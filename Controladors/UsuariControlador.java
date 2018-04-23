@@ -10,9 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UsuariControlador implements UsuariDAO {
-    static ConnectorBD conn = new ConnectorBD();
-    static ObservableList<Usuari> list = FXCollections.observableArrayList();
-    static Usuari user;
+    ConnectorBD conn = new ConnectorBD();
+    ObservableList<Usuari> list = FXCollections.observableArrayList();
+    Usuari user;
 
     public ObservableList selectTotsUsers(){
         PreparedStatement ps = null;
@@ -57,13 +57,19 @@ public class UsuariControlador implements UsuariDAO {
             return list;
         }
     }
-    public ObservableList selectTotsUsersAdmins(){
+    public ObservableList selectTotsUsersAdmin(boolean admin){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Usuari selectUsuari;
         try {
-            String sql = "Select id,nom,p_cognom,s_cognom,email,telefon_mobil,telefon_fixe,contrasenya,esAdmin,estat,nivell" +
-                    " from Usuari where esAdmin=1";
+            String sql;
+            if(admin) {
+                sql = "Select id,nom,p_cognom,s_cognom,email,telefon_mobil,telefon_fixe,contrasenya,esAdmin,estat,nivell" +
+                        " from Usuari where esAdmin=1";
+            } else {
+                sql = "Select id,nom,p_cognom,s_cognom,email,telefon_mobil,telefon_fixe,contrasenya,esAdmin,estat,nivell" +
+                        " from Usuari where esAdmin=0";
+            }
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
             list.clear();
@@ -100,99 +106,19 @@ public class UsuariControlador implements UsuariDAO {
             return list;
         }
     }
-    public ObservableList selectTotsUsersActivats(){
+    public ObservableList selectTotsUsersActivat(boolean activat){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Usuari selectUsuari;
         try {
-            String sql = "Select id,nom,p_cognom,s_cognom,email,telefon_mobil,telefon_fixe,contrasenya,esAdmin,estat,nivell" +
-                    " from Usuari where estat=1";
-            ps = conn.connectar().prepareStatement(sql);
-            rs = ps.executeQuery();
-            list.clear();
-            while(rs.next()){
-                selectUsuari = new Usuari();
-                selectUsuari.setId(rs.getInt(1));
-                selectUsuari.setNom(rs.getString(2));
-                selectUsuari.setPcognom(rs.getString(3));
-                selectUsuari.setScognom(rs.getString(4));
-                selectUsuari.setEmail(rs.getString(5));
-                selectUsuari.setTelefon_mobil(rs.getInt(6));
-                selectUsuari.setTelefon_fixe(rs.getInt(7));
-                selectUsuari.setContrasenya(rs.getString(8));
-                selectUsuari.setEsAdmin(rs.getInt(9));
-                selectUsuari.setEstat(rs.getInt(10));
-                selectUsuari.setNivell(rs.getString(11));
-                list.add(selectUsuari);
+            String sql;
+            if(activat) {
+                sql = "Select id,nom,p_cognom,s_cognom,email,telefon_mobil,telefon_fixe,contrasenya,esAdmin,estat,nivell" +
+                        " from Usuari where estat=1";
+            } else {
+                sql = "Select id,nom,p_cognom,s_cognom,email,telefon_mobil,telefon_fixe,contrasenya,esAdmin,estat,nivell" +
+                        " from Usuari where estat=0";
             }
-            ps.close();
-            rs.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
-        }
-    }
-    public ObservableList selectTotsUsersDesactivats(){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        Usuari selectUsuari;
-        try {
-            String sql = "Select id,nom,p_cognom,s_cognom,email,telefon_mobil,telefon_fixe,contrasenya,esAdmin,estat,nivell" +
-                    " from Usuari where estat=0";
-            ps = conn.connectar().prepareStatement(sql);
-            rs = ps.executeQuery();
-            list.clear();
-            while(rs.next()){
-                selectUsuari = new Usuari();
-                selectUsuari.setId(rs.getInt(1));
-                selectUsuari.setNom(rs.getString(2));
-                selectUsuari.setPcognom(rs.getString(3));
-                selectUsuari.setScognom(rs.getString(4));
-                selectUsuari.setEmail(rs.getString(5));
-                selectUsuari.setTelefon_mobil(rs.getInt(6));
-                selectUsuari.setTelefon_fixe(rs.getInt(7));
-                selectUsuari.setContrasenya(rs.getString(8));
-                selectUsuari.setEsAdmin(rs.getInt(9));
-                selectUsuari.setEstat(rs.getInt(10));
-                selectUsuari.setNivell(rs.getString(11));
-                list.add(selectUsuari);
-            }
-            ps.close();
-            rs.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
-        }
-    }
-    public ObservableList selectTotsUsersNoAdmins(){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        Usuari selectUsuari;
-        try {
-            String sql = "Select id,nom,p_cognom,s_cognom,email,telefon_mobil,telefon_fixe,contrasenya,esAdmin,estat,nivell " +
-                    "from Usuari where esAdmin=0";
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
             list.clear();
@@ -256,7 +182,7 @@ public class UsuariControlador implements UsuariDAO {
                 user.setEmail(rs.getString(7));
                 user.setContrasenya(rs.getString(8));
                 user.setEstat(rs.getInt(9));
-                user.setSalt(rs.getInt(10));
+                user.setSalt(rs.getString(10));
                 user.setEsAdmin(rs.getInt(11));
                 user.setNivell(rs.getString(12));
                 list.add(user);
@@ -283,7 +209,7 @@ public class UsuariControlador implements UsuariDAO {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String insert = "Insert into Usuari values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            String insert = "Insert into Usuari values (?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.connectar().prepareStatement(insert);
             ps.setInt(1,nextIdUsers());
             ps.setString(2,insUsuari.getNom());
@@ -294,9 +220,8 @@ public class UsuariControlador implements UsuariDAO {
             ps.setString(7,insUsuari.getEmail());
             ps.setString(8,insUsuari.getContrasenya());
             ps.setInt(9,insUsuari.getEstat());
-            ps.setInt(10,insUsuari.getSalt());
-            ps.setInt(11,insUsuari.getEsAdmin());
-            ps.setString(12,insUsuari.getNivell());
+            ps.setInt(10,insUsuari.getEsAdmin());
+            ps.setString(11,insUsuari.getNivell());
 
             ps.close();
             rs.close();
@@ -381,33 +306,26 @@ public class UsuariControlador implements UsuariDAO {
             }
         }
     }
-    public Usuari selectUsersEmail(String email){
+    public boolean updateUsersActivat(int id, boolean activat){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String sql = "Select nom,p_cognom,s_cognom,email,telefon_mobil,telefon_fixe,contrasenya,esAdmin,estat,nivell " +
-                    "from Usuari where email LIKE ?";
-            ps = conn.connectar().prepareStatement(sql);
-            ps.setString(1,'%'+email+'%');
-
-            rs = ps.executeQuery();
-
-            user = new Usuari();
-            user.setNom(rs.getString(1));
-            user.setPcognom(rs.getString(2));
-            user.setScognom(rs.getString(3));
-            user.setEmail(rs.getString(4));
-            user.setTelefon_mobil(rs.getInt(5));
-            user.setTelefon_fixe(rs.getInt(6));
-            user.setContrasenya(rs.getString(7));
-            user.setEsAdmin(rs.getInt(8));
-            user.setEstat(rs.getInt(9));
-            user.setNivell(rs.getString(10));
+            String update;
+            if(activat) {
+                update = "UPDATE from Usuari SET estat = 1 where id = ?";
+            } else {
+                update = "UPDATE from Usuari SET estat = 0 where id = ?";
+            }
+            ps = conn.connectar().prepareStatement(update);
+            ps.setInt(1,id);
+            ps.executeUpdate();
 
             ps.close();
             rs.close();
+            return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
+            return false;
         } finally {
             try {
                 if(ps != null) {
@@ -419,7 +337,6 @@ public class UsuariControlador implements UsuariDAO {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return user;
         }
     }
     public int nextIdUsers(){

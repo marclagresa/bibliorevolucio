@@ -30,22 +30,22 @@ public class Producte {
         this.id = new SimpleIntegerProperty();
         this.ISBN = new SimpleStringProperty("");
         this.nom = new SimpleStringProperty("");
-        this.num_pag = new SimpleIntegerProperty();
+        this.num_pag = new SimpleIntegerProperty(-1);
         this.dimensions = new SimpleStringProperty("");
         this.data = new SimpleStringProperty("");
         this.resum = new SimpleStringProperty("");
         this.caracteristiques = new SimpleStringProperty("");
         this.urlPortada = new SimpleStringProperty("");
         this.adreçaWeb = new SimpleStringProperty("");
-        this.estat = new SimpleIntegerProperty();
-        this.idTipusProducte = new SimpleIntegerProperty();
-        this.idIdioma = new SimpleIntegerProperty();
-        this.idEditorial = new SimpleIntegerProperty();
-        this.idFormat = new SimpleIntegerProperty();
-        this.idProcedencia = new SimpleIntegerProperty();
-        this.idNivell = new SimpleIntegerProperty();
-        this.idColeccio = new SimpleIntegerProperty();
-        this.idCDU = new SimpleIntegerProperty();
+        this.estat = new SimpleIntegerProperty(-1);
+        this.idTipusProducte = new SimpleIntegerProperty(-1);
+        this.idIdioma = new SimpleIntegerProperty(-1);
+        this.idEditorial = new SimpleIntegerProperty(-1);
+        this.idFormat = new SimpleIntegerProperty(-1);
+        this.idProcedencia = new SimpleIntegerProperty(-1);
+        this.idNivell = new SimpleIntegerProperty(-1);
+        this.idColeccio = new SimpleIntegerProperty(-1);
+        this.idCDU = new SimpleIntegerProperty(-1);
     }
 
     //Constructor Total

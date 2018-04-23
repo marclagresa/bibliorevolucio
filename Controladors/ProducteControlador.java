@@ -1,20 +1,18 @@
 package com.company.DAM2.Bibliorevolució.Controladors;
 
 import com.company.DAM2.Bibliorevolució.Classes.Producte;
-import com.company.DAM2.Bibliorevolució.Classes.Usuari;
 import com.company.DAM2.Bibliorevolució.Connector.ConnectorBD;
 import com.company.DAM2.Bibliorevolució.DAO.ProducteDAO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ProducteControlador implements ProducteDAO {
-    static ConnectorBD conn = new ConnectorBD();
-    static ObservableList<Producte> list = FXCollections.observableArrayList();
-    static Producte producte;
+    ConnectorBD conn = new ConnectorBD();
+    ObservableList<Producte> list = FXCollections.observableArrayList();
+    Producte producte;
 
     public ObservableList selectTotsProductes(){
         PreparedStatement ps = null;
@@ -67,13 +65,14 @@ public class ProducteControlador implements ProducteDAO {
             return list;
         }
     }
-    public ObservableList selectTotsProductesTipus(){
+    public ObservableList selectTotsProductesFormat(String format){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Producte selectProducte;
         try {
-            String sql = "Select * from Producte WHERE ";
+            String sql = "Select * from Producte p inner join format f on f.id=p.format_id WHERE f.nom = ? ";
             ps = conn.connectar().prepareStatement(sql);
+            ps.setString(1,format);
             rs = ps.executeQuery();
             list.clear();
             while(rs.next()){
@@ -118,63 +117,17 @@ public class ProducteControlador implements ProducteDAO {
             return list;
         }
     }
-    public ObservableList selectTotsProductesActivats(){
+    public ObservableList selectTotsProductesActivat(boolean activat){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Producte selectProducte;
         try {
-            String sql = "Select * from Producte WHERE estat = 1";
-            ps = conn.connectar().prepareStatement(sql);
-            rs = ps.executeQuery();
-            list.clear();
-            while(rs.next()){
-                selectProducte = new Producte(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getInt(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(7),
-                        rs.getString(8),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getInt(11),
-                        rs.getInt(12),
-                        rs.getInt(13),
-                        rs.getInt(14),
-                        rs.getInt(15),
-                        rs.getInt(16),
-                        rs.getInt(17),
-                        rs.getInt(18),
-                        rs.getInt(19)
-                );
-                list.add(selectProducte);
+            String sql;
+            if(activat) {
+                sql = "Select * from Producte WHERE estat = 1";
+            } else {
+                sql = "Select * from Producte WHERE estat = 0";
             }
-            ps.close();
-            rs.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
-        }
-    }
-    public ObservableList selectTotsProductesDesactivats(){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        Producte selectProducte;
-        try {
-            String sql = "Select * from Producte WHERE estat = 0";
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
             list.clear();
@@ -230,30 +183,29 @@ public class ProducteControlador implements ProducteDAO {
             ps.setInt(1,selProducte.getId());
             rs = ps.executeQuery();
             list.clear();
-            while(rs.next()){
-                selectProducte = new Producte(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getInt(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(7),
-                        rs.getString(8),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getInt(11),
-                        rs.getInt(12),
-                        rs.getInt(13),
-                        rs.getInt(14),
-                        rs.getInt(15),
-                        rs.getInt(16),
-                        rs.getInt(17),
-                        rs.getInt(18),
-                        rs.getInt(19)
-                );
-                list.add(selectProducte);
-            }
+            producte = new Producte(
+                    rs.getInt(1),
+                    rs.getString(2),
+                    rs.getString(3),
+                    rs.getInt(4),
+                    rs.getString(5),
+                    rs.getString(6),
+                    rs.getString(7),
+                    rs.getString(8),
+                    rs.getString(9),
+                    rs.getString(10),
+                    rs.getInt(11),
+                    rs.getInt(12),
+                    rs.getInt(13),
+                    rs.getInt(14),
+                    rs.getInt(15),
+                    rs.getInt(16),
+                    rs.getInt(17),
+                    rs.getInt(18),
+                    rs.getInt(19)
+            );
+            list.add(producte);
+
             ps.close();
             rs.close();
         } catch (SQLException ex) {
@@ -371,6 +323,39 @@ public class ProducteControlador implements ProducteDAO {
             ps.setInt(16,uptProducte.getIdColeccio());
             ps.setInt(17,uptProducte.getIdCDU());
             ps.setInt(18,uptProducte.getId());
+            ps.executeUpdate();
+
+            ps.close();
+            rs.close();
+            return true;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return false;
+        } finally {
+            try {
+                if(ps != null) {
+                    ps.close();
+                }
+                if(rs != null){
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    public boolean updateProducteActivar(int id, boolean activat){
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            String update;
+            if(activat) {
+                update = "UPDATE from Producte SET estat = 1 where id = ?";
+            } else {
+                update = "UPDATE from Producte SET estat = 0 where id = ?";
+            }
+            ps = conn.connectar().prepareStatement(update);
+            ps.setInt(1,id);
             ps.executeUpdate();
 
             ps.close();
