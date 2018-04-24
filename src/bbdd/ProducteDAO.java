@@ -7,12 +7,14 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProducteDAO implements IObjectDAO<Producte> {
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Producte> list = FXCollections.observableArrayList();
+    List<Producte> list = new ArrayList<>();
 
-    public ObservableList selectAll(){
+    public List<Producte> selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Producte selectProducte;
@@ -63,7 +65,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             return list;
         }
     }
-    public ObservableList selectTotsProductesFormat(String format){
+    public List<Producte> selectTotsProductesFormat(String format){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Producte selectProducte;
@@ -115,7 +117,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             return list;
         }
     }
-    public ObservableList selectTotsProductesActivat(boolean activat){
+    public List<Producte> selectTotsProductesActivat(boolean activat){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Producte selectProducte;
@@ -171,7 +173,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             return list;
         }
     }
-    public ObservableList select(Producte producte){
+    public List<Producte> select(Producte producte){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Producte selectProducte;

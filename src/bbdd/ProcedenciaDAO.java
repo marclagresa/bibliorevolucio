@@ -8,12 +8,14 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Procedencia> list = FXCollections.observableArrayList();
+    List<Procedencia> list = new ArrayList<>();
 
-    public ObservableList selectAll(){
+    public List<Procedencia> selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Procedencia selectProcedencia;
@@ -46,7 +48,7 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
             return list;
         }
     }
-    public ObservableList select(Procedencia procedencia){
+    public List<Procedencia> select(Procedencia procedencia){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {

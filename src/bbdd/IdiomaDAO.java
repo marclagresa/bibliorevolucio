@@ -8,12 +8,14 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class IdiomaDAO implements IObjectDAO<Idioma> {
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Idioma> list = FXCollections.observableArrayList();
+    List<Idioma> list = new ArrayList<>();
 
-    public ObservableList selectAll(){
+    public List<Idioma> selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Idioma idioma;
@@ -46,7 +48,7 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
             return list;
         }
     }
-    public ObservableList select(Idioma idioma){
+    public List<Idioma> select(Idioma idioma){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {

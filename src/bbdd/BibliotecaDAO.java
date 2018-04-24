@@ -7,12 +7,14 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Biblioteca> list = FXCollections.observableArrayList();
+    List<Biblioteca> list = new ArrayList<>();
 
-    public ObservableList selectAll(){
+    public List<Biblioteca> selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Biblioteca selectBiblioteca;
@@ -45,7 +47,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
             return list;
         }
     }
-    public ObservableList select(Biblioteca biblioteca){
+    public List<Biblioteca> select(Biblioteca biblioteca){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {

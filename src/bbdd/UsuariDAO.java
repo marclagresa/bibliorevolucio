@@ -2,17 +2,17 @@ package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
 import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectorBD;
 import com.company.DAM2.Bibliorevolució.objecte.Usuari;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UsuariDAO implements IObjectDAO<Usuari> {
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Usuari> list = FXCollections.observableArrayList();
+    List<Usuari> list = new ArrayList<>();
 
-    public ObservableList selectAll(){
+    public List<Usuari> selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Usuari selectUsuari;
@@ -55,7 +55,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
             return list;
         }
     }
-    public ObservableList selectTotsUsersAdmin(boolean admin){
+    public List<Usuari> selectTotsUsersAdmin(boolean admin){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Usuari selectUsuari;
@@ -104,7 +104,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
             return list;
         }
     }
-    public ObservableList selectTotsUsersActivat(boolean activat){
+    public List<Usuari> selectTotsUsersActivat(boolean activat){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Usuari selectUsuari;
@@ -153,7 +153,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
             return list;
         }
     }
-    public ObservableList select(Usuari usuari){
+    public List<Usuari> select(Usuari usuari){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Usuari user;

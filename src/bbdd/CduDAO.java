@@ -8,12 +8,14 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CduDAO implements IObjectDAO<Cdu> {
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Cdu> list = FXCollections.observableArrayList();
+    List<Cdu> list = new ArrayList<>();
 
-    public ObservableList selectAll(){
+    public List<Cdu> selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Cdu selectCdu;
@@ -47,7 +49,7 @@ public class CduDAO implements IObjectDAO<Cdu> {
             return list;
         }
     }
-    public ObservableList select(Cdu cdu){
+    public List<Cdu> select(Cdu cdu){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {

@@ -7,12 +7,14 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class FormatDAO implements IObjectDAO<Format>{
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Format> list = FXCollections.observableArrayList();
+    List<Format> list = new ArrayList<>();
 
-    public ObservableList selectAll(){
+    public List<Format> selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Format selectFormat;
@@ -45,7 +47,7 @@ public class FormatDAO implements IObjectDAO<Format>{
             return list;
         }
     }
-    public ObservableList select(Format format){
+    public List<Format> select(Format format){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {

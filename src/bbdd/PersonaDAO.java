@@ -8,12 +8,14 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PersonaDAO implements IObjectDAO<Persona> {
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Persona> list = FXCollections.observableArrayList();
+    List<Persona> list = new ArrayList<>();
 
-    public ObservableList selectAll(){
+    public List<Persona> selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Persona selectPersona;
@@ -46,7 +48,7 @@ public class PersonaDAO implements IObjectDAO<Persona> {
             return list;
         }
     }
-    public ObservableList select(Persona persona){
+    public List<Persona> select(Persona persona){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {

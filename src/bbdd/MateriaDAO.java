@@ -8,12 +8,14 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MateriaDAO implements IObjectDAO<Materia> {
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Materia> list = FXCollections.observableArrayList();
+    List<Materia> list = new ArrayList<>();
 
-    public ObservableList selectAll(){
+    public List<Materia> selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Materia selectMateria;
@@ -46,7 +48,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
             return list;
         }
     }
-    public ObservableList select(Materia materia){
+    public List<Materia> select(Materia materia){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {

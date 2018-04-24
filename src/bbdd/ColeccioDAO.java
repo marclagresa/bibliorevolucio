@@ -2,18 +2,18 @@ package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
 import com.company.DAM2.Bibliorevolució.objecte.Coleccio;
 import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectorBD;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ColeccioDAO implements IObjectDAO<Coleccio> {
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Coleccio> list = FXCollections.observableArrayList();
+    List<Coleccio> list = new ArrayList<>();
 
-    public ObservableList selectAll(){
+    public List<Coleccio> selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Coleccio selectColeccio;
@@ -46,7 +46,7 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
             return list;
         }
     }
-    public ObservableList select(Coleccio coleccio){
+    public List<Coleccio> select(Coleccio coleccio){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {

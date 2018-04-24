@@ -8,12 +8,14 @@ import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class NivellDAO implements IObjectDAO<Nivell> {
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Nivell> list = FXCollections.observableArrayList();
+    List<Nivell> list = new ArrayList<>();
 
-    public ObservableList selectAll(){
+    public List<Nivell> selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Nivell selectNivell;
@@ -46,7 +48,7 @@ public class NivellDAO implements IObjectDAO<Nivell> {
             return list;
         }
     }
-    public ObservableList select(Nivell nivell){
+    public List<Nivell> select(Nivell nivell){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
