@@ -1,34 +1,31 @@
-package com.company.DAM2.Bibliorevolució.Controladors;
+package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
-import com.company.DAM2.Bibliorevolució.Classes.Nivell;
-import com.company.DAM2.Bibliorevolució.Connector.ConnectorBD;
-import com.company.DAM2.Bibliorevolució.DAO.NivellDAO;
+import com.company.DAM2.Bibliorevolució.objecte.Biblioteca;
+import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectorBD;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class NivellControlador implements NivellDAO {
+public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Nivell> list = FXCollections.observableArrayList();
-    Nivell nivell;
+    ObservableList<Biblioteca> list = FXCollections.observableArrayList();
 
-    public ObservableList selectTotsNivells(){
+    public ObservableList selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Nivell selectNivell;
+        Biblioteca selectBiblioteca;
         try {
-            String sql = "Select id,nom from Nivell";
+            String sql = "Select id,nom from Biblioteca";
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
             list.clear();
             while(rs.next()){
-                selectNivell = new Nivell();
-                selectNivell.setId(rs.getInt(1));
-                selectNivell.setNom(rs.getString(2));
-                list.add(selectNivell);
+                selectBiblioteca = new Biblioteca();
+                selectBiblioteca.setId(rs.getInt(1));
+                selectBiblioteca.setNom(rs.getString(2));
+                list.add(selectBiblioteca);
             }
             ps.close();
             rs.close();
@@ -48,20 +45,20 @@ public class NivellControlador implements NivellDAO {
             return list;
         }
     }
-    public ObservableList selectNivellEspecific(Nivell selNivell){
+    public ObservableList select(Biblioteca biblioteca){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String sql = "Select * from Nivell where nom LIKE ? ";
+            String sql = "Select * from Biblioteca where nom LIKE ? ";
             ps = conn.connectar().prepareStatement(sql);
-            ps.setString(1,'%'+selNivell.getNom()+'%');
+            ps.setString(1,'%'+biblioteca.getNom()+'%');
             rs = ps.executeQuery();
             list.clear();
             while(rs.next()){
-                nivell = new Nivell();
-                nivell.setId(rs.getInt(1));
-                nivell.setNom(rs.getString(2));
-                list.add(nivell);
+                biblioteca = new Biblioteca();
+                biblioteca.setId(rs.getInt(1));
+                biblioteca.setNom(rs.getString(2));
+                list.add(biblioteca);
             }
             ps.close();
             rs.close();
@@ -81,14 +78,14 @@ public class NivellControlador implements NivellDAO {
             return list;
         }
     }
-    public boolean insertNivell(Nivell insNivell){
+    public boolean insert(Biblioteca biblioteca){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String insert = "Insert into Nivell values (?,?)";
+            String insert = "Insert into Biblioteca values (?,?)";
             ps = conn.connectar().prepareStatement(insert);
-            ps.setInt(1,nextIdNivell());
-            ps.setString(2,insNivell.getNom());
+            ps.setInt(1,nextId());
+            ps.setString(2,biblioteca.getNom());
 
             ps.close();
             rs.close();
@@ -109,13 +106,13 @@ public class NivellControlador implements NivellDAO {
             }
         }
     }
-    public boolean deleteNivell(Nivell delNivell){
+    public boolean delete(Biblioteca biblioteca){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String delete = "Delete from Nivell where id = ?";
+            String delete = "Delete from Biblioteca where id = ?";
             ps = conn.connectar().prepareStatement(delete);
-            ps.setInt(1,delNivell.getId());
+            ps.setInt(1,biblioteca.getId());
             ps.executeUpdate();
 
             ps.close();
@@ -137,14 +134,14 @@ public class NivellControlador implements NivellDAO {
             }
         }
     }
-    public boolean updateNivell(Nivell uptNivell){
+    public boolean update(Biblioteca biblioteca){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String update = "UPDATE from Nivell SET nom = ? where id = ?";
+            String update = "UPDATE from Biblioteca SET nom = ? where id = ?";
             ps = conn.connectar().prepareStatement(update);
-            ps.setString(1,uptNivell.getNom());
-            ps.setInt(2,uptNivell.getId());
+            ps.setString(1,biblioteca.getNom());
+            ps.setInt(2,biblioteca.getId());
             ps.executeUpdate();
 
             ps.close();
@@ -166,12 +163,12 @@ public class NivellControlador implements NivellDAO {
             }
         }
     }
-    public int nextIdNivell(){
+    public int nextId(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         int id = 0;
         try {
-            String sql = "SELECT max(id)+1 FROM Nivell";
+            String sql = "SELECT max(id)+1 FROM Biblioteca";
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
             id = rs.getInt(1);

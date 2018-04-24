@@ -1,20 +1,18 @@
-package com.company.DAM2.Bibliorevolució.Controladors;
+package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
-import com.company.DAM2.Bibliorevolució.Connector.ConnectorBD;
-import com.company.DAM2.Bibliorevolució.Classes.Usuari;
-import com.company.DAM2.Bibliorevolució.DAO.UsuariDAO;
+import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectorBD;
+import com.company.DAM2.Bibliorevolució.objecte.Usuari;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class UsuariControlador implements UsuariDAO {
+public class UsuariDAO implements IObjectDAO<Usuari> {
     ConnectorBD conn = new ConnectorBD();
     ObservableList<Usuari> list = FXCollections.observableArrayList();
-    Usuari user;
 
-    public ObservableList selectTotsUsers(){
+    public ObservableList selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Usuari selectUsuari;
@@ -34,8 +32,8 @@ public class UsuariControlador implements UsuariDAO {
                 selectUsuari.setTelefon_mobil(rs.getInt(6));
                 selectUsuari.setTelefon_fixe(rs.getInt(7));
                 selectUsuari.setContrasenya(rs.getString(8));
-                selectUsuari.setEsAdmin(rs.getInt(9));
-                selectUsuari.setEstat(rs.getInt(10));
+                selectUsuari.setEsAdmin(rs.getBoolean(9));
+                selectUsuari.setEstat(rs.getBoolean(10));
                 selectUsuari.setNivell(rs.getString(11));
                 list.add(selectUsuari);
             }
@@ -65,10 +63,10 @@ public class UsuariControlador implements UsuariDAO {
             String sql;
             if(admin) {
                 sql = "Select id,nom,p_cognom,s_cognom,email,telefon_mobil,telefon_fixe,contrasenya,esAdmin,estat,nivell" +
-                        " from Usuari where esAdmin=1";
+                        " from Usuari where esAdmin= true";
             } else {
                 sql = "Select id,nom,p_cognom,s_cognom,email,telefon_mobil,telefon_fixe,contrasenya,esAdmin,estat,nivell" +
-                        " from Usuari where esAdmin=0";
+                        " from Usuari where esAdmin= false";
             }
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
@@ -83,8 +81,8 @@ public class UsuariControlador implements UsuariDAO {
                 selectUsuari.setTelefon_mobil(rs.getInt(6));
                 selectUsuari.setTelefon_fixe(rs.getInt(7));
                 selectUsuari.setContrasenya(rs.getString(8));
-                selectUsuari.setEsAdmin(rs.getInt(9));
-                selectUsuari.setEstat(rs.getInt(10));
+                selectUsuari.setEsAdmin(rs.getBoolean(9));
+                selectUsuari.setEstat(rs.getBoolean(10));
                 selectUsuari.setNivell(rs.getString(11));
                 list.add(selectUsuari);
             }
@@ -114,10 +112,10 @@ public class UsuariControlador implements UsuariDAO {
             String sql;
             if(activat) {
                 sql = "Select id,nom,p_cognom,s_cognom,email,telefon_mobil,telefon_fixe,contrasenya,esAdmin,estat,nivell" +
-                        " from Usuari where estat=1";
+                        " from Usuari where estat= true";
             } else {
                 sql = "Select id,nom,p_cognom,s_cognom,email,telefon_mobil,telefon_fixe,contrasenya,esAdmin,estat,nivell" +
-                        " from Usuari where estat=0";
+                        " from Usuari where estat= false";
             }
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
@@ -132,8 +130,8 @@ public class UsuariControlador implements UsuariDAO {
                 selectUsuari.setTelefon_mobil(rs.getInt(6));
                 selectUsuari.setTelefon_fixe(rs.getInt(7));
                 selectUsuari.setContrasenya(rs.getString(8));
-                selectUsuari.setEsAdmin(rs.getInt(9));
-                selectUsuari.setEstat(rs.getInt(10));
+                selectUsuari.setEsAdmin(rs.getBoolean(9));
+                selectUsuari.setEstat(rs.getBoolean(10));
                 selectUsuari.setNivell(rs.getString(11));
                 list.add(selectUsuari);
             }
@@ -155,20 +153,21 @@ public class UsuariControlador implements UsuariDAO {
             return list;
         }
     }
-    public ObservableList selectUsersEspecific(Usuari selUsuari){
+    public ObservableList select(Usuari usuari){
         PreparedStatement ps = null;
         ResultSet rs = null;
+        Usuari user;
         try {
             String sql = "Select * from Usuari where nom LIKE ? AND p_cognom LIKE ? AND s_cognom LIKE ? AND email LIKE ? " +
                     "AND esAdmin = ? AND estat = ? AND nivell LIKE ?";
             ps = conn.connectar().prepareStatement(sql);
-            ps.setString(1,'%'+selUsuari.getNom()+'%');
-            ps.setString(2,'%'+selUsuari.getPcognom()+'%');
-            ps.setString(3,'%'+selUsuari.getScognom()+'%');
-            ps.setString(4,'%'+selUsuari.getEmail()+'%');
-            ps.setInt(5,selUsuari.getEsAdmin());
-            ps.setInt(6,selUsuari.getEstat());
-            ps.setString(7,'%'+selUsuari.getNivell()+'%');
+            ps.setString(1,'%'+usuari.getNom()+'%');
+            ps.setString(2,'%'+usuari.getPcognom()+'%');
+            ps.setString(3,'%'+usuari.getScognom()+'%');
+            ps.setString(4,'%'+usuari.getEmail()+'%');
+            ps.setBoolean(5,usuari.getEsAdmin());
+            ps.setBoolean(6,usuari.getEstat());
+            ps.setString(7,'%'+usuari.getNivell()+'%');
             rs = ps.executeQuery();
             list.clear();
             while(rs.next()){
@@ -181,9 +180,9 @@ public class UsuariControlador implements UsuariDAO {
                 user.setTelefon_fixe(rs.getInt(6));
                 user.setEmail(rs.getString(7));
                 user.setContrasenya(rs.getString(8));
-                user.setEstat(rs.getInt(9));
+                user.setEstat(rs.getBoolean(9));
                 user.setSalt(rs.getString(10));
-                user.setEsAdmin(rs.getInt(11));
+                user.setEsAdmin(rs.getBoolean(11));
                 user.setNivell(rs.getString(12));
                 list.add(user);
             }
@@ -205,26 +204,25 @@ public class UsuariControlador implements UsuariDAO {
             return list;
         }
     }
-    public boolean insertUsers(Usuari insUsuari){
+    public boolean insert(Usuari usuari){
         PreparedStatement ps = null;
-        ResultSet rs = null;
         try {
-            String insert = "Insert into Usuari values (?,?,?,?,?,?,?,?,?,?,?)";
+            String insert = "Insert into Usuari values (?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.connectar().prepareStatement(insert);
-            ps.setInt(1,nextIdUsers());
-            ps.setString(2,insUsuari.getNom());
-            ps.setString(3,insUsuari.getPcognom());
-            ps.setString(4,insUsuari.getScognom());
-            ps.setInt(5,insUsuari.getTelefon_mobil());
-            ps.setInt(6,insUsuari.getTelefon_fixe());
-            ps.setString(7,insUsuari.getEmail());
-            ps.setString(8,insUsuari.getContrasenya());
-            ps.setInt(9,insUsuari.getEstat());
-            ps.setInt(10,insUsuari.getEsAdmin());
-            ps.setString(11,insUsuari.getNivell());
-
+            ps.setInt(1,nextId());
+            ps.setString(2,usuari.getNom());
+            ps.setString(3,usuari.getPcognom());
+            ps.setString(4,usuari.getScognom());
+            ps.setInt(5,usuari.getTelefon_mobil());
+            ps.setInt(6,usuari.getTelefon_fixe());
+            ps.setString(7,usuari.getEmail());
+            ps.setString(8,usuari.getContrasenya());
+            ps.setBoolean(9,usuari.getEstat());
+            ps.setString(10,usuari.getSalt());
+            ps.setBoolean(11,usuari.getEsAdmin());
+            ps.setString(12,usuari.getNivell());
+            ps.executeUpdate();
             ps.close();
-            rs.close();
             return true;
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -234,21 +232,18 @@ public class UsuariControlador implements UsuariDAO {
                 if(ps != null) {
                     ps.close();
                 }
-                if(rs != null){
-                    rs.close();
-                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
-    public boolean deleteUsers(Usuari delUsuari){
+    public boolean delete(Usuari usuari){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             String delete = "Delete from Usuari where id = ?";
             ps = conn.connectar().prepareStatement(delete);
-            ps.setInt(1,delUsuari.getId());
+            ps.setInt(1,usuari.getId());
             ps.executeUpdate();
 
             ps.close();
@@ -270,21 +265,21 @@ public class UsuariControlador implements UsuariDAO {
             }
         }
     }
-    public boolean updateUsers(Usuari uptUsuari){
+    public boolean update(Usuari usuari){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             String update = "UPDATE from Usuari SET nom = ?, p_cognom = ?, s_cognom = ?, telefon_mobil = ?, telefon_fixe = ?," +
                     " email = ?, nivell = ? where id = ?";
             ps = conn.connectar().prepareStatement(update);
-            ps.setString(1,uptUsuari.getNom());
-            ps.setString(2,uptUsuari.getPcognom());
-            ps.setString(3,uptUsuari.getScognom());
-            ps.setInt(4,uptUsuari.getTelefon_mobil());
-            ps.setInt(5,uptUsuari.getTelefon_fixe());
-            ps.setString(6,uptUsuari.getEmail());
-            ps.setString(7,uptUsuari.getNivell());
-            ps.setInt(8,uptUsuari.getId());
+            ps.setString(1,usuari.getNom());
+            ps.setString(2,usuari.getPcognom());
+            ps.setString(3,usuari.getScognom());
+            ps.setInt(4,usuari.getTelefon_mobil());
+            ps.setInt(5,usuari.getTelefon_fixe());
+            ps.setString(6,usuari.getEmail());
+            ps.setString(7,usuari.getNivell());
+            ps.setInt(8,usuari.getId());
             ps.executeUpdate();
 
             ps.close();
@@ -312,9 +307,9 @@ public class UsuariControlador implements UsuariDAO {
         try {
             String update;
             if(activat) {
-                update = "UPDATE from Usuari SET estat = 1 where id = ?";
+                update = "UPDATE from Usuari SET estat = true where id = ?";
             } else {
-                update = "UPDATE from Usuari SET estat = 0 where id = ?";
+                update = "UPDATE from Usuari SET estat = false where id = ?";
             }
             ps = conn.connectar().prepareStatement(update);
             ps.setInt(1,id);
@@ -339,7 +334,7 @@ public class UsuariControlador implements UsuariDAO {
             }
         }
     }
-    public int nextIdUsers(){
+    public int nextId(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         int id = 0;
@@ -347,7 +342,11 @@ public class UsuariControlador implements UsuariDAO {
             String sql = "SELECT max(id)+1 FROM usuari";
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
-            id = rs.getInt(1);
+            if(!rs.next()){
+                id = 1;
+            } else {
+                id = rs.getInt(1);
+            }
             return id;
         } catch (SQLException ex) {
             ex.printStackTrace();

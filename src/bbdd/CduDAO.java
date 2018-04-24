@@ -1,8 +1,7 @@
-package com.company.DAM2.Bibliorevolució.Controladors;
+package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
-import com.company.DAM2.Bibliorevolució.Classes.Coleccio;
-import com.company.DAM2.Bibliorevolució.Connector.ConnectorBD;
-import com.company.DAM2.Bibliorevolució.DAO.ColeccioDAO;
+import com.company.DAM2.Bibliorevolució.objecte.Cdu;
+import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectorBD;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,25 +9,25 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ColeccioControlador implements ColeccioDAO {
+public class CduDAO implements IObjectDAO<Cdu> {
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Coleccio> list = FXCollections.observableArrayList();
-    Coleccio coleccio;
+    ObservableList<Cdu> list = FXCollections.observableArrayList();
 
-    public ObservableList selectTotesColeccions(){
+    public ObservableList selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Coleccio selectColeccio;
+        Cdu selectCdu;
         try {
-            String sql = "Select id,nom from Coleccio";
+            String sql = "Select id,nom,idPare from Cdu";
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
             list.clear();
             while(rs.next()){
-                selectColeccio = new Coleccio();
-                selectColeccio.setId(rs.getInt(1));
-                selectColeccio.setNom(rs.getString(2));
-                list.add(selectColeccio);
+                selectCdu = new Cdu();
+                selectCdu.setId(rs.getInt(1));
+                selectCdu.setNom(rs.getString(2));
+                selectCdu.setIdPare(rs.getInt(3));
+                list.add(selectCdu);
             }
             ps.close();
             rs.close();
@@ -48,20 +47,21 @@ public class ColeccioControlador implements ColeccioDAO {
             return list;
         }
     }
-    public ObservableList selectColeccioEspecifica(Coleccio selColeccio){
+    public ObservableList select(Cdu cdu){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String sql = "Select * from Coleccio where nom LIKE ? ";
+            String sql = "Select * from Cdu where nom LIKE ? ";
             ps = conn.connectar().prepareStatement(sql);
-            ps.setString(1,'%'+selColeccio.getNom()+'%');
+            ps.setString(1,'%'+cdu.getNom()+'%');
             rs = ps.executeQuery();
             list.clear();
             while(rs.next()){
-                coleccio = new Coleccio();
-                coleccio.setId(rs.getInt(1));
-                coleccio.setNom(rs.getString(2));
-                list.add(coleccio);
+                cdu = new Cdu();
+                cdu.setId(rs.getInt(1));
+                cdu.setNom(rs.getString(2));
+                cdu.setIdPare(rs.getInt(3));
+                list.add(cdu);
             }
             ps.close();
             rs.close();
@@ -81,14 +81,15 @@ public class ColeccioControlador implements ColeccioDAO {
             return list;
         }
     }
-    public boolean insertColeccio(Coleccio insColeccio){
+    public boolean insert(Cdu cdu){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String insert = "Insert into Coleccio values (?,?)";
+            String insert = "Insert into Cdu values (?,?,?)";
             ps = conn.connectar().prepareStatement(insert);
-            ps.setInt(1,nextIdColeccio());
-            ps.setString(2,insColeccio.getNom());
+            ps.setInt(1,nextId());
+            ps.setString(2,cdu.getNom());
+            ps.setInt(3,cdu.getIdPare());
 
             ps.close();
             rs.close();
@@ -109,13 +110,13 @@ public class ColeccioControlador implements ColeccioDAO {
             }
         }
     }
-    public boolean deleteColeccio(Coleccio delColeccio){
+    public boolean delete(Cdu cdu){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String delete = "Delete from Coleccio where id = ?";
+            String delete = "Delete from Cdu where id = ?";
             ps = conn.connectar().prepareStatement(delete);
-            ps.setInt(1,delColeccio.getId());
+            ps.setInt(1,cdu.getId());
             ps.executeUpdate();
 
             ps.close();
@@ -137,14 +138,15 @@ public class ColeccioControlador implements ColeccioDAO {
             }
         }
     }
-    public boolean updateColeccio(Coleccio uptColeccio){
+    public boolean update(Cdu cdu){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String update = "UPDATE from Biblioteca SET nom = ? where id = ?";
+            String update = "UPDATE from Cdu SET nom = ?, idPare = ? where id = ?";
             ps = conn.connectar().prepareStatement(update);
-            ps.setString(1,uptColeccio.getNom());
-            ps.setInt(2,uptColeccio.getId());
+            ps.setString(1,cdu.getNom());
+            ps.setInt(2,cdu.getIdPare());
+            ps.setInt(3,cdu.getId());
             ps.executeUpdate();
 
             ps.close();
@@ -166,12 +168,12 @@ public class ColeccioControlador implements ColeccioDAO {
             }
         }
     }
-    public int nextIdColeccio(){
+    public int nextId(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         int id = 0;
         try {
-            String sql = "SELECT max(id)+1 FROM Coleccio";
+            String sql = "SELECT max(id)+1 FROM Cdu";
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
             id = rs.getInt(1);

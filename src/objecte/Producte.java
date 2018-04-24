@@ -1,5 +1,6 @@
-package com.company.DAM2.Bibliorevolució.Classes;
+package com.company.DAM2.Bibliorevolució.objecte;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
@@ -14,7 +15,7 @@ public class Producte {
     private SimpleStringProperty caracteristiques;
     private SimpleStringProperty urlPortada;
     private SimpleStringProperty adreçaWeb;
-    private SimpleIntegerProperty estat;
+    private SimpleBooleanProperty estat;
     private SimpleIntegerProperty idTipusProducte;
     private SimpleIntegerProperty idIdioma;
     private SimpleIntegerProperty idEditorial;
@@ -37,7 +38,7 @@ public class Producte {
         this.caracteristiques = new SimpleStringProperty("");
         this.urlPortada = new SimpleStringProperty("");
         this.adreçaWeb = new SimpleStringProperty("");
-        this.estat = new SimpleIntegerProperty(-1);
+        this.estat = new SimpleBooleanProperty(false);
         this.idTipusProducte = new SimpleIntegerProperty(-1);
         this.idIdioma = new SimpleIntegerProperty(-1);
         this.idEditorial = new SimpleIntegerProperty(-1);
@@ -51,7 +52,7 @@ public class Producte {
     //Constructor Total
 
     public Producte(Integer id, String ISBN, String nom, Integer num_pag, String dimensions, String data, String resum,
-                    String caracteristiques, String urlPortada, String adreçaWeb, Integer estat, Integer idTipusProducte,
+                    String caracteristiques, String urlPortada, String adreçaWeb, boolean estat, Integer idTipusProducte,
                     Integer idIdioma, Integer idEditorial, Integer idFormat, Integer idProcedencia, Integer idNivell,
                     Integer idColeccio, Integer idCDU){
         this.id = new SimpleIntegerProperty(id);
@@ -64,7 +65,7 @@ public class Producte {
         this.caracteristiques = new SimpleStringProperty(caracteristiques);
         this.urlPortada = new SimpleStringProperty(urlPortada);
         this.adreçaWeb = new SimpleStringProperty(adreçaWeb);
-        this.estat = new SimpleIntegerProperty(estat);
+        this.estat = new SimpleBooleanProperty(estat);
         this.idTipusProducte = new SimpleIntegerProperty(idTipusProducte);
         this.idIdioma = new SimpleIntegerProperty(idIdioma);
         this.idEditorial = new SimpleIntegerProperty(idEditorial);
@@ -87,7 +88,7 @@ public class Producte {
     public String getCaracteristiques() { return caracteristiques.get(); }
     public String getUrlPortada() { return urlPortada.get(); }
     public String getAdreçaWeb() { return adreçaWeb.get(); }
-    public int getEstat() { return estat.get(); }
+    public boolean getEstat() { return estat.get(); }
     public int getIdTipusProducte() { return idTipusProducte.get(); }
     public int getIdIdioma() { return idIdioma.get(); }
     public int getIdEditorial() { return idEditorial.get(); }
@@ -109,7 +110,7 @@ public class Producte {
     public void setCaracteristiques(String caracteristiques) { this.caracteristiques.set(caracteristiques); }
     public void setUrlPortada(String urlPortada) { this.urlPortada.set(urlPortada); }
     public void setAdreçaWeb(String adreçaWeb) { this.adreçaWeb.set(adreçaWeb); }
-    public void setEstat(int estat) { this.estat.set(estat); }
+    public void setEstat(boolean estat) { this.estat.set(estat); }
     public void setIdTipusProducte(int idTipusProducte) { this.idTipusProducte.set(idTipusProducte); }
     public void setIdIdioma(int idIdioma) { this.idIdioma.set(idIdioma); }
     public void setIdEditorial(int idEditorial) { this.idEditorial.set(idEditorial); }
@@ -131,7 +132,7 @@ public class Producte {
     public SimpleStringProperty caracteristiquesProperty() { return caracteristiques; }
     public SimpleStringProperty urlPortadaProperty() { return urlPortada; }
     public SimpleStringProperty adreçaWebProperty() { return adreçaWeb; }
-    public SimpleIntegerProperty estatProperty() { return estat; }
+    public SimpleBooleanProperty estatProperty() { return estat; }
     public SimpleIntegerProperty idTipusProducteProperty() { return idTipusProducte; }
     public SimpleIntegerProperty idIdiomaProperty() { return idIdioma; }
     public SimpleIntegerProperty idEditorialProperty() { return idEditorial; }

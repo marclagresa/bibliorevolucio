@@ -1,20 +1,18 @@
-package com.company.DAM2.Bibliorevolució.Controladors;
+package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
-import com.company.DAM2.Bibliorevolució.Classes.Producte;
-import com.company.DAM2.Bibliorevolució.Connector.ConnectorBD;
-import com.company.DAM2.Bibliorevolució.DAO.ProducteDAO;
+import com.company.DAM2.Bibliorevolució.objecte.Producte;
+import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectorBD;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ProducteControlador implements ProducteDAO {
+public class ProducteDAO implements IObjectDAO<Producte> {
     ConnectorBD conn = new ConnectorBD();
     ObservableList<Producte> list = FXCollections.observableArrayList();
-    Producte producte;
 
-    public ObservableList selectTotsProductes(){
+    public ObservableList selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Producte selectProducte;
@@ -35,7 +33,7 @@ public class ProducteControlador implements ProducteDAO {
                         rs.getString(8),
                         rs.getString(9),
                         rs.getString(10),
-                        rs.getInt(11),
+                        rs.getBoolean(11),
                         rs.getInt(12),
                         rs.getInt(13),
                         rs.getInt(14),
@@ -87,7 +85,7 @@ public class ProducteControlador implements ProducteDAO {
                         rs.getString(8),
                         rs.getString(9),
                         rs.getString(10),
-                        rs.getInt(11),
+                        rs.getBoolean(11),
                         rs.getInt(12),
                         rs.getInt(13),
                         rs.getInt(14),
@@ -124,9 +122,9 @@ public class ProducteControlador implements ProducteDAO {
         try {
             String sql;
             if(activat) {
-                sql = "Select * from Producte WHERE estat = 1";
+                sql = "Select * from Producte WHERE estat = true";
             } else {
-                sql = "Select * from Producte WHERE estat = 0";
+                sql = "Select * from Producte WHERE estat = false";
             }
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
@@ -143,7 +141,7 @@ public class ProducteControlador implements ProducteDAO {
                         rs.getString(8),
                         rs.getString(9),
                         rs.getString(10),
-                        rs.getInt(11),
+                        rs.getBoolean(11),
                         rs.getInt(12),
                         rs.getInt(13),
                         rs.getInt(14),
@@ -173,14 +171,14 @@ public class ProducteControlador implements ProducteDAO {
             return list;
         }
     }
-    public ObservableList selectProducteEspecific(Producte selProducte){
+    public ObservableList select(Producte producte){
         PreparedStatement ps = null;
         ResultSet rs = null;
         Producte selectProducte;
         try {
             String sql = "Select * from Producte WHERE id = ?";
             ps = conn.connectar().prepareStatement(sql);
-            ps.setInt(1,selProducte.getId());
+            ps.setInt(1,producte.getId());
             rs = ps.executeQuery();
             list.clear();
             producte = new Producte(
@@ -194,7 +192,7 @@ public class ProducteControlador implements ProducteDAO {
                     rs.getString(8),
                     rs.getString(9),
                     rs.getString(10),
-                    rs.getInt(11),
+                    rs.getBoolean(11),
                     rs.getInt(12),
                     rs.getInt(13),
                     rs.getInt(14),
@@ -224,31 +222,31 @@ public class ProducteControlador implements ProducteDAO {
             return list;
         }
     }
-    public boolean insertProducte(Producte insProducte){
+    public boolean insert(Producte producte){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             String insert = "Insert into Producte values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.connectar().prepareStatement(insert);
-            ps.setInt(1,nextIdProducte());
-            ps.setString(2,insProducte.getISBN());
-            ps.setString(3,insProducte.getNom());
-            ps.setInt(4,insProducte.getNum_pag());
-            ps.setString(5,insProducte.getDimensions());
-            ps.setString(6,insProducte.getData());
-            ps.setString(7,insProducte.getResum());
-            ps.setString(8,insProducte.getCaracteristiques());
-            ps.setString(9,insProducte.getUrlPortada());
-            ps.setString(10,insProducte.getAdreçaWeb());
-            ps.setInt(11,insProducte.getIdTipusProducte());
-            ps.setInt(12,insProducte.getEstat());
-            ps.setInt(13,insProducte.getIdIdioma());
-            ps.setInt(14,insProducte.getIdEditorial());
-            ps.setInt(15,insProducte.getIdFormat());
-            ps.setInt(16,insProducte.getIdProcedencia());
-            ps.setInt(17,insProducte.getIdNivell());
-            ps.setInt(18,insProducte.getIdColeccio());
-            ps.setInt(19,insProducte.getIdCDU());
+            ps.setInt(1,nextId());
+            ps.setString(2,producte.getISBN());
+            ps.setString(3,producte.getNom());
+            ps.setInt(4,producte.getNum_pag());
+            ps.setString(5,producte.getDimensions());
+            ps.setString(6,producte.getData());
+            ps.setString(7,producte.getResum());
+            ps.setString(8,producte.getCaracteristiques());
+            ps.setString(9,producte.getUrlPortada());
+            ps.setString(10,producte.getAdreçaWeb());
+            ps.setInt(11,producte.getIdTipusProducte());
+            ps.setBoolean(12,producte.getEstat());
+            ps.setInt(13,producte.getIdIdioma());
+            ps.setInt(14,producte.getIdEditorial());
+            ps.setInt(15,producte.getIdFormat());
+            ps.setInt(16,producte.getIdProcedencia());
+            ps.setInt(17,producte.getIdNivell());
+            ps.setInt(18,producte.getIdColeccio());
+            ps.setInt(19,producte.getIdCDU());
 
             ps.close();
             rs.close();
@@ -269,13 +267,13 @@ public class ProducteControlador implements ProducteDAO {
             }
         }
     }
-    public boolean deleteProducte(Producte delProducte){
+    public boolean delete(Producte producte){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
             String delete = "Delete from Producte where id_producte = ?";
             ps = conn.connectar().prepareStatement(delete);
-            ps.setInt(1,delProducte.getId());
+            ps.setInt(1,producte.getId());
             ps.executeUpdate();
 
             ps.close();
@@ -297,7 +295,7 @@ public class ProducteControlador implements ProducteDAO {
             }
         }
     }
-    public boolean updateProducte(Producte uptProducte){
+    public boolean update(Producte producte){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
@@ -305,24 +303,24 @@ public class ProducteControlador implements ProducteDAO {
                     "caracteristiques = ?, url_portada = ?, adreça_web = ?, id_tipus_producte = ?, idioma_id = ?, editorial_id = ?," +
                     "format_id = ?, procedencia_id = ?, nivell_id = ?, coleccio_id = ?, cdu_id = ? where id_producte = ?";
             ps = conn.connectar().prepareStatement(update);
-            ps.setString(1,uptProducte.getISBN());
-            ps.setString(2,uptProducte.getNom());
-            ps.setInt(3,uptProducte.getNum_pag());
-            ps.setString(4,uptProducte.getDimensions());
-            ps.setString(5,uptProducte.getData());
-            ps.setString(6,uptProducte.getResum());
-            ps.setString(7,uptProducte.getCaracteristiques());
-            ps.setString(8,uptProducte.getUrlPortada());
-            ps.setString(9,uptProducte.getAdreçaWeb());
-            ps.setInt(10,uptProducte.getIdTipusProducte());
-            ps.setInt(11,uptProducte.getIdIdioma());
-            ps.setInt(12,uptProducte.getIdEditorial());
-            ps.setInt(13,uptProducte.getIdFormat());
-            ps.setInt(14,uptProducte.getIdProcedencia());
-            ps.setInt(15,uptProducte.getIdNivell());
-            ps.setInt(16,uptProducte.getIdColeccio());
-            ps.setInt(17,uptProducte.getIdCDU());
-            ps.setInt(18,uptProducte.getId());
+            ps.setString(1,producte.getISBN());
+            ps.setString(2,producte.getNom());
+            ps.setInt(3,producte.getNum_pag());
+            ps.setString(4,producte.getDimensions());
+            ps.setString(5,producte.getData());
+            ps.setString(6,producte.getResum());
+            ps.setString(7,producte.getCaracteristiques());
+            ps.setString(8,producte.getUrlPortada());
+            ps.setString(9,producte.getAdreçaWeb());
+            ps.setInt(10,producte.getIdTipusProducte());
+            ps.setInt(11,producte.getIdIdioma());
+            ps.setInt(12,producte.getIdEditorial());
+            ps.setInt(13,producte.getIdFormat());
+            ps.setInt(14,producte.getIdProcedencia());
+            ps.setInt(15,producte.getIdNivell());
+            ps.setInt(16,producte.getIdColeccio());
+            ps.setInt(17,producte.getIdCDU());
+            ps.setInt(18,producte.getId());
             ps.executeUpdate();
 
             ps.close();
@@ -350,9 +348,9 @@ public class ProducteControlador implements ProducteDAO {
         try {
             String update;
             if(activat) {
-                update = "UPDATE from Producte SET estat = 1 where id = ?";
+                update = "UPDATE from Producte SET estat = true where id = ?";
             } else {
-                update = "UPDATE from Producte SET estat = 0 where id = ?";
+                update = "UPDATE from Producte SET estat = false where id = ?";
             }
             ps = conn.connectar().prepareStatement(update);
             ps.setInt(1,id);
@@ -377,7 +375,7 @@ public class ProducteControlador implements ProducteDAO {
             }
         }
     }
-    public int nextIdProducte(){
+    public int nextId(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         int id = 0;

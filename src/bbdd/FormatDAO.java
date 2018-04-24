@@ -1,35 +1,31 @@
-package com.company.DAM2.Bibliorevolució.Controladors;
+package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
-import com.company.DAM2.Bibliorevolució.Classes.Biblioteca;
-import com.company.DAM2.Bibliorevolució.Classes.Usuari;
-import com.company.DAM2.Bibliorevolució.Connector.ConnectorBD;
-import com.company.DAM2.Bibliorevolució.DAO.BibliotecaDAO;
-import com.company.DAM2.Bibliorevolució.DAO.UsuariDAO;
+import com.company.DAM2.Bibliorevolució.objecte.Format;
+import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectorBD;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class BibliotecaControlador implements BibliotecaDAO {
+public class FormatDAO implements IObjectDAO<Format>{
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Biblioteca> list = FXCollections.observableArrayList();
-    Biblioteca biblioteca;
+    ObservableList<Format> list = FXCollections.observableArrayList();
 
-    public ObservableList selectTotesBiblioteques(){
+    public ObservableList selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Biblioteca selectBiblioteca;
+        Format selectFormat;
         try {
-            String sql = "Select id,nom from Biblioteca";
+            String sql = "Select id,nom from Format";
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
             list.clear();
             while(rs.next()){
-                selectBiblioteca = new Biblioteca();
-                selectBiblioteca.setId(rs.getInt(1));
-                selectBiblioteca.setNom(rs.getString(2));
-                list.add(selectBiblioteca);
+                selectFormat = new Format();
+                selectFormat.setId(rs.getInt(1));
+                selectFormat.setNom(rs.getString(2));
+                list.add(selectFormat);
             }
             ps.close();
             rs.close();
@@ -49,20 +45,20 @@ public class BibliotecaControlador implements BibliotecaDAO {
             return list;
         }
     }
-    public ObservableList selectBibliotecaEspecifica(Biblioteca selBiblioteca){
+    public ObservableList select(Format format){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String sql = "Select * from Biblioteca where nom LIKE ? ";
+            String sql = "Select * from Format where nom LIKE ? ";
             ps = conn.connectar().prepareStatement(sql);
-            ps.setString(1,'%'+selBiblioteca.getNom()+'%');
+            ps.setString(1,'%'+format.getNom()+'%');
             rs = ps.executeQuery();
             list.clear();
             while(rs.next()){
-                biblioteca = new Biblioteca();
-                biblioteca.setId(rs.getInt(1));
-                biblioteca.setNom(rs.getString(2));
-                list.add(biblioteca);
+                format = new Format();
+                format.setId(rs.getInt(1));
+                format.setNom(rs.getString(2));
+                list.add(format);
             }
             ps.close();
             rs.close();
@@ -82,14 +78,14 @@ public class BibliotecaControlador implements BibliotecaDAO {
             return list;
         }
     }
-    public boolean insertBiblioteca(Biblioteca insBiblioteca){
+    public boolean insert(Format format){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String insert = "Insert into Biblioteca values (?,?)";
+            String insert = "Insert into Format values (?,?)";
             ps = conn.connectar().prepareStatement(insert);
-            ps.setInt(1,nextIdBiblioteca());
-            ps.setString(2,insBiblioteca.getNom());
+            ps.setInt(1,nextId());
+            ps.setString(2,format.getNom());
 
             ps.close();
             rs.close();
@@ -110,13 +106,13 @@ public class BibliotecaControlador implements BibliotecaDAO {
             }
         }
     }
-    public boolean deleteBiblioteca(Biblioteca delBiblioteca){
+    public boolean delete(Format format){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String delete = "Delete from Biblioteca where id = ?";
+            String delete = "Delete from Format where id = ?";
             ps = conn.connectar().prepareStatement(delete);
-            ps.setInt(1,delBiblioteca.getId());
+            ps.setInt(1,format.getId());
             ps.executeUpdate();
 
             ps.close();
@@ -138,14 +134,14 @@ public class BibliotecaControlador implements BibliotecaDAO {
             }
         }
     }
-    public boolean updateBiblioteca(Biblioteca uptBiblioteca){
+    public boolean update(Format format){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String update = "UPDATE from Biblioteca SET nom = ? where id = ?";
+            String update = "UPDATE from Format SET nom = ? where id = ?";
             ps = conn.connectar().prepareStatement(update);
-            ps.setString(1,uptBiblioteca.getNom());
-            ps.setInt(2,uptBiblioteca.getId());
+            ps.setString(1,format.getNom());
+            ps.setInt(2,format.getId());
             ps.executeUpdate();
 
             ps.close();
@@ -167,12 +163,12 @@ public class BibliotecaControlador implements BibliotecaDAO {
             }
         }
     }
-    public int nextIdBiblioteca(){
+    public int nextId(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         int id = 0;
         try {
-            String sql = "SELECT max(id)+1 FROM Biblioteca";
+            String sql = "SELECT max(id)+1 FROM Format";
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
             id = rs.getInt(1);

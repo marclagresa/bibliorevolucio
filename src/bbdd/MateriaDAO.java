@@ -1,8 +1,7 @@
-package com.company.DAM2.Bibliorevolució.Controladors;
+package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
-import com.company.DAM2.Bibliorevolució.Classes.Procedencia;
-import com.company.DAM2.Bibliorevolució.Connector.ConnectorBD;
-import com.company.DAM2.Bibliorevolució.DAO.ProcedenciaDAO;
+import com.company.DAM2.Bibliorevolució.objecte.Materia;
+import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectorBD;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
@@ -10,25 +9,24 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ProcedenciaControlador implements ProcedenciaDAO {
+public class MateriaDAO implements IObjectDAO<Materia> {
     ConnectorBD conn = new ConnectorBD();
-    ObservableList<Procedencia> list = FXCollections.observableArrayList();
-    Procedencia procedencia;
+    ObservableList<Materia> list = FXCollections.observableArrayList();
 
-    public ObservableList selectTotesProcedencies(){
+    public ObservableList selectAll(){
         PreparedStatement ps = null;
         ResultSet rs = null;
-        Procedencia selectProcedencia;
+        Materia selectMateria;
         try {
-            String sql = "Select id,nom from Procedencia";
+            String sql = "Select id,nom from Materia";
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
             list.clear();
             while(rs.next()){
-                selectProcedencia = new Procedencia();
-                selectProcedencia.setId(rs.getInt(1));
-                selectProcedencia.setNom(rs.getString(2));
-                list.add(selectProcedencia);
+                selectMateria = new Materia();
+                selectMateria.setId(rs.getInt(1));
+                selectMateria.setNom(rs.getString(2));
+                list.add(selectMateria);
             }
             ps.close();
             rs.close();
@@ -48,20 +46,20 @@ public class ProcedenciaControlador implements ProcedenciaDAO {
             return list;
         }
     }
-    public ObservableList selectProcedenciaEspecifica(Procedencia selProcedencia){
+    public ObservableList select(Materia materia){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String sql = "Select * from Procedencia where nom LIKE ? ";
+            String sql = "Select * from Materia where nom LIKE ? ";
             ps = conn.connectar().prepareStatement(sql);
-            ps.setString(1,'%'+selProcedencia.getNom()+'%');
+            ps.setString(1,'%'+materia.getNom()+'%');
             rs = ps.executeQuery();
             list.clear();
             while(rs.next()){
-                procedencia = new Procedencia();
-                procedencia.setId(rs.getInt(1));
-                procedencia.setNom(rs.getString(2));
-                list.add(procedencia);
+                materia = new Materia();
+                materia.setId(rs.getInt(1));
+                materia.setNom(rs.getString(2));
+                list.add(materia);
             }
             ps.close();
             rs.close();
@@ -81,14 +79,14 @@ public class ProcedenciaControlador implements ProcedenciaDAO {
             return list;
         }
     }
-    public boolean insertProcedencia(Procedencia insProcedencia){
+    public boolean insert(Materia materia){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String insert = "Insert into Procedencia values (?,?)";
+            String insert = "Insert into Materia values (?,?)";
             ps = conn.connectar().prepareStatement(insert);
-            ps.setInt(1,nextIdProcedencia());
-            ps.setString(2,insProcedencia.getNom());
+            ps.setInt(1,nextId());
+            ps.setString(2,materia.getNom());
 
             ps.close();
             rs.close();
@@ -109,13 +107,13 @@ public class ProcedenciaControlador implements ProcedenciaDAO {
             }
         }
     }
-    public boolean deleteProcedencia(Procedencia delProcedencia){
+    public boolean delete(Materia materia){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String delete = "Delete from Procedencia where id = ?";
+            String delete = "Delete from Materia where id = ?";
             ps = conn.connectar().prepareStatement(delete);
-            ps.setInt(1,delProcedencia.getId());
+            ps.setInt(1,materia.getId());
             ps.executeUpdate();
 
             ps.close();
@@ -137,14 +135,14 @@ public class ProcedenciaControlador implements ProcedenciaDAO {
             }
         }
     }
-    public boolean updateProcedencia(Procedencia uptProcedencia){
+    public boolean update(Materia materia){
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            String update = "UPDATE from Procedencia SET nom = ? where id = ?";
+            String update = "UPDATE from Materia SET nom = ? where id = ?";
             ps = conn.connectar().prepareStatement(update);
-            ps.setString(1,uptProcedencia.getNom());
-            ps.setInt(2,uptProcedencia.getId());
+            ps.setString(1,materia.getNom());
+            ps.setInt(2,materia.getId());
             ps.executeUpdate();
 
             ps.close();
@@ -166,12 +164,12 @@ public class ProcedenciaControlador implements ProcedenciaDAO {
             }
         }
     }
-    public int nextIdProcedencia(){
+    public int nextId(){
         PreparedStatement ps = null;
         ResultSet rs = null;
         int id = 0;
         try {
-            String sql = "SELECT max(id)+1 FROM Procedencia";
+            String sql = "SELECT max(id)+1 FROM Materia";
             ps = conn.connectar().prepareStatement(sql);
             rs = ps.executeQuery();
             id = rs.getInt(1);

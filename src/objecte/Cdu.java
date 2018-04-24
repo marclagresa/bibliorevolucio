@@ -1,16 +1,16 @@
-package com.company.DAM2.Bibliorevolució.Classes;
+package com.company.DAM2.Bibliorevolució.objecte;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class CDU {
+public class Cdu {
     private SimpleIntegerProperty id;
     private SimpleIntegerProperty idPare;
     private SimpleStringProperty nom;
 
     //Constructor Buit
 
-    public CDU(){
+    public Cdu(){
         this.id = new SimpleIntegerProperty();
         this.idPare = new SimpleIntegerProperty();
         this.nom = new SimpleStringProperty("");
@@ -18,7 +18,7 @@ public class CDU {
 
     //Constructor Total
 
-    public CDU(Integer id, Integer idPare, String nom){
+    public Cdu(Integer id, Integer idPare, String nom){
         this.id = new SimpleIntegerProperty(id);
         this.idPare = new SimpleIntegerProperty(idPare);
         this.nom = new SimpleStringProperty(nom);

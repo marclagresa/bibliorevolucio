@@ -1,22 +1,22 @@
-package com.company.DAM2.Bibliorevolució.Classes;
+package com.company.DAM2.Bibliorevolució.objecte;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class Biblioteca {
+public class Format {
     private SimpleIntegerProperty id;
     private SimpleStringProperty nom;
 
     //Constructor Buit
 
-    public Biblioteca(){
+    public Format(){
         this.id = new SimpleIntegerProperty();
         this.nom = new SimpleStringProperty("");
     }
 
     //Constructor Total
 
-    public Biblioteca(Integer id, String nom){
+    public Format(Integer id, String nom){
         this.id = new SimpleIntegerProperty(id);
         this.nom = new SimpleStringProperty(nom);
     }

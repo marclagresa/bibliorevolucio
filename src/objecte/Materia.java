@@ -1,22 +1,22 @@
-package com.company.DAM2.Bibliorevolució.Classes;
+package com.company.DAM2.Bibliorevolució.objecte;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class Procedencia {
+public class Materia {
     private SimpleIntegerProperty id;
     private SimpleStringProperty nom;
 
     //Constructor Buit
 
-    public Procedencia(){
+    public Materia(){
         this.id = new SimpleIntegerProperty();
         this.nom = new SimpleStringProperty("");
     }
 
     //Constructor Total
 
-    public Procedencia(Integer id, String nom){
+    public Materia(Integer id, String nom){
         this.id = new SimpleIntegerProperty(id);
         this.nom = new SimpleStringProperty(nom);
     }
