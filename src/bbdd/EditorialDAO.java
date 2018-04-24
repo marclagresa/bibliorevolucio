@@ -6,7 +6,6 @@
 package bbdd;
 
 import objecte.Editorial;
-import contractes.ContractEditorial;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -92,10 +91,10 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
             st=c.createStatement();
             rs=st.executeQuery(q);
             while(rs.next()){
-                nom=rs.getString("nom");
-                pais=rs.getString("pais");
-                adreca=rs.getString("adreca");
-                id=rs.getInt("id");
+                nom=rs.getString(ContractEditorial.NOM);
+                pais=rs.getString(ContractEditorial.PAIS);
+                adreca=rs.getString(ContractEditorial.ADRECA);
+                id=rs.getInt(ContractEditorial.ID);
                 if(nom==null){
                     nom="";
                 }
@@ -151,7 +150,7 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
         }
         return deletejat;
     }
-
+    
     /**
      * Funcio per afegir una nova editorial
      * @param e nova editorial a inserir
@@ -206,12 +205,56 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
     }
     
     /**
+     * Retorna una llista amb totes les editorial que coinicideix amb la rebuda per paràmetre
+     * @param e Editorial que te els valors de busqueda
+     * @return List of Editorial
+     * @throws SQLException si hi ha hagut algún problema al conectarse a la BBDD o al executar la query
+     * @throws ClassNotFoundException Si no s' ha pogut carregar el driver jdbc
+     */
+    @Override 
+    public List<Editorial> select(Editorial e)throws SQLException,ClassNotFoundException{
+        List<Editorial> editorials=new ArrayList<>();
+        Editorial objEditorial;
+        try {
+            c=ConnectionFactory.getConnection();
+            pst=c.prepareStatement("SELECT * FROM " + ContractEditorial.NOM_TAULA 
+                    + "WHERE " + ContractEditorial.NOM + "LIKE '%?%' "
+                    + "AND " + ContractEditorial.PAIS + "LIKE '%?%' "
+                    + "AND " + ContractEditorial.ADRECA + "LIKE '%?%' "
+                );
+            pst.setString(1, e.getNom());
+            pst.setString(2, e.getPais());
+            pst.setString(3, e.getAdreca());
+            rs=pst.executeQuery();
+            while(rs.next()){
+                objEditorial= new Editorial(
+                    rs.getInt(ContractEditorial.ID), 
+                    rs.getString(ContractEditorial.NOM),
+                    rs.getString(ContractEditorial.PAIS),
+                    rs.getString(ContractEditorial.ADRECA)
+                );
+                editorials.add(e);
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally{
+            this.close();
+        }
+        
+        return editorials;
+    }
+    
+    
+    /**
      * Funció per seleccionar un nou id
      * @return return MAX id + 1 from taula editorial.
      * @throws SQLException
      * @throws ClassNotFoundException
      */
-    public int selectNewId()throws SQLException,ClassNotFoundException{
+    @Override
+    public int nextId()throws SQLException,ClassNotFoundException{
         int id=1;
         try {
             c=ConnectionFactory.getConnection();
