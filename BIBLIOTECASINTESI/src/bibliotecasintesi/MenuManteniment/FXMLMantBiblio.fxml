@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox id="contingut1" prefHeight="604.0" prefWidth="1207.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="bibliotecasintesi.MenuManteniment.MantBiblioControlador">
+   <children>
+      <VBox alignment="TOP_CENTER" prefHeight="605.0" prefWidth="580.0">
+         <children>
+            <ImageView fitHeight="264.0" fitWidth="195.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/MantAutor.png" />
+               </image>
+            </ImageView>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="37.0" prefWidth="434.0" text="AUTOR" textAlignment="CENTER" />
+            <ImageView fitHeight="252.0" fitWidth="193.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/MantEditorial.png" />
+               </image>
+            </ImageView>
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="37.0" prefWidth="434.0" text="EDITORIAL" textAlignment="CENTER" />
+         </children>
+      </VBox>
+      <Separator id="separador" opacity="0.8" orientation="VERTICAL" prefHeight="545.0" prefWidth="66.0">
+         <effect>
+            <Blend />
+         </effect>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets left="30.0" right="30.0" />
+         </padding>
+         <HBox.margin>
+            <Insets bottom="10.0" top="10.0" />
+         </HBox.margin>
+      </Separator>
+      <VBox alignment="TOP_CENTER" prefHeight="594.0" prefWidth="567.0">
+         <children>
+            <ImageView fitHeight="236.0" fitWidth="184.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/MantCDU.png" />
+               </image>
+            </ImageView>
+            <Label alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="37.0" prefWidth="458.0" text="CDU" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" />
+            <ImageView fitHeight="278.0" fitWidth="201.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../img/MantObres.png" />
+               </image>
+            </ImageView>
+            <Label alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="37.0" prefWidth="458.0" text="OBRES" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" />
+         </children>
+      </VBox>
+      <VBox prefHeight="594.0" prefWidth="0.0" />
+   </children>
+</HBox>
