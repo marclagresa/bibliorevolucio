@@ -5,7 +5,8 @@
  */
 package bibliotecasintesi;
 
-import bibliotecasintesi.principal2MantenimentBiblio.MantBiblioController;
+import bibliotecasintesi.MenuPrincipal.MenuPrincipalControlador;
+import bibliotecasintesi.MenuManteniment.MantBiblioControlador;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,11 +36,7 @@ public class PantallaPrincipalControlador  implements Initializable {
     public  BorderPane BordPn;
     @FXML
     private Label lbCapcalera;
-    
-    private void handleButtonAction(ActionEvent event) {
-        System.out.println("You clicked me!");
-        label.setText("Hello World!");
-    }
+ 
     public void setFinestraCentre(GenericControlador generic){
         BordPn.setCenter(generic);
         lbCapcalera.setText(generic.getCapcalera());
@@ -55,9 +52,10 @@ public class PantallaPrincipalControlador  implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb)  {         
         try {
-         MenuPrincipalController   menuPrincipal = MenuPrincipalController.Crear();
+         MenuPrincipalControlador   menuPrincipal = MenuPrincipalControlador.Crear();
               setFinestraCentre(menuPrincipal);
-        } catch (IOException ex) {
+        } 
+        catch (IOException ex) {
             Logger.getLogger(PantallaPrincipalControlador.class.getName()).log(Level.SEVERE, null, ex);
         }    
         

@@ -26,7 +26,7 @@ public class BIBLIOTECASINTESI extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {
-        Parent root = FXMLLoader.load(getClass().getResource("PantallaPrincipal.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("FXMLPantallaPrincipal.fxml"));
         
         
         
