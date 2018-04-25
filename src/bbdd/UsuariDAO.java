@@ -1,7 +1,7 @@
 package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
-import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectorBD;
 import com.company.DAM2.Bibliorevolució.objecte.Usuari;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
