@@ -1,9 +1,10 @@
 package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
+import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectionFactory;
+import com.company.DAM2.Bibliorevolució.BBDD.contract.ContractFormat;
 import com.company.DAM2.Bibliorevolució.objecte.Format;
-import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectorBD;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,183 +12,162 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FormatDAO implements IObjectDAO<Format>{
-    ConnectorBD conn = new ConnectorBD();
-    List<Format> list = new ArrayList<>();
+    private Connection conn;
+    private ResultSet rs;
+    private PreparedStatement ps;
 
-    public List<Format> selectAll(){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    public FormatDAO(){
+        conn=null;
+        rs=null;
+        ps=null;
+    }
+
+    @Override
+    public List<Format> selectAll() throws ClassNotFoundException, SQLException{
+        List<Format> list = new ArrayList<>();
+        String sql;
         Format selectFormat;
         try {
-            String sql = "Select id,nom from Format";
-            ps = conn.connectar().prepareStatement(sql);
+            conn = ConnectionFactory.getConnection();
+            sql = "Select "+ContractFormat.ID+","+ContractFormat.NOM+" from "+ContractFormat.NOM_TAULA;
+            ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
-            list.clear();
             while(rs.next()){
                 selectFormat = new Format();
                 selectFormat.setId(rs.getInt(1));
                 selectFormat.setNom(rs.getString(2));
                 list.add(selectFormat);
             }
-            ps.close();
-            rs.close();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
+            this.close();
         }
+        return list;
     }
-    public List<Format> select(Format format){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public List<Format> select(Format format) throws ClassNotFoundException, SQLException{
+        List<Format> list = new ArrayList<>();
+        String sql;
         try {
-            String sql = "Select * from Format where nom LIKE ? ";
-            ps = conn.connectar().prepareStatement(sql);
+            conn = ConnectionFactory.getConnection();
+            sql = "Select "+ContractFormat.ID+","+ContractFormat.NOM+" from "+
+                    ContractFormat.NOM_TAULA+" where "+ContractFormat.NOM+" LIKE ? ";
+            ps = conn.prepareStatement(sql);
             ps.setString(1,'%'+format.getNom()+'%');
             rs = ps.executeQuery();
-            list.clear();
             while(rs.next()){
                 format = new Format();
                 format.setId(rs.getInt(1));
                 format.setNom(rs.getString(2));
                 list.add(format);
             }
-            ps.close();
-            rs.close();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
+            this.close();
         }
+        return list;
     }
-    public boolean insert(Format format){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public boolean insert(Format format) throws ClassNotFoundException, SQLException{
+        String insert;
+        boolean inserit = false;
         try {
-            String insert = "Insert into Format values (?,?)";
-            ps = conn.connectar().prepareStatement(insert);
+            conn = ConnectionFactory.getConnection();
+            insert = "Insert into "+ContractFormat.NOM_TAULA+" values (?,?)";
+            ps = conn.prepareStatement(insert);
             ps.setInt(1,nextId());
             ps.setString(2,format.getNom());
-
-            ps.close();
-            rs.close();
-            return true;
-        } catch (SQLException ex) {
+            inserit = true;
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            this.close();
         }
+        return inserit;
     }
-    public boolean delete(Format format){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public boolean delete(Format format) throws ClassNotFoundException, SQLException{
+        String delete;
+        boolean borrat = false;
         try {
-            String delete = "Delete from Format where id = ?";
-            ps = conn.connectar().prepareStatement(delete);
+            conn = ConnectionFactory.getConnection();
+            delete = "Delete from "+ContractFormat.NOM_TAULA+" where "+ContractFormat.ID+" = ?";
+            ps = conn.prepareStatement(delete);
             ps.setInt(1,format.getId());
             ps.executeUpdate();
-
-            ps.close();
-            rs.close();
-            return true;
-        } catch (SQLException ex) {
+            borrat = true;
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            this.close();
         }
+        return borrat;
     }
-    public boolean update(Format format){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public boolean update(Format format) throws ClassNotFoundException, SQLException{
+        String update;
+        boolean actualitzat = false;
         try {
-            String update = "UPDATE from Format SET nom = ? where id = ?";
-            ps = conn.connectar().prepareStatement(update);
+            conn = ConnectionFactory.getConnection();
+            update = "UPDATE from "+ContractFormat.NOM_TAULA+" SET "+ContractFormat.NOM+" = ? " +
+                    "where "+ContractFormat.ID+" = ?";
+            ps = conn.prepareStatement(update);
             ps.setString(1,format.getNom());
             ps.setInt(2,format.getId());
             ps.executeUpdate();
-
-            ps.close();
-            rs.close();
-            return true;
-        } catch (SQLException ex) {
+            actualitzat = true;
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         } finally {
+            this.close();
+        }
+        return actualitzat;
+    }
+    @Override
+    public int nextId() throws ClassNotFoundException, SQLException{
+        int id = 1;
+        String sql;
+        try {
+            conn = ConnectionFactory.getConnection();
+            sql = "SELECT max("+ ContractFormat.ID+") FROM "+ContractFormat.NOM_TAULA;
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                id = rs.getInt(1)+1;
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        } finally {
+            this.close();
+        }
+        return id;
+    }
+    @Override
+    public void close(){
+        if(this.conn!=null){
             try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                this.conn.close();
+                this.conn=null;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
-    }
-    public int nextId(){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        int id = 0;
-        try {
-            String sql = "SELECT max(id)+1 FROM Format";
-            ps = conn.connectar().prepareStatement(sql);
-            rs = ps.executeQuery();
-            id = rs.getInt(1);
-            return id;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return id;
-        } finally {
+        if(this.ps!=null){
             try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                this.ps.close();
+                this.ps=null;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if(this.rs!=null){
+            try{
+                this.rs.close();
+                this.rs=null;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
     }

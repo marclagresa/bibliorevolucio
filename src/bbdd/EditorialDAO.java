@@ -1,11 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package bbdd;
+package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
-import objecte.Editorial;
+import com.company.DAM2.Bibliorevolució.BBDD.contract.ContractEditorial;
+import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectionFactory;
+import com.company.DAM2.Bibliorevolució.BBDD.contract.ContractEditorial;
+import com.company.DAM2.Bibliorevolució.BBDD.dao.IObjectDAO;
+import com.company.DAM2.Bibliorevolució.objecte.Editorial;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,13 +14,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import base.ConnectionFactory;
-
 /**
- *
  * @author sergiclotas
  */
-public class EditorialDAO implements IObjectDAO<Editorial>{
+
+public class EditorialDAO implements IObjectDAO<Editorial> {
     
     private Connection c;
     private Statement st;
@@ -35,20 +32,13 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
         pst=null;
     }
 
-    /**
-     * Funcio per actualitzar l' informació d' una editorial.
-     * @param e Editorial a actualitzar
-     * @return cert si es pot actualitzar altrament retorna fals.
-     * @throws ClassNotFoundException
-     * @throws SQLException 
-     */
     @Override
-    public boolean update(Editorial e) throws ClassNotFoundException,SQLException{
+    public boolean update(Editorial e) throws SQLException,ClassNotFoundException{
         boolean updated=false;
         String query;
         
         try{
-            c=ConnectionFactory.getConnection();
+            c= ConnectionFactory.getConnection();
             query="UPDATE " + ContractEditorial.NOM_TAULA + " SET "
                 + ContractEditorial.NOM + " = ?, "
                 + ContractEditorial.PAIS + " = ?, "
@@ -133,7 +123,7 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
         boolean deletejat = false;
         String query;
         try {
-            c=ConnectionFactory.getConnection();
+            c= ConnectionFactory.getConnection();
             query=" DELETE FROM " + ContractEditorial.NOM_TAULA 
                 + " WHERE " + ContractEditorial.ID + " = ?";
             pst=c.prepareStatement(query);
@@ -257,9 +247,9 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
     public int nextId()throws SQLException,ClassNotFoundException{
         int id=1;
         try {
-            c=ConnectionFactory.getConnection();
+            c= ConnectionFactory.getConnection();
             st=c.createStatement();
-            rs=st.executeQuery("SELECT MAX("+ContractEditorial.ID +") FROM "+ContractEditorial.NOM_TAULA);
+            rs=st.executeQuery("SELECT MAX("+ContractEditorial.ID+") FROM "+ContractEditorial.NOM_TAULA);
             if(rs.next()){
                 id=rs.getInt(1) + 1;
             }
@@ -277,7 +267,7 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
     /**
      * Métode per tancar les conexions obertes amb la BBDD.
      */
-    private void close(){
+    public void close(){
         
         if(this.c!=null){
             try {
@@ -286,9 +276,7 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
             } catch (SQLException ex) {
                 
             }
-            
         }
-        
         if(this.st!=null){
             try {
                 this.st.close();
@@ -298,7 +286,6 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
             }
             
         }
-        
         if(this.pst!=null){
             try {
                 this.pst.close();
@@ -307,7 +294,6 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
                 
             }
         }
-        
         if(this.rs!=null){
             try{
                 this.rs.close();

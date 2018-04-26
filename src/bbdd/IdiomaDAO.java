@@ -1,10 +1,10 @@
 package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
+import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectionFactory;
+import com.company.DAM2.Bibliorevolució.BBDD.contract.ContractIdioma;
 import com.company.DAM2.Bibliorevolució.objecte.Idioma;
-import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectorBD;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,183 +12,162 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IdiomaDAO implements IObjectDAO<Idioma> {
-    ConnectorBD conn = new ConnectorBD();
-    List<Idioma> list = new ArrayList<>();
+    private Connection conn;
+    private ResultSet rs;
+    private PreparedStatement ps;
 
-    public List<Idioma> selectAll(){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    public IdiomaDAO(){
+        conn=null;
+        rs=null;
+        ps=null;
+    }
+
+    @Override
+    public List<Idioma> selectAll() throws ClassNotFoundException, SQLException{
+        List<Idioma> list = new ArrayList<>();
+        String sql;
         Idioma idioma;
         try {
-            String sql = "Select id,nom from Idioma";
-            ps = conn.connectar().prepareStatement(sql);
+            conn = ConnectionFactory.getConnection();
+            sql = "Select "+ContractIdioma.ID+","+ContractIdioma.NOM+" from "+ContractIdioma.NOM_TAULA;
+            ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
-            list.clear();
             while(rs.next()){
                 idioma = new Idioma();
                 idioma.setId(rs.getInt(1));
                 idioma.setNom(rs.getString(2));
                 list.add(idioma);
             }
-            ps.close();
-            rs.close();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
+            this.close();
         }
+        return list;
     }
-    public List<Idioma> select(Idioma idioma){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public List<Idioma> select(Idioma idioma) throws ClassNotFoundException, SQLException{
+        List<Idioma> list = new ArrayList<>();
+        String sql;
         try {
-            String sql = "Select * from Idioma where nom LIKE ? ";
-            ps = conn.connectar().prepareStatement(sql);
+            conn = ConnectionFactory.getConnection();
+            sql = "Select "+ContractIdioma.ID+","+ContractIdioma.NOM+" from "+ContractIdioma.NOM_TAULA+
+                    " where "+ContractIdioma.NOM+" LIKE ? ";
+            ps = conn.prepareStatement(sql);
             ps.setString(1,'%'+idioma.getNom()+'%');
             rs = ps.executeQuery();
-            list.clear();
             while(rs.next()){
                 idioma = new Idioma();
                 idioma.setId(rs.getInt(1));
                 idioma.setNom(rs.getString(2));
                 list.add(idioma);
             }
-            ps.close();
-            rs.close();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
+            this.close();
         }
+        return list;
     }
-    public boolean insert(Idioma idioma){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public boolean insert(Idioma idioma) throws ClassNotFoundException, SQLException{
+        String insert;
+        boolean inserit = false;
         try {
-            String insert = "Insert into Idioma values (?,?)";
-            ps = conn.connectar().prepareStatement(insert);
+            conn = ConnectionFactory.getConnection();
+            insert = "Insert into "+ContractIdioma.NOM_TAULA+" values (?,?)";
+            ps = conn.prepareStatement(insert);
             ps.setInt(1,nextId());
             ps.setString(2,idioma.getNom());
-
-            ps.close();
-            rs.close();
-            return true;
-        } catch (SQLException ex) {
+            inserit = true;
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            this.close();
         }
+        return inserit;
     }
-    public boolean delete(Idioma idioma){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public boolean delete(Idioma idioma) throws ClassNotFoundException, SQLException{
+        String delete;
+        boolean borrat = false;
         try {
-            String delete = "Delete from Idioma where id = ?";
-            ps = conn.connectar().prepareStatement(delete);
+            conn = ConnectionFactory.getConnection();
+            delete = "Delete from "+ContractIdioma.NOM_TAULA+" where "+ContractIdioma.ID+" = ?";
+            ps = conn.prepareStatement(delete);
             ps.setInt(1,idioma.getId());
             ps.executeUpdate();
-
-            ps.close();
-            rs.close();
-            return true;
-        } catch (SQLException ex) {
+            borrat = true;
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            this.close();
         }
+        return borrat;
     }
-    public boolean update(Idioma idioma){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public boolean update(Idioma idioma) throws ClassNotFoundException, SQLException{
+        String update;
+        boolean actualitzat = false;
         try {
-            String update = "UPDATE from Idioma SET nom = ? where id = ?";
-            ps = conn.connectar().prepareStatement(update);
+            conn = ConnectionFactory.getConnection();
+            update = "UPDATE from "+ContractIdioma.NOM_TAULA+" SET "+
+                    ContractIdioma.NOM+" = ? where "+ContractIdioma.ID+" = ?";
+            ps = conn.prepareStatement(update);
             ps.setString(1,idioma.getNom());
             ps.setInt(2,idioma.getId());
             ps.executeUpdate();
-
-            ps.close();
-            rs.close();
-            return true;
-        } catch (SQLException ex) {
+            actualitzat = true;
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         } finally {
+            this.close();
+        }
+        return actualitzat;
+    }
+    @Override
+    public int nextId() throws ClassNotFoundException, SQLException{
+        int id = 1;
+        String sql;
+        try {
+            conn = ConnectionFactory.getConnection();
+            sql = "SELECT max("+ContractIdioma.ID+") FROM "+ContractIdioma.NOM_TAULA;
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                id = rs.getInt(1)+1;
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        } finally {
+            this.close();
+        }
+        return id;
+    }
+    @Override
+    public void close(){
+        if(this.conn!=null){
             try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                this.conn.close();
+                this.conn=null;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
-    }
-    public int nextId(){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        int id = 0;
-        try {
-            String sql = "SELECT max(id)+1 FROM Idioma";
-            ps = conn.connectar().prepareStatement(sql);
-            rs = ps.executeQuery();
-            id = rs.getInt(1);
-            return id;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return id;
-        } finally {
+        if(this.ps!=null){
             try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                this.ps.close();
+                this.ps=null;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if(this.rs!=null){
+            try{
+                this.rs.close();
+                this.rs=null;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
     }

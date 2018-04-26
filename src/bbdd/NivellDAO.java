@@ -1,10 +1,10 @@
 package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
+import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectionFactory;
+import com.company.DAM2.Bibliorevolució.BBDD.contract.ContractNivell;
 import com.company.DAM2.Bibliorevolució.objecte.Nivell;
-import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectorBD;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,183 +12,163 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NivellDAO implements IObjectDAO<Nivell> {
-    ConnectorBD conn = new ConnectorBD();
-    List<Nivell> list = new ArrayList<>();
+    private Connection conn;
+    private ResultSet rs;
+    private PreparedStatement ps;
 
-    public List<Nivell> selectAll(){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    public NivellDAO(){
+        conn=null;
+        rs=null;
+        ps=null;
+    }
+
+    @Override
+    public List<Nivell> selectAll() throws ClassNotFoundException, SQLException{
+        List<Nivell> list = new ArrayList<>();
+        String sql;
         Nivell selectNivell;
         try {
-            String sql = "Select id,nom from Nivell";
-            ps = conn.connectar().prepareStatement(sql);
+            conn = ConnectionFactory.getConnection();
+            sql = "Select "+ContractNivell.ID+","+ContractNivell.NOM+" from "+ContractNivell.NOM_TAULA;
+            ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
-            list.clear();
             while(rs.next()){
                 selectNivell = new Nivell();
                 selectNivell.setId(rs.getInt(1));
                 selectNivell.setNom(rs.getString(2));
                 list.add(selectNivell);
             }
-            ps.close();
-            rs.close();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
+            this.close();
         }
+        return list;
     }
-    public List<Nivell> select(Nivell nivell){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public List<Nivell> select(Nivell nivell) throws ClassNotFoundException, SQLException{
+        List<Nivell> list = new ArrayList<>();
+        String sql;
         try {
-            String sql = "Select * from Nivell where nom LIKE ? ";
-            ps = conn.connectar().prepareStatement(sql);
+            conn = ConnectionFactory.getConnection();
+            sql = "Select "+ContractNivell.ID+","+ContractNivell.NOM+" from "+ContractNivell.NOM_TAULA+
+                    " where "+ContractNivell.NOM+" LIKE ? ";
+            ps = conn.prepareStatement(sql);
             ps.setString(1,'%'+nivell.getNom()+'%');
             rs = ps.executeQuery();
-            list.clear();
             while(rs.next()){
                 nivell = new Nivell();
                 nivell.setId(rs.getInt(1));
                 nivell.setNom(rs.getString(2));
                 list.add(nivell);
             }
-            ps.close();
-            rs.close();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
+            this.close();
         }
+        return list;
     }
-    public boolean insert(Nivell nivell){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public boolean insert(Nivell nivell) throws ClassNotFoundException, SQLException{
+        String insert;
+        boolean inserit = false;
         try {
-            String insert = "Insert into Nivell values (?,?)";
-            ps = conn.connectar().prepareStatement(insert);
+            conn = ConnectionFactory.getConnection();
+            insert = "Insert into "+ContractNivell.NOM_TAULA+" values (?,?)";
+            ps = conn.prepareStatement(insert);
             ps.setInt(1,nextId());
             ps.setString(2,nivell.getNom());
 
-            ps.close();
-            rs.close();
-            return true;
-        } catch (SQLException ex) {
+            inserit = true;
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            this.close();
         }
+        return inserit;
     }
-    public boolean delete(Nivell nivell){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public boolean delete(Nivell nivell) throws ClassNotFoundException, SQLException{
+        String delete;
+        boolean borrat = false;
         try {
-            String delete = "Delete from Nivell where id = ?";
-            ps = conn.connectar().prepareStatement(delete);
+            conn = ConnectionFactory.getConnection();
+            delete = "Delete from "+ContractNivell.NOM_TAULA+" where "+ContractNivell.ID+" = ?";
+            ps = conn.prepareStatement(delete);
             ps.setInt(1,nivell.getId());
             ps.executeUpdate();
-
-            ps.close();
-            rs.close();
-            return true;
-        } catch (SQLException ex) {
+            borrat = true;
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            this.close();
         }
+        return borrat;
     }
-    public boolean update(Nivell nivell){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public boolean update(Nivell nivell) throws ClassNotFoundException, SQLException{
+        String update;
+        boolean actualitzat = false;
         try {
-            String update = "UPDATE from Nivell SET nom = ? where id = ?";
-            ps = conn.connectar().prepareStatement(update);
+            conn = ConnectionFactory.getConnection();
+            update = "UPDATE from "+ContractNivell.NOM_TAULA+" SET "+
+                    ContractNivell.NOM+" = ? where "+ContractNivell.ID+" = ?";
+            ps = conn.prepareStatement(update);
             ps.setString(1,nivell.getNom());
             ps.setInt(2,nivell.getId());
             ps.executeUpdate();
-
-            ps.close();
-            rs.close();
-            return true;
-        } catch (SQLException ex) {
+            actualitzat = true;
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         } finally {
+            this.close();
+        }
+        return actualitzat;
+    }
+    @Override
+    public int nextId() throws ClassNotFoundException, SQLException{
+        int id = 1;
+        String sql;
+        try {
+            conn = ConnectionFactory.getConnection();
+            sql = "SELECT max("+ContractNivell.ID+") FROM "+ContractNivell.NOM_TAULA;
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                id = rs.getInt(1)+1;
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        } finally {
+            this.close();
+        }
+        return id;
+    }
+    @Override
+    public void close(){
+        if(this.conn!=null){
             try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                this.conn.close();
+                this.conn=null;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
-    }
-    public int nextId(){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        int id = 0;
-        try {
-            String sql = "SELECT max(id)+1 FROM Nivell";
-            ps = conn.connectar().prepareStatement(sql);
-            rs = ps.executeQuery();
-            id = rs.getInt(1);
-            return id;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return id;
-        } finally {
+        if(this.ps!=null){
             try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                this.ps.close();
+                this.ps=null;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if(this.rs!=null){
+            try{
+                this.rs.close();
+                this.rs=null;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
     }
