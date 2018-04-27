@@ -1,3 +1,8 @@
 ####################################### 27-04-2018 #######################################
 
-Albert Corominas: He creat i retocat les classes basiques del projecte, els DAOs, els contractes i també he retocat la BBDD.
+- Albert Corominas: He creat i retocat les classes basiques del projecte, els DAOs, els contractes i també he retocat la BBDD.
+
+
+- Sergi Clotas: S' ha creat ConnectionFactory.java, Usuari.java,UsuariDAO.java,IOBjectDAO.java,FXMLLogin.fxml,FXMLLoginController.java, s' ha modificat base dades taules usuari canvi camps telefon_fixe i telefon_mobil de int (9) a varchar(30), s'han creat 2 usuaris mysql un per bibliotecari anomenat adminbiblio amb permisos de tot a només la base de dades de de bibliorevolucio del ordinador del profe aquest usuari es pot conectar tan remotament com localment, el mateix per un usuari lector pero només amb permisos de select a tota la base de dades bibliorevolucio + permisos update a la taula bibliorevolucio.usuari per poder actualitzar perfil.Falta per codi logic Login i debugar-lo en data 27/04/2018.
+
+ 
