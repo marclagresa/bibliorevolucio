@@ -1,2 +1,3 @@
 ####################################### 27-04-2018 #######################################
 
+Albert Corominas: He creat i retocat les classes basiques del projecte, els DAOs, els contractes i també he retocat la BBDD.
