@@ -52,8 +52,8 @@ public class PantallaPrincipalControlador  implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb)  {         
        try {
-         MenuPrincipalControlador   menuPrincipal = MenuPrincipalControlador.Crear();
-              setFinestraCentre(menuPrincipal);
+         FXMLLoginController   login = FXMLLoginController.Crear();
+              setFinestraCentre(login);
         } 
         catch (IOException ex) {
             Logger.getLogger(PantallaPrincipalControlador.class.getName()).log(Level.SEVERE, null, ex);

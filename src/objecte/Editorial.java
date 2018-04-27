@@ -5,6 +5,8 @@
  */
 package objecte;
 
+import bbdd.ContractEditorial;
+import java.util.HashMap;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -49,6 +51,26 @@ public class Editorial {
         this.pais = new SimpleStringProperty(pais);
         this.adreca=new SimpleStringProperty(adreca);
     
+    }
+    public Editorial mountEditorial(HashMap <String,Object> dades){
+        Editorial e=new Editorial();
+        dades.forEach((k, v) -> {
+            switch (k){
+                case ContractEditorial.ID:
+                    e.setId((Integer)v);
+                    break;
+                case ContractEditorial.NOM:
+                    e.setNom((String)v);
+                    break;
+                case ContractEditorial.ADRECA:
+                    e.setAdreca((String)v);
+                    break;
+                case ContractEditorial.PAIS:
+                    e.setPais((String)v);
+                    break;
+            }
+        });
+        return e;
     }
     //<editor-fold desc="Getters">
     /**

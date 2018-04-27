@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLLoginController">
+   <children>
+      <GridPane alignment="CENTER" hgap="10.0" prefHeight="178.0" prefWidth="478.0" vgap="10.0">
+         <children>
+            <Label alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="183.0" text="Email:" textAlignment="RIGHT" />
+            <Label alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="164.0" text="Contrasenya:" GridPane.rowIndex="1" />
+            <TextField fx:id="txfEmail" GridPane.columnIndex="1" />
+            <PasswordField fx:id="pwfContrasenya" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <HBox prefHeight="52.0" prefWidth="260.0" spacing="80.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+               <children>
+                  <Button fx:id="btnEntrar" mnemonicParsing="false" onAction="#entrar" prefHeight="44.0" prefWidth="120.0" text="ENTRAR" />
+                  <Button fx:id="btnSortir" mnemonicParsing="false" prefHeight="46.0" prefWidth="120.0" text="SORTIR" />
+               </children>
+               <padding>
+                  <Insets left="100.0" />
+               </padding>
+            </HBox>
+         </children>
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="115.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="305.0" minWidth="10.0" prefWidth="301.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+      </GridPane>
+   </children>
+   <opaqueInsets>
+      <Insets />
+   </opaqueInsets>
+   <padding>
+      <Insets top="100.0" />
+   </padding>
+</VBox>

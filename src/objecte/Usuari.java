@@ -1,98 +1,245 @@
-package com.company.DAM2.Bibliorevolució.objecte;
+package objecte;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class Usuari {
+    //<editor-fold desc="Atributs">
     private SimpleIntegerProperty id;
     private SimpleStringProperty nom;
-    private SimpleStringProperty pcognom;
-    private SimpleStringProperty scognom;
-    private SimpleIntegerProperty telefon_mobil;
-    private SimpleIntegerProperty telefon_fixe;
+    private SimpleStringProperty pCognom;
+    private SimpleStringProperty sCognom;
+    private SimpleStringProperty telefonMobil;
+    private SimpleStringProperty telefonFixe;
     private SimpleStringProperty email;
     private String contrasenya;
-    private SimpleBooleanProperty estat;
+    private SimpleBooleanProperty actiu;
     private String salt;
-    private SimpleBooleanProperty esAdmin;
+    private SimpleBooleanProperty admin;
     private SimpleStringProperty nivell;
-
-    //Constructor Buit
+    //</editor-fold>
+    //<editor-fold desc="Contructors">
+    /**
+     * Constructor per defecte
+     */
 
     public Usuari(){
+        this.id= new SimpleIntegerProperty(-1);
         this.nom = new SimpleStringProperty("");
-        this.pcognom = new SimpleStringProperty("");
-        this.scognom = new SimpleStringProperty("");
-        this.telefon_mobil = new SimpleIntegerProperty(-1);
-        this.telefon_fixe = new SimpleIntegerProperty(-1);
+        this.pCognom = new SimpleStringProperty("");
+        this.sCognom = new SimpleStringProperty("");
+        this.telefonMobil = new SimpleStringProperty("");
+        this.telefonFixe = new SimpleStringProperty("");
         this.email = new SimpleStringProperty("");
         this.contrasenya = "";
-        this.estat = new SimpleBooleanProperty(false);
+        this.actiu = new SimpleBooleanProperty(true);
         this.salt = "";
-        this.esAdmin = new SimpleBooleanProperty(false);
+        this.admin = new SimpleBooleanProperty(false);
         this.nivell = new SimpleStringProperty("");
     }
 
-    //Constructor Total
+    /**
+     * Contructor amb els atributs
+     * @param nom
+     * @param pcognom
+     * @param scognom
+     * @param telefon_mobil
+     * @param telefon_fixe
+     * @param email
+     * @param contrasenya
+     * @param estat
+     * @param salt
+     * @param esAdmin
+     * @param nivell 
+     */
 
-    public Usuari(String nom, String pcognom, String scognom,Integer telefon_mobil, Integer telefon_fixe,
-                  String email,  String contrasenya, Boolean estat, String salt, Boolean esAdmin,
-                  String nivell){
+    public Usuari(String nom, String pcognom, String scognom,
+        String telefon_mobil, String telefon_fixe,String email,  
+        String contrasenya, Boolean estat, String salt, Boolean esAdmin,
+        String nivell){
         this.nom = new SimpleStringProperty(nom);
-        this.pcognom = new SimpleStringProperty(pcognom);
-        this.scognom = new SimpleStringProperty(scognom);
-        this.telefon_mobil = new SimpleIntegerProperty(telefon_mobil);
-        this.telefon_fixe = new SimpleIntegerProperty(telefon_fixe);
+        this.pCognom = new SimpleStringProperty(pcognom);
+        this.sCognom = new SimpleStringProperty(scognom);
+        this.telefonMobil = new SimpleStringProperty(telefon_mobil);
+        this.telefonFixe = new SimpleStringProperty(telefon_fixe);
         this.email = new SimpleStringProperty(email);
         this.contrasenya = contrasenya;
-        this.estat = new SimpleBooleanProperty(estat);
+        this.actiu = new SimpleBooleanProperty(estat);
         this.salt = salt;
-        this.esAdmin = new SimpleBooleanProperty(esAdmin);
+        this.admin = new SimpleBooleanProperty(esAdmin);
         this.nivell = new SimpleStringProperty(nivell);
     }
-
-    //Getters
-
+    //</editor-fold>
+    //<editor-fold desc="Getters Attributs">
+    
+    /**
+     * Getter id
+     * @return id
+     */
     public int getId() { return id.get(); }
+    
+    /**
+     * Getter nom
+     * @return nom
+     */
     public String getNom() { return nom.get(); }
-    public String getPcognom() { return pcognom.get(); }
-    public String getScognom() { return scognom.get(); }
-    public int getTelefon_mobil() { return telefon_mobil.get(); }
-    public int getTelefon_fixe() { return telefon_fixe.get(); }
+    
+    /**
+     * Getter pCognom
+     * @return pCognom
+     */
+    public String getPcognom() { return pCognom.get(); }
+    
+    /**
+     * Getter sCognom
+     * @return sCognom
+     */
+    public String getScognom() { return sCognom.get(); }
+    
+    /**
+     * Getter telefonMobil
+     * @return telefonMobil
+     */
+    public String getTelefonMobil() { return telefonMobil.get(); }
+    
+    /**
+     * Getter telefonFixe
+     * @return telefonFixe
+     */
+    public String getTelefonFixe() { return telefonFixe.get(); }
+    
+    /**
+     * Getter email
+     * @return email
+     */
     public String getEmail() { return email.get(); }
+    
+    /**
+     * Getter contrasenya
+     * @return contrasenya
+     */
     public String getContrasenya() { return this.contrasenya; }
-    public boolean getEstat() { return estat.get(); }
+    
+    /**
+     * Getter actiu 
+     * @return actiu
+     */
+    public boolean isActiu() { return actiu.get(); }
+    
+    /**
+     * Getter salt
+     * @return salt
+     */
     public String getSalt() { return this.salt; }
-    public boolean getEsAdmin() { return esAdmin.get(); }
+    
+    /**
+     * Getter admin
+     * @return admin
+     */
+    public boolean isAdmin() { return admin.get(); }
+    
+    /**
+     * Getter nivell
+     * @return nivell
+     */
     public String getNivell() { return nivell.get(); }
-
-    //Setters
-
+    //</editor-fold>
+    //<editor-fold desc="Setters Attributs">
+    
+    /**
+     * Setter id
+     * @param id  
+     */
     public void setId(int id) { this.id.set(id); }
+    
+    /**
+     * Setter nom
+     * @param nom 
+     */
     public void setNom(String nom) { this.nom.set(nom); }
-    public void setPcognom(String pcognom) { this.pcognom.set(pcognom); }
-    public void setScognom(String scognom) { this.scognom.set(scognom); }
-    public void setTelefon_mobil(int telefon_mobil) { this.telefon_mobil.set(telefon_mobil); }
-    public void setTelefon_fixe(int telefon_fixe) { this.telefon_fixe.set(telefon_fixe); }
+    
+    /**
+     * Setter pCognom
+     * @param pCognom 
+     */
+    public void setPcognom(String pCognom) { this.pCognom.set(pCognom); }
+    
+    /**
+     * Setter sCognom
+     * @param sCognom 
+     */
+    public void setScognom(String sCognom) { this.sCognom.set(sCognom); }
+    
+    /**
+     * Setter telefonMobil
+     * @param telefonMobil 
+     */
+    public void setTelefonMobil(String telefonMobil) { this.telefonMobil.set(telefonMobil); }
+    
+    /**
+     * Setter telefonFixe
+     * @param telefonFixe 
+     */
+    public void setTelefonFixe(String telefonFixe) { this.telefonFixe.set(telefonFixe); }
+    
+    /**
+     * Setter email
+     * @param email 
+     */
     public void setEmail(String email) { this.email.set(email); }
+    
+    /**
+     * Setter contrasenya
+     * @param contrasenya 
+     */
     public void setContrasenya(String contrasenya) { this.contrasenya=contrasenya; }
-    public void setEstat(boolean estat) { this.estat.set(estat); }
+    
+    /**
+     * Setter actiu
+     * @param actiu 
+     */
+    public void setActiu(boolean actiu) { this.actiu.set(actiu); }
+    
+    /**
+     * Setter salt
+     * @param salt 
+     */
     public void setSalt(String salt) { this.salt=salt; }
-    public void setEsAdmin(boolean esAdmin) { this.esAdmin.set(esAdmin); }
+    
+    /**
+     * Setter admin
+     * @param isAdmin 
+     */
+    public void setAdmin(boolean isAdmin) { this.admin.set(isAdmin); }
+    
+    /**
+     * Setter nivell
+     * @param nivell 
+     */
     public void setNivell(String nivell) { this.nivell.set(nivell); }
+    //</editor-fold>
+    //<editor-fold desc="Getters Properties">
 
-    //Properties
-
-    public SimpleIntegerProperty idProperty() { return id; }
-    public SimpleStringProperty nomProperty() { return nom; }
-    public SimpleStringProperty pcognomProperty() { return pcognom; }
-    public SimpleStringProperty scognomProperty() { return scognom; }
-    public SimpleIntegerProperty telefon_mobilProperty() { return telefon_mobil; }
-    public SimpleIntegerProperty telefon_fixeProperty() { return telefon_fixe; }
-    public SimpleStringProperty emailProperty() { return email; }
-    public SimpleBooleanProperty estatProperty() { return estat; }
-    public SimpleBooleanProperty esAdminProperty() { return esAdmin; }
+    public SimpleIntegerProperty getIdProperty() { return id; }
+    public SimpleStringProperty getNomProperty() { return nom; }
+    public SimpleStringProperty getPCognomProperty() { return pCognom; }
+    public SimpleStringProperty getSCognomProperty() { return sCognom; }
+    public SimpleStringProperty getTelefonMobilProperty() { return telefonMobil; }
+    public SimpleStringProperty getTelefonFixeProperty() { return telefonFixe; }
+    public SimpleStringProperty getEmailProperty() { return email; }
+    public SimpleBooleanProperty isActiuProperty() { return actiu; }
+    public SimpleBooleanProperty IsAdminProperty() { return admin; }
     public SimpleStringProperty nivellProperty() { return nivell; }
-
+    
+    //</editor-fold>
+    
+    /**
+     * 
+     * @return Nom PrimerCognom SegonCognom del usuari
+     */
+    @Override 
+    public String toString(){
+        return this.getNom()+" "+this.getPcognom()+" "+this.getScognom();
+    }
 }
