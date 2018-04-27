@@ -73,12 +73,15 @@ public class MateriaDAO implements IObjectDAO<Materia> {
     public boolean insert(Materia materia) throws ClassNotFoundException, SQLException{
         String insert;
         boolean inserit = false;
+        int id;
         try {
+            id = nextId();
             conn = ConnectionFactory.getConnection();
             insert = "Insert into "+ContractMateria.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,nextId());
+            ps.setInt(1,id);
             ps.setString(2,materia.getNom());
+            ps.executeUpdate();
             inserit = true;
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -139,8 +142,6 @@ public class MateriaDAO implements IObjectDAO<Materia> {
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-        } finally {
-            this.close();
         }
         return id;
     }

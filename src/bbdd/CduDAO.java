@@ -80,18 +80,18 @@ public class CduDAO implements IObjectDAO<Cdu> {
     public boolean insert(Cdu cdu) throws ClassNotFoundException, SQLException{
         String insert;
         boolean inserit = false;
+        int id;
         try {
+            id = nextId();
             insert = "Insert into "+ContractCdu.NOM_TAULA+" values (?,?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,nextId());
+            ps.setInt(1,id);
             ps.setString(2,cdu.getNom());
             ps.setInt(3,cdu.getIdPare());
-
+            ps.executeUpdate();
             inserit = true;
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-        } finally {
-            this.close();
         }
         return inserit;
     }
@@ -148,8 +148,6 @@ public class CduDAO implements IObjectDAO<Cdu> {
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-        } finally {
-            this.close();
         }
         return id;
     }

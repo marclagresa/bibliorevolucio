@@ -73,13 +73,15 @@ public class NivellDAO implements IObjectDAO<Nivell> {
     public boolean insert(Nivell nivell) throws ClassNotFoundException, SQLException{
         String insert;
         boolean inserit = false;
+        int id;
         try {
+            id = nextId();
             conn = ConnectionFactory.getConnection();
             insert = "Insert into "+ContractNivell.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,nextId());
+            ps.setInt(1,id);
             ps.setString(2,nivell.getNom());
-
+            ps.executeUpdate();
             inserit = true;
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -140,8 +142,6 @@ public class NivellDAO implements IObjectDAO<Nivell> {
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-        } finally {
-            this.close();
         }
         return id;
     }

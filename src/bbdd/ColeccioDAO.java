@@ -73,17 +73,18 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
     public boolean insert(Coleccio coleccio) throws ClassNotFoundException, SQLException{
         String insert;
         boolean inserit = false;
+        int id;
         try {
+            id = nextId();
             conn = ConnectionFactory.getConnection();
             insert = "Insert into "+ContractColeccio.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,nextId());
+            ps.setInt(1,id);
             ps.setString(2,coleccio.getNom());
+            ps.executeUpdate();
             inserit = true;
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-        } finally {
-            this.close();
         }
         return inserit;
     }
@@ -139,8 +140,6 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-        } finally {
-            this.close();
         }
         return id;
     }

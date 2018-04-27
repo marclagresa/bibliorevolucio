@@ -74,12 +74,15 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
     public boolean insert(Biblioteca biblioteca) throws ClassNotFoundException, SQLException{
         String insert;
         boolean inserit = false;
+        int id;
         try {
             conn = ConnectionFactory.getConnection();
+            id = nextId();
             insert = "Insert into "+ContractBiblioteca.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,nextId());
+            ps.setInt(1,id);
             ps.setString(2,biblioteca.getNom());
+            ps.executeUpdate();
             inserit=true;
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -140,8 +143,6 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-        } finally {
-            this.close();
         }
         return id;
     }

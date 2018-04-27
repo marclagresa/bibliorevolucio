@@ -75,12 +75,15 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
     public boolean insert(Procedencia procedencia) throws ClassNotFoundException, SQLException{
         String insert;
         boolean inserit = false;
+        int id;
         try {
+            id = nextId();
             conn = ConnectionFactory.getConnection();
             insert = "Insert into "+ContractProcedencia.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,nextId());
+            ps.setInt(1,id);
             ps.setString(2,procedencia.getNom());
+            ps.executeUpdate();
             inserit = true;
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -141,8 +144,6 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-        } finally {
-            this.close();
         }
         return id;
     }

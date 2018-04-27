@@ -73,12 +73,15 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
     public boolean insert(Idioma idioma) throws ClassNotFoundException, SQLException{
         String insert;
         boolean inserit = false;
+        int id;
         try {
+            id = nextId();
             conn = ConnectionFactory.getConnection();
             insert = "Insert into "+ContractIdioma.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,nextId());
+            ps.setInt(1,id);
             ps.setString(2,idioma.getNom());
+            ps.executeUpdate();
             inserit = true;
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -139,8 +142,6 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-        } finally {
-            this.close();
         }
         return id;
     }

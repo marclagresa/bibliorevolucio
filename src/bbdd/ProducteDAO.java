@@ -119,12 +119,14 @@ public class ProducteDAO implements IObjectDAO<Producte> {
     public boolean insert(Producte producte) throws ClassNotFoundException, SQLException{
         String insert;
         boolean inserit = false;
+        int id;
         try {
             conn = ConnectionFactory.getConnection();
+            id = nextId();
             insert = "Insert into "+ContractProducte.NOM_TAULA+
-                    " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,nextId());
+            ps.setInt(1,id);
             ps.setString(2,producte.getISBN());
             ps.setString(3,producte.getNom());
             ps.setInt(4,producte.getNum_pag());
@@ -135,13 +137,14 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setString(9,producte.getUrlPortada());
             ps.setString(10,producte.getAdreçaWeb());
             ps.setBoolean(11,producte.getEstat());
-            ps.setObject(12,producte.getIdioma());
-            ps.setObject(13,producte.getEditorial());
-            ps.setObject(14,producte.getFormat());
-            ps.setObject(15,producte.getProcedencia());
-            ps.setObject(16,producte.getNivell());
-            ps.setObject(17,producte.getColeccio());
-            ps.setObject(18,producte.getCDU());
+            ps.setInt(12,producte.getIdioma().getId());
+            ps.setInt(13,producte.getEditorial().getId());
+            ps.setInt(14,producte.getFormat().getId());
+            ps.setInt(15,producte.getProcedencia().getId());
+            ps.setInt(16,producte.getNivell().getId());
+            ps.setInt(17,producte.getColeccio().getId());
+            ps.setInt(18,producte.getCDU().getId());
+            ps.executeUpdate();
             inserit = true;
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -222,8 +225,6 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-        } finally {
-            this.close();
         }
         return id;
     }

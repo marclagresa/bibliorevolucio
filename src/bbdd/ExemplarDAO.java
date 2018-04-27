@@ -1,203 +1,187 @@
 package com.company.DAM2.Bibliorevolució.BBDD.dao;
 
+import com.company.DAM2.Bibliorevolució.BBDD.connector.ConnectionFactory;
+import com.company.DAM2.Bibliorevolució.BBDD.contract.ContractExemplar;
 import com.company.DAM2.Bibliorevolució.objecte.Biblioteca;
 import com.company.DAM2.Bibliorevolució.objecte.Exemplar;
 import com.company.DAM2.Bibliorevolució.objecte.Producte;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ExemplarDAO implements IObjectDAO<Exemplar> {
-    ConnectorBD conn = new ConnectorBD();
-    List<Exemplar> list = new ArrayList<>();
+    private Connection conn;
+    private ResultSet rs;
+    private PreparedStatement ps;
 
-    public List<Exemplar> selectAll(){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    public ExemplarDAO() {
+        conn=null;
+        rs=null;
+        ps=null;
+    }
+
+    @Override
+    public List<Exemplar> selectAll() throws ClassNotFoundException, SQLException{
+        List<Exemplar> list = new ArrayList<>();
+        String sql;
         Exemplar selectExemplar;
         try {
-            String sql = "Select * from Exemplar";
-            ps = conn.connectar().prepareStatement(sql);
+            conn = ConnectionFactory.getConnection();
+            sql = "Select "+ContractExemplar.ID+","+ContractExemplar.ID_PRODUCTE+","+ContractExemplar.ID_BIBLIOTECA+","+
+                    ContractExemplar.NUMERO_PRESTEC+","+ContractExemplar.ESTAT+" from "+ContractExemplar.NOM_TAULA;
+            ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
-            list.clear();
             while(rs.next()){
                 selectExemplar = new Exemplar();
                 selectExemplar.setId(rs.getInt(1));
-                selectExemplar.setEstat(rs.getBoolean(2));
-                selectExemplar.setNumprestecs(rs.getInt(3));
-                selectExemplar.setIdProducte((Producte) rs.getObject(4));
-                selectExemplar.setIdBiblioteca((Biblioteca) rs.getObject(5));
+                selectExemplar.setIdProducte((Producte) rs.getObject(2));
+                selectExemplar.setIdBiblioteca((Biblioteca) rs.getObject(3));
+                selectExemplar.setNumprestecs(rs.getInt(4));
+                selectExemplar.setEstat(rs.getBoolean(5));
+
                 list.add(selectExemplar);
             }
-            ps.close();
-            rs.close();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
+            this.close();
         }
+        return list;
     }
-    public List<Exemplar> select(Exemplar exemplar){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public List<Exemplar> select(Exemplar exemplar) throws ClassNotFoundException, SQLException{
+        List<Exemplar> list = new ArrayList<>();
+        String sql;
         try {
-            String sql = "Select * from Exemplar where numero_prestec = ? ";
-            ps = conn.connectar().prepareStatement(sql);
+            conn = ConnectionFactory.getConnection();
+            sql = "Select "+ContractExemplar.ID+","+ContractExemplar.ID_PRODUCTE+","+ContractExemplar.ID_BIBLIOTECA+","+
+                    ContractExemplar.NUMERO_PRESTEC+","+ContractExemplar.ESTAT+" from "+ContractExemplar.NOM_TAULA+
+                    " where "+ContractExemplar.NUMERO_PRESTEC+" = ? ";
+            ps = conn.prepareStatement(sql);
             ps.setInt(1,exemplar.getNumprestecs());
             rs = ps.executeQuery();
-            list.clear();
             while(rs.next()){
                 exemplar = new Exemplar();
                 exemplar.setId(rs.getInt(1));
-                exemplar.setEstat(rs.getBoolean(2));
-                exemplar.setNumprestecs(rs.getInt(3));
-                exemplar.setIdProducte((Producte) rs.getObject(4));
-                exemplar.setIdBiblioteca((Biblioteca) rs.getObject(5));
+                exemplar.setIdProducte((Producte) rs.getObject(2));
+                exemplar.setIdBiblioteca((Biblioteca) rs.getObject(3));
+                exemplar.setNumprestecs(rs.getInt(4));
+                exemplar.setEstat(rs.getBoolean(5));
+
                 list.add(exemplar);
             }
-            ps.close();
-            rs.close();
-        } catch (SQLException ex) {
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
+            this.close();
         }
+        return list;
     }
-    public boolean insert(Exemplar exemplar){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public boolean insert(Exemplar exemplar) throws ClassNotFoundException, SQLException{
+        String insert;
+        boolean inserit = false;
+        int id;
         try {
-            String insert = "Insert into Exemplar values (?,?,?,?,?)";
-            ps = conn.connectar().prepareStatement(insert);
-            ps.setInt(1,nextId());
-            ps.setObject(2,exemplar.getProducte());
-            ps.setObject(3,exemplar.getBiblioteca());
+            id = nextId();
+            conn = ConnectionFactory.getConnection();
+            insert = "Insert into "+ContractExemplar.NOM_TAULA+" values (?,?,?,?,?)";
+            ps = conn.prepareStatement(insert);
+            ps.setInt(1,id);
+            ps.setInt(2,exemplar.getProducte().getId());
+            ps.setInt(3,exemplar.getBiblioteca().getId());
             ps.setInt(4,exemplar.getNumprestecs());
             ps.setBoolean(5,exemplar.getEstat());
-
-            ps.close();
-            rs.close();
-            return true;
-        } catch (SQLException ex) {
+            ps.executeUpdate();
+            inserit = true;
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            this.close();
         }
+        return inserit;
     }
-    public boolean delete(Exemplar exemplar){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public boolean delete(Exemplar exemplar) throws ClassNotFoundException, SQLException{
+        String delete;
+        boolean borrat = false;
         try {
-            String delete = "Delete from Exemplar where id = ?";
-            ps = conn.connectar().prepareStatement(delete);
+            conn = ConnectionFactory.getConnection();
+            delete = "Delete from "+ContractExemplar.NOM_TAULA+" where "+ContractExemplar.ID+" = ?";
+            ps = conn.prepareStatement(delete);
             ps.setInt(1,exemplar.getId());
             ps.executeUpdate();
-
-            ps.close();
-            rs.close();
-            return true;
-        } catch (SQLException ex) {
+            borrat = true;
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            this.close();
         }
+        return borrat;
     }
-    public boolean update(Exemplar exemplar){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+    @Override
+    public boolean update(Exemplar exemplar) throws ClassNotFoundException, SQLException{
+        String update;
+        boolean actualitzat = false;
         try {
-            String update = "UPDATE from Exemplar SET producte = ?, biblioteca = ?  where id = ?";
-            ps = conn.connectar().prepareStatement(update);
-            ps.setObject(1,exemplar.getProducte());
-            ps.setObject(2,exemplar.getBiblioteca());
+            conn = ConnectionFactory.getConnection();
+            update = "UPDATE from "+ContractExemplar.NOM_TAULA+" SET "+ContractExemplar.ID_PRODUCTE+" = ?, "+
+                    ContractExemplar.ID_BIBLIOTECA+" = ?  where "+ContractExemplar.ID+" = ?";
+            ps = conn.prepareStatement(update);
+            ps.setInt(1,exemplar.getProducte().getId());
+            ps.setInt(2,exemplar.getBiblioteca().getId());
             ps.setInt(3,exemplar.getId());
             ps.executeUpdate();
-
-            ps.close();
-            rs.close();
-            return true;
-        } catch (SQLException ex) {
+            actualitzat = true;
+        } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
-            return false;
         } finally {
+            this.close();
+        }
+        return actualitzat;
+    }
+    @Override
+    public int nextId() throws ClassNotFoundException, SQLException{
+        int id = 1;
+        String sql;
+        try {
+            conn = ConnectionFactory.getConnection();
+            sql = "SELECT max("+ContractExemplar.ID+") FROM "+ContractExemplar.NOM_TAULA;
+            ps = conn.prepareStatement(sql);
+            rs = ps.executeQuery();
+            if(rs.next()){
+                id = rs.getInt(1)+1;
+            }
+        } catch (SQLException | ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return id;
+    }
+    @Override
+    public void close(){
+        if(this.conn!=null){
             try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                this.conn.close();
+                this.conn=null;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
-    }
-    public int nextId(){
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        int id = 0;
-        try {
-            String sql = "SELECT max(id)+1 FROM Exemplar";
-            ps = conn.connectar().prepareStatement(sql);
-            rs = ps.executeQuery();
-            id = rs.getInt(1);
-            return id;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return id;
-        } finally {
+        if(this.ps!=null){
             try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
+                this.ps.close();
+                this.ps=null;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        if(this.rs!=null){
+            try{
+                this.rs.close();
+                this.rs=null;
+            } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
     }
