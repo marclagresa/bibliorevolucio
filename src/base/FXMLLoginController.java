@@ -66,12 +66,14 @@ public class FXMLLoginController extends GenericControlador implements Initializ
             else{
                 if(usr.getContrasenya().equals(HashGenerator.generateHash(pwfContrasenya.getText()+usr.getSalt()))){
                     if(usr.isAdmin()){
+                        ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configAdmin.txt"));
                         MenuPrincipalControlador menu = MenuPrincipalControlador.Crear();
                         pare.setFinestraCentre(menu);
                         pare.setLblUsuariText("Login as:"+usr.toString());
                     }
                     else{
-                        //carregar menu principal lector;
+                        ConnectionFactory.getInstance().configure( FileSystems.getDefault().getPath("src/base", "configLector.txt"));
+                        //falta pantalla menu usuari.
                     }
                 }
                 else{

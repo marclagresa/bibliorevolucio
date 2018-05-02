@@ -237,7 +237,7 @@ public class Usuari {
     //</editor-fold>
     
     /**
-     * 
+     * Funció toString
      * @return Nom PrimerCognom SegonCognom del usuari
      */
     @Override 
