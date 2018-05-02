@@ -1,5 +1,5 @@
 
-package com.company.DAM2.Bibliorevolució.BBDD.contract;
+package contract;
 
 /**
  * @author sergiclotas

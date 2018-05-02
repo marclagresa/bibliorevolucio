@@ -1,6 +1,7 @@
 package bbdd;
 
 import base.ConnectionFactory;
+import contract.ContractUsuari;
 import java.sql.Connection;
 import objecte.Usuari;
 import java.sql.PreparedStatement;

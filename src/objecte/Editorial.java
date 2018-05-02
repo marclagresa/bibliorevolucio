@@ -5,7 +5,8 @@
  */
 package objecte;
 
-import bbdd.ContractEditorial;
+
+import contract.ContractEditorial;
 import java.util.HashMap;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
