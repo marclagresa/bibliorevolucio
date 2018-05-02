@@ -28,7 +28,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         String sql;
         Producte selectProducte;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ ContractProducte.ID+","+ContractProducte.ISBN+","+ContractProducte.NOM+","
                     +ContractProducte.NUM_PAG+","+ContractProducte.DIMENSIONS+","+ContractProducte.DATA+","
                     +ContractProducte.RESUM+","+ContractProducte.CARACTERISTIQUES+","
@@ -75,7 +75,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         List<Producte> list = new ArrayList<>();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractProducte.ID+","+ContractProducte.ISBN+","+ContractProducte.NOM+","
                     +ContractProducte.NUM_PAG+","+ContractProducte.DIMENSIONS+","+ContractProducte.DATA+","
                     +ContractProducte.RESUM+","+ContractProducte.CARACTERISTIQUES+","
@@ -123,7 +123,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         FormatDAO format = new FormatDAO();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractProducte.ID+","+ContractProducte.ISBN+","+ContractProducte.NOM+","
                     +ContractProducte.NUM_PAG+","+ContractProducte.DIMENSIONS+","+ContractProducte.DATA+","
                     +ContractProducte.RESUM+","+ContractProducte.CARACTERISTIQUES+","
@@ -161,7 +161,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         boolean inserit = false;
         int id;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             id = nextId();
             insert = "Insert into "+ContractProducte.NOM_TAULA+
                     " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -198,7 +198,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         String delete;
         boolean borrat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             delete = "Delete from "+ContractProducte.NOM_TAULA+" where "+ContractProducte.ID+" = ?";
             ps = conn.prepareStatement(delete);
             ps.setInt(1,producte.getId());
@@ -216,7 +216,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         String update;
         boolean actualitzat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             update = "UPDATE "+ContractProducte.NOM_TAULA+" SET "+ContractProducte.ISBN+" = ?,"
                     +ContractProducte.NOM+" = ?,"+ContractProducte.NUM_PAG+" = ?,"+ContractProducte.DIMENSIONS+" = ?,"
                     +ContractProducte.DATA+" = ?,"+ContractProducte.RESUM+" = ?,"+ContractProducte.CARACTERISTIQUES+" = ?,"
@@ -256,7 +256,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         int id = 1;
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "SELECT max("+ContractProducte.ID+") FROM "+ContractProducte.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -295,146 +295,4 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             }
         }
     }
-
-    /*
-    public List<Producte> selectTotsProductesFormat(String format) throws ClassNotFoundException, SQLException{
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        Producte selectProducte;
-        try {
-            String sql = "Select * from Producte p inner join format f on f.id=p.format_id WHERE f.nom = ? ";
-            ps = conn.connectar().prepareStatement(sql);
-            ps.setString(1,format);
-            rs = ps.executeQuery();
-            list.clear();
-            while(rs.next()){
-                selectProducte = new Producte(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getInt(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(7),
-                        rs.getString(8),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getBoolean(11),
-                        (Idioma) rs.getObject(12),
-                        (Editorial) rs.getObject(13),
-                        (Format) rs.getObject(14),
-                        (Procedencia) rs.getObject(15),
-                        (Nivell) rs.getObject(16),
-                        (Coleccio) rs.getObject(17),
-                        (Cdu) rs.getObject(18)
-                );
-                list.add(selectProducte);
-            }
-            ps.close();
-            rs.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
-        }
-    }
-    public List<Producte> selectTotsProductesActivat(boolean activat) throws ClassNotFoundException, SQLException{
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        Producte selectProducte;
-        try {
-            String sql;
-            if(activat) {
-                sql = "Select * from Producte WHERE estat = true";
-            } else {
-                sql = "Select * from Producte WHERE estat = false";
-            }
-            ps = conn.connectar().prepareStatement(sql);
-            rs = ps.executeQuery();
-            list.clear();
-            while(rs.next()){
-                selectProducte = new Producte(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getInt(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(7),
-                        rs.getString(8),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getBoolean(11),
-                        (Idioma) rs.getObject(12),
-                        (Editorial) rs.getObject(13),
-                        (Format) rs.getObject(14),
-                        (Procedencia) rs.getObject(15),
-                        (Nivell) rs.getObject(16),
-                        (Coleccio) rs.getObject(17),
-                        (Cdu) rs.getObject(18)
-                );
-                list.add(selectProducte);
-            }
-            ps.close();
-            rs.close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return list;
-        }
-    }
-    public boolean updateProducteActivar(int id, boolean activat) throws ClassNotFoundException, SQLException{
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            String update;
-            if(activat) {
-                update = "UPDATE from Producte SET estat = true where id = ?";
-            } else {
-                update = "UPDATE from Producte SET estat = false where id = ?";
-            }
-            ps = conn.connectar().prepareStatement(update);
-            ps.setInt(1,id);
-            ps.executeUpdate();
-
-            ps.close();
-            rs.close();
-            return true;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            return false;
-        } finally {
-            try {
-                if(ps != null) {
-                    ps.close();
-                }
-                if(rs != null){
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-    */
 }

@@ -30,7 +30,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         String sql;
         Exemplar selectExemplar;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ ContractExemplar.ID+","+ContractExemplar.ID_PRODUCTE+","+ContractExemplar.ID_BIBLIOTECA+","+
                     ContractExemplar.NUMERO_PRESTEC+","+ContractExemplar.ESTAT+" from "+ContractExemplar.NOM_TAULA;
             ps = conn.prepareStatement(sql);
@@ -57,7 +57,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         List<Exemplar> list = new ArrayList<>();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractExemplar.ID+","+ContractExemplar.ID_PRODUCTE+","+ContractExemplar.ID_BIBLIOTECA+","+
                     ContractExemplar.NUMERO_PRESTEC+","+ContractExemplar.ESTAT+" from "+ContractExemplar.NOM_TAULA+
                     " where "+ContractExemplar.NUMERO_PRESTEC+" = ? ";
@@ -86,7 +86,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         Exemplar exemplar = new Exemplar();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractExemplar.ID+","+ContractExemplar.ID_PRODUCTE+","+ContractExemplar.ID_BIBLIOTECA+","+
                     ContractExemplar.NUMERO_PRESTEC+","+ContractExemplar.ESTAT+" from "+ContractExemplar.NOM_TAULA+
                     " where "+ContractExemplar.ID+" = ? ";
@@ -112,7 +112,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         int id;
         try {
             id = nextId();
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             insert = "Insert into "+ContractExemplar.NOM_TAULA+" values (?,?,?,?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,id);
@@ -134,7 +134,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         String delete;
         boolean borrat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             delete = "Delete from "+ContractExemplar.NOM_TAULA+" where "+ContractExemplar.ID+" = ?";
             ps = conn.prepareStatement(delete);
             ps.setInt(1,exemplar.getId());
@@ -152,7 +152,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         String update;
         boolean actualitzat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             update = "UPDATE "+ContractExemplar.NOM_TAULA+" SET "+ContractExemplar.ID_PRODUCTE+" = ?, "+
                     ContractExemplar.ID_BIBLIOTECA+" = ?  where "+ContractExemplar.ID+" = ?";
             ps = conn.prepareStatement(update);
@@ -173,7 +173,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         int id = 1;
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "SELECT max("+ContractExemplar.ID+") FROM "+ContractExemplar.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();

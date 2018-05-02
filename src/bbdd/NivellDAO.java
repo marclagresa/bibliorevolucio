@@ -28,7 +28,7 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         String sql;
         Nivell selectNivell;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ ContractNivell.ID+","+ContractNivell.NOM+" from "+ContractNivell.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -50,7 +50,7 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         List<Nivell> list = new ArrayList<>();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractNivell.ID+","+ContractNivell.NOM+" from "+ContractNivell.NOM_TAULA+
                     " where "+ContractNivell.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
@@ -74,7 +74,7 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         Nivell nivell = new Nivell();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractNivell.ID+","+ContractNivell.NOM+" from "+ContractNivell.NOM_TAULA+
                     " where "+ContractNivell.ID+" = ? ";
             ps = conn.prepareStatement(sql);
@@ -96,7 +96,7 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         int id;
         try {
             id = nextId();
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             insert = "Insert into "+ContractNivell.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,id);
@@ -115,7 +115,7 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         String delete;
         boolean borrat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             delete = "Delete from "+ContractNivell.NOM_TAULA+" where "+ContractNivell.ID+" = ?";
             ps = conn.prepareStatement(delete);
             ps.setInt(1,nivell.getId());
@@ -133,7 +133,7 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         String update;
         boolean actualitzat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             update = "UPDATE "+ContractNivell.NOM_TAULA+" SET "+
                     ContractNivell.NOM+" = ? where "+ContractNivell.ID+" = ?";
             ps = conn.prepareStatement(update);
@@ -153,7 +153,7 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         int id = 1;
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "SELECT max("+ContractNivell.ID+") FROM "+ContractNivell.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();

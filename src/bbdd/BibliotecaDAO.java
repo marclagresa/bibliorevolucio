@@ -34,7 +34,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         String sql;
         Biblioteca selectBiblioteca;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ ContractBiblioteca.ID+","+ContractBiblioteca.NOM+" from "+ContractBiblioteca.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -56,7 +56,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         List<Biblioteca> list = new ArrayList<>();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractBiblioteca.ID+","+ContractBiblioteca.NOM+
                     " from "+ContractBiblioteca.NOM_TAULA+" where "+ContractBiblioteca.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
@@ -80,7 +80,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         Biblioteca biblioteca = new Biblioteca();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractBiblioteca.ID+","+ContractBiblioteca.NOM+
                     " from "+ContractBiblioteca.NOM_TAULA+" where "+ContractBiblioteca.ID+" = ? ";
             ps = conn.prepareStatement(sql);
@@ -102,7 +102,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         boolean inserit = false;
         int id;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             id = nextId();
             insert = "Insert into "+ContractBiblioteca.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
@@ -122,7 +122,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         String delete;
         boolean borrat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             delete = "Delete from "+ContractBiblioteca.NOM_TAULA+" where "+ContractBiblioteca.ID+" = ?";
             ps = conn.prepareStatement(delete);
             ps.setInt(1,biblioteca.getId());
@@ -140,7 +140,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         String update;
         boolean actualitzat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             update = "UPDATE "+ContractBiblioteca.NOM_TAULA+" SET "+ContractBiblioteca.NOM+" = ? " +
                     "where "+ContractBiblioteca.ID+" = ?";
             ps = conn.prepareStatement(update);
@@ -160,7 +160,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         int id = 1;
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "SELECT max("+ContractBiblioteca.ID+") FROM "+ContractBiblioteca.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();

@@ -28,7 +28,7 @@ public class PersonaDAO implements IObjectDAO<Persona> {
         String sql;
         Persona selectPersona;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ ContractPersona.ID+","+ContractPersona.NOM+" from "+ContractPersona.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -50,7 +50,7 @@ public class PersonaDAO implements IObjectDAO<Persona> {
         List<Persona> list = new ArrayList<>();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractPersona.ID+","+ContractPersona.NOM+" from "+
                     ContractPersona.NOM_TAULA+" where "+ContractPersona.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
@@ -75,7 +75,7 @@ public class PersonaDAO implements IObjectDAO<Persona> {
         Persona persona = new Persona();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractPersona.ID+","+ContractPersona.NOM+" from "+
                     ContractPersona.NOM_TAULA+" where "+ContractPersona.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
@@ -97,7 +97,7 @@ public class PersonaDAO implements IObjectDAO<Persona> {
         int id;
         try {
             id = nextId();
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             insert = "Insert into "+ContractPersona.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,id);
@@ -116,7 +116,7 @@ public class PersonaDAO implements IObjectDAO<Persona> {
         String delete;
         boolean borrat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             delete = "Delete from "+ContractPersona.NOM_TAULA+" where "+ContractPersona.ID+" = ?";
             ps = conn.prepareStatement(delete);
             ps.setInt(1,persona.getId());
@@ -134,7 +134,7 @@ public class PersonaDAO implements IObjectDAO<Persona> {
         String update;
         boolean actualitzat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             update = "UPDATE "+ContractPersona.NOM_TAULA+" SET "+ContractPersona.NOM+" = ? " +
                     "where "+ContractPersona.ID+" = ?";
             ps = conn.prepareStatement(update);
@@ -154,7 +154,7 @@ public class PersonaDAO implements IObjectDAO<Persona> {
         int id = 1;
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "SELECT max("+ContractPersona.ID+") FROM "+ContractPersona.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();

@@ -28,7 +28,7 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
         String sql;
         Procedencia selectProcedencia;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ ContractProcedencia.ID+","+ContractProcedencia.NOM+
                     " from "+ContractProcedencia.NOM_TAULA;
             ps = conn.prepareStatement(sql);
@@ -51,7 +51,7 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
         List<Procedencia> list = new ArrayList<>();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractProcedencia.ID+","+ContractProcedencia.NOM+
                     "from "+ContractProcedencia.NOM_TAULA+" where "+ContractProcedencia.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
@@ -75,7 +75,7 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
         Procedencia procedencia = new Procedencia();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractProcedencia.ID+","+ContractProcedencia.NOM+
                     "from "+ContractProcedencia.NOM_TAULA+" where "+ContractProcedencia.ID+" = ? ";
             ps = conn.prepareStatement(sql);
@@ -98,7 +98,7 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
         int id;
         try {
             id = nextId();
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             insert = "Insert into "+ContractProcedencia.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,id);
@@ -117,7 +117,7 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
         String delete;
         boolean borrat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             delete = "Delete from "+ContractProcedencia.NOM_TAULA+" where "+ContractProcedencia.ID+" = ?";
             ps = conn.prepareStatement(delete);
             ps.setInt(1,procedencia.getId());
@@ -135,7 +135,7 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
         String update;
         boolean actualitzat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             update = "UPDATE "+ContractProcedencia.NOM_TAULA+" SET "+ContractProcedencia.NOM+" = ? " +
                     "where "+ContractProcedencia.ID+" = ?";
             ps = conn.prepareStatement(update);
@@ -155,7 +155,7 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
         int id = 1;
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "SELECT max("+ContractProcedencia.ID+") FROM "+ContractProcedencia.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();

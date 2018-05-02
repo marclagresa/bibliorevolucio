@@ -28,7 +28,7 @@ public class FormatDAO implements IObjectDAO<Format>{
         String sql;
         Format selectFormat;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ ContractFormat.ID+","+ContractFormat.NOM+" from "+ContractFormat.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -50,7 +50,7 @@ public class FormatDAO implements IObjectDAO<Format>{
         List<Format> list = new ArrayList<>();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractFormat.ID+","+ContractFormat.NOM+" from "+
                     ContractFormat.NOM_TAULA+" where "+ContractFormat.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
@@ -74,7 +74,7 @@ public class FormatDAO implements IObjectDAO<Format>{
         Format format = new Format();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractFormat.ID+","+ContractFormat.NOM+" from "+
                     ContractFormat.NOM_TAULA+" where "+ContractFormat.ID+" = ? ";
             ps = conn.prepareStatement(sql);
@@ -96,7 +96,7 @@ public class FormatDAO implements IObjectDAO<Format>{
         int id;
         try {
             id = nextId();
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             insert = "Insert into "+ContractFormat.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,id);
@@ -115,7 +115,7 @@ public class FormatDAO implements IObjectDAO<Format>{
         String delete;
         boolean borrat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             delete = "Delete from "+ContractFormat.NOM_TAULA+" where "+ContractFormat.ID+" = ?";
             ps = conn.prepareStatement(delete);
             ps.setInt(1,format.getId());
@@ -133,7 +133,7 @@ public class FormatDAO implements IObjectDAO<Format>{
         String update;
         boolean actualitzat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             update = "UPDATE "+ContractFormat.NOM_TAULA+" SET "+ContractFormat.NOM+" = ? " +
                     "where "+ContractFormat.ID+" = ?";
             ps = conn.prepareStatement(update);
@@ -153,7 +153,7 @@ public class FormatDAO implements IObjectDAO<Format>{
         int id = 1;
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "SELECT max("+ ContractFormat.ID+") FROM "+ContractFormat.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();

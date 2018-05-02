@@ -32,7 +32,7 @@ public class CduDAO implements IObjectDAO<Cdu> {
         Cdu selectCdu;
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractCdu.ID+","+ContractCdu.NOM+","+ContractCdu.IDPARE+" from "+ ContractCdu.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -55,7 +55,7 @@ public class CduDAO implements IObjectDAO<Cdu> {
         List<Cdu> list = new ArrayList<>();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractCdu.ID+","+ContractCdu.NOM+","+ContractCdu.IDPARE+
                     " from "+ContractCdu.NOM_TAULA+" where "+ContractCdu.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
@@ -80,7 +80,7 @@ public class CduDAO implements IObjectDAO<Cdu> {
         Cdu cdu = new Cdu();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractCdu.ID+","+ContractCdu.NOM+","+ContractCdu.IDPARE+
                     " from "+ContractCdu.NOM_TAULA+" where "+ContractCdu.ID+" = ? ";
             ps = conn.prepareStatement(sql);
@@ -103,6 +103,7 @@ public class CduDAO implements IObjectDAO<Cdu> {
         boolean inserit = false;
         int id;
         try {
+            conn=ConnectionFactory.getInstance().getConnection();
             id = nextId();
             insert = "Insert into "+ContractCdu.NOM_TAULA+" values (?,?,?)";
             ps = conn.prepareStatement(insert);
@@ -121,7 +122,7 @@ public class CduDAO implements IObjectDAO<Cdu> {
         String delete;
         boolean borrat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             delete = "Delete from "+ContractCdu.NOM_TAULA+" where "+ContractCdu.ID+" = ?";
             ps = conn.prepareStatement(delete);
             ps.setInt(1,cdu.getId());
@@ -139,7 +140,7 @@ public class CduDAO implements IObjectDAO<Cdu> {
         String update;
         boolean actualitzat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             update = "UPDATE "+ContractCdu.NOM_TAULA+" SET "+ContractCdu.NOM+" = ?, "+
                     ContractCdu.IDPARE+ " = ? where "+ContractCdu.ID+" = ?";
             ps = conn.prepareStatement(update);
@@ -160,7 +161,7 @@ public class CduDAO implements IObjectDAO<Cdu> {
         int id = 1;
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "SELECT max("+ContractCdu.ID+") FROM "+ContractCdu.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();

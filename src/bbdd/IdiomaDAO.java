@@ -28,7 +28,7 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
         String sql;
         Idioma idioma;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ ContractIdioma.ID+","+ContractIdioma.NOM+" from "+ContractIdioma.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -50,7 +50,7 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
         List<Idioma> list = new ArrayList<>();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractIdioma.ID+","+ContractIdioma.NOM+" from "+ContractIdioma.NOM_TAULA+
                     " where "+ContractIdioma.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
@@ -74,7 +74,7 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
         Idioma idioma = new Idioma();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractIdioma.ID+","+ContractIdioma.NOM+" from "+ContractIdioma.NOM_TAULA+
                     " where "+ContractIdioma.ID+" = ? ";
             ps = conn.prepareStatement(sql);
@@ -97,7 +97,7 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
         int id;
         try {
             id = nextId();
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             insert = "Insert into "+ContractIdioma.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,id);
@@ -116,7 +116,7 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
         String delete;
         boolean borrat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             delete = "Delete from "+ContractIdioma.NOM_TAULA+" where "+ContractIdioma.ID+" = ?";
             ps = conn.prepareStatement(delete);
             ps.setInt(1,idioma.getId());
@@ -134,7 +134,7 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
         String update;
         boolean actualitzat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             update = "UPDATE "+ContractIdioma.NOM_TAULA+" SET "+
                     ContractIdioma.NOM+" = ? where "+ContractIdioma.ID+" = ?";
             ps = conn.prepareStatement(update);
@@ -154,7 +154,7 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
         int id = 1;
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "SELECT max("+ContractIdioma.ID+") FROM "+ContractIdioma.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();

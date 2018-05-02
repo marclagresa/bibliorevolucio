@@ -28,7 +28,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         String sql;
         Materia selectMateria;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ ContractMateria.ID+","+ContractMateria.NOM+" from "+ContractMateria.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -50,7 +50,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         List<Materia> list = new ArrayList<>();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractMateria.ID+","+ContractMateria.NOM+ " from "+ContractMateria.NOM_TAULA+
                     " where "+ContractMateria.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
@@ -74,7 +74,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         Materia materia = new Materia();
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractMateria.ID+","+ContractMateria.NOM+ " from "+ContractMateria.NOM_TAULA+
                     " where "+ContractMateria.ID+" = ? ";
             ps = conn.prepareStatement(sql);
@@ -96,7 +96,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         int id;
         try {
             id = nextId();
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             insert = "Insert into "+ContractMateria.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,id);
@@ -115,7 +115,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         String delete;
         boolean borrat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             delete = "Delete from "+ContractMateria.NOM_TAULA+" where "+ContractMateria.ID+" = ?";
             ps = conn.prepareStatement(delete);
             ps.setInt(1,materia.getId());
@@ -133,7 +133,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         String update;
         boolean actualitzat = false;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             update = "UPDATE "+ContractMateria.NOM_TAULA+" SET "+
                     ContractMateria.NOM+" = ? where "+ContractMateria.ID+" = ?";
             ps = conn.prepareStatement(update);
@@ -153,7 +153,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         int id = 1;
         String sql;
         try {
-            conn = ConnectionFactory.getConnection();
+            conn = ConnectionFactory.getInstance().getConnection();
             sql = "SELECT max("+ContractMateria.ID+") FROM "+ContractMateria.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
