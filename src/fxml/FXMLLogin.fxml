@@ -9,10 +9,10 @@
 
 <VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLLoginController">
    <children>
-      <GridPane alignment="CENTER" hgap="10.0" prefHeight="178.0" prefWidth="478.0" vgap="10.0">
+      <GridPane alignment="CENTER" gridLinesVisible="true" hgap="10.0" prefHeight="178.0" prefWidth="478.0" styleClass="gridpane" vgap="10.0">
          <children>
-            <Label alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="183.0" text="Email:" textAlignment="RIGHT" />
-            <Label alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="164.0" text="Contrasenya:" GridPane.rowIndex="1" />
+            <Label alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="1013.0" text="Email:" textAlignment="RIGHT" />
+            <Label alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="1011.0" styleClass="gridpane" text="Contrasenya:" GridPane.rowIndex="1" />
             <TextField fx:id="txfEmail" GridPane.columnIndex="1" />
             <PasswordField fx:id="pwfContrasenya" GridPane.columnIndex="1" GridPane.rowIndex="1" />
             <HBox prefHeight="52.0" prefWidth="260.0" spacing="80.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
@@ -24,6 +24,7 @@
                   <Insets left="100.0" />
                </padding>
             </HBox>
+            <Label fx:id="lblLoginFail" prefHeight="15.0" prefWidth="509.0" GridPane.columnSpan="2" GridPane.rowIndex="2" />
          </children>
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="115.0" />

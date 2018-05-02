@@ -52,12 +52,14 @@ public class Usuari {
      * @param salt
      * @param esAdmin
      * @param nivell 
+     * @param id
      */
 
-    public Usuari(String nom, String pcognom, String scognom,
+    public Usuari(int id,String nom, String pcognom, String scognom,
         String telefon_mobil, String telefon_fixe,String email,  
-        String contrasenya, Boolean estat, String salt, Boolean esAdmin,
+        String contrasenya, boolean estat, String salt, boolean esAdmin,
         String nivell){
+        this.id=new SimpleIntegerProperty(id);
         this.nom = new SimpleStringProperty(nom);
         this.pCognom = new SimpleStringProperty(pcognom);
         this.sCognom = new SimpleStringProperty(scognom);

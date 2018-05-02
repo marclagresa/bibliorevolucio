@@ -5,8 +5,6 @@
  */
 package base;
 
-import base.MenuPrincipalControlador;
-import base.MantBiblioControlador;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -15,12 +13,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
 /**
@@ -31,12 +26,18 @@ public class PantallaPrincipalControlador  implements Initializable {
     
     private Stack<GenericControlador> pilaBtenrere = new Stack<GenericControlador>();
     private GenericControlador activa=null;
-    private Label label;
+    
     @FXML
     public  BorderPane BordPn;
     @FXML
     private Label lbCapcalera;
- 
+    @FXML
+    private Label lblUsuari;
+    @FXML
+    private Button btnEnrera;
+    public void setLblUsuariText(String text){
+        lblUsuari.setText(text);
+    }
     public void setFinestraCentre(GenericControlador generic){
         BordPn.setCenter(generic);
         lbCapcalera.setText(generic.getCapcalera());
@@ -45,29 +46,35 @@ public class PantallaPrincipalControlador  implements Initializable {
         
         if(activa!=null){
             pilaBtenrere.push(activa);
+            if(btnEnrera.isDisable()){
+                btnEnrera.setDisable(false);
+            }
         }
         activa=generic;
     }
-    
+    @FXML
+    public void anarEnrere(ActionEvent event) {
+        if(!pilaBtenrere.empty()){
+            activa = null;
+            setFinestraCentre(pilaBtenrere.pop());
+        }
+        if(pilaBtenrere.empty()){
+            btnEnrera.setDisable(true);
+            lblUsuari.setText("");
+        }
+    }
     @Override
     public void initialize(URL url, ResourceBundle rb)  {         
        try {
-         FXMLLoginController   login = FXMLLoginController.Crear();
-              setFinestraCentre(login);
+            FXMLLoginController   login = FXMLLoginController.Crear();
+            setFinestraCentre(login);
+            btnEnrera.setDisable(true);
+            lblUsuari.setText("");
         } 
         catch (IOException ex) {
             Logger.getLogger(PantallaPrincipalControlador.class.getName()).log(Level.SEVERE, null, ex);
         }  
         
-    }  
-
-    @FXML
-    private void ButoEnrere(MouseEvent event) {
-          
-           if(!pilaBtenrere.empty()){
-                activa = null;
-          setFinestraCentre(pilaBtenrere.pop());
-           }
     }
   
 }

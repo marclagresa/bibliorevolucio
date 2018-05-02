@@ -1,10 +1,16 @@
 .root {
-/*-fx-background-image: url("img2.png");*/
--fx-font-family: /*"Lucida Fax"*/'Lucida Fax';
+    /*-fx-background-image: url("img2.png");*/
+    -fx-font-family: /*"Lucida Fax"*/'Lucida Fax';
 }
 .label {
- -fx-font-size: 25px;
- -fx-text-fill: #FF4619;
+    -fx-font-size: 25px;
+    -fx-text-fill: #FF4619;
+}
+.gridpane .label{
+    -fx-font-size:14px;
+    -fx-text-fill:black;
+    -fx-alignment:CENTER_RIGHT;
+    -fx-border-color: black;
 }
 #contingut1{
     -fx-alignment: CENTER;
@@ -13,9 +19,9 @@
  /* -fx-background-color: #464646;  */
 }
 #lbCapcelera{
-     -fx-font-size: 720%;
-     -fx-alignment: CENTER;
-     -fx-font-family: /*"sans-serif"*/'Lucida Fax';
+    -fx-font-size: 720%;
+    -fx-alignment: CENTER;
+    -fx-font-family: /*"sans-serif"*/'Lucida Fax';
 }
 #lbLogin{
     -fx-alignment: CENTER_LEFT;
@@ -34,14 +40,11 @@
     -fx-border-radius: 85px;
     -fx-background-image: url('../img/flexa1.png');
     -fx-text-alignment: left;
-    
-
 }
 
 #btEnrere:hover{
-     -fx-border-radius: 5px;
-    
-     -fx-background-image: url('../img/flexa2.png');
+    -fx-border-radius: 5px;
+    -fx-background-image: url('../img/flexa2.png');
      /* -fx-box-shadow:inset 0 0 0 3px #3a7999;*/
 }
 
@@ -51,17 +54,17 @@
  -fx-fill: #336699;
  -fx-effect: innershadow( three-pass-box , rgba(153,0,204,0.7) ,
 6, 0.0, 0 , 2 );*/
- -fx-background-color: #464646;
- -fx-font-weight: bold;
- -fx-text-fill: #FF4619;
+    -fx-background-color: #464646;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FF4619;
  
 }
 #consultaResult{
     -fx-text-fill:#AE33FF;
 }
 #styleMenu{
-     -fx-font-size: 17px;
-     -fx-font-weight: bold;
-     -fx-text-fill: #D3E1FF;
-     /*-fx-background-color: #AFC8FF;*/
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #D3E1FF;
+    /*-fx-background-color: #AFC8FF;*/
 }

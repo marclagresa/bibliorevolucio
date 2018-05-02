@@ -2,3 +2,4 @@ user;lector
 password;pladelestany2018
 driver;com.mysql.jdbc.Driver
 url;jdbc:mysql://172.16.201.11/bibliorevolucio
+url_;jdbc:mysql://localhost/bibliorevolucio

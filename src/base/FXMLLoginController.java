@@ -9,12 +9,14 @@ import bbdd.UsuariDAO;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.FileSystems;
+import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import objecte.Usuari;
@@ -37,6 +39,8 @@ public class FXMLLoginController extends GenericControlador implements Initializ
     public static FXMLLoginController Crear()throws IOException{
         return crearFinestre("/fxml/FXMLLogin.fxml",FXMLLoginController.class,"BENVINGUT/DA");
     }
+    @FXML
+    private Label lblLoginFail;
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -45,34 +49,36 @@ public class FXMLLoginController extends GenericControlador implements Initializ
             ConnectionFactory.getInstance().configure( FileSystems.getDefault().getPath("src/base", "configLector.txt"));
             
         }catch(IOException e){
-            
+            System.err.println(e.getMessage());
         }
         
     }
 
     @FXML
     private void entrar(ActionEvent event) throws IOException{
-        UsuariDAO usrDao;
-        Usuari usr;
-        System.out.println(ConnectionFactory.getInstance().driver);
-        System.out.println(ConnectionFactory.getInstance().url);
+       
         try {
-            usrDao=new UsuariDAO();
-            usr=new Usuari();
-            usr.setEmail(txfEmail.getText());
-            usr=usrDao.select(usr).get(0);
-            
-            System.out.println(usr.toString());
-            if(usr.isAdmin()){
-                MenuPrincipalControlador menu = MenuPrincipalControlador.Crear();
-                pare.setFinestraCentre(menu);
+            UsuariDAO usrDAO = new UsuariDAO();
+            Usuari usr = usrDAO.select(txfEmail.getText());
+            if(usr.getId()==-1){
+                lblLoginFail.setText("email incorrecte");
             }
-            
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch(ClassNotFoundException e ){
-            System.err.println("hola poma");
-        } catch(IndexOutOfBoundsException e){
+            else{
+                if(usr.getContrasenya().equals(HashGenerator.generateHash(pwfContrasenya.getText()+usr.getSalt()))){
+                    if(usr.isAdmin()){
+                        MenuPrincipalControlador menu = MenuPrincipalControlador.Crear();
+                        pare.setFinestraCentre(menu);
+                        pare.setLblUsuariText("Login as:"+usr.toString());
+                    }
+                    else{
+                        //carregar menu principal lector;
+                    }
+                }
+                else{
+                    lblLoginFail.setText("contrasenya incorrecte");
+                }
+            }
+        } catch (SQLException | ClassNotFoundException | IndexOutOfBoundsException | NoSuchAlgorithmException e) {
             System.err.println(e.getMessage());
         }
     

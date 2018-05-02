@@ -8,7 +8,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Classe encarregada de llegir/escriure a la taula usuari de la BBDD
+ * @author sergiclotas
+ */
 public class UsuariDAO implements IObjectDAO<Usuari> {
 
     Connection c;
@@ -20,8 +23,39 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
         this.ps=null;
         this.rs=null;
     }
-    
-    
+    /**
+     * Funció que rep l' email d' un usuari i retorna un Objecte Usuari
+     * 
+     * @param emailUser email de l' usuari que estem buscant
+     * @return Usuari que te l email rebut per parametre o un nou Usuari si no 
+     * existeix cap usuari amb aquest email.
+     * @throws SQLException si no es pot conectar a la bbdd
+     * @throws ClassNotFoundException si el driver jdbc no esta carregat
+     */
+    public Usuari select(String emailUser)throws SQLException,ClassNotFoundException{
+        Usuari usr=new Usuari();
+        String query;
+        try{
+            c=ConnectionFactory.getInstance().getConnection();
+            query = "SELECT * " 
+                  + "FROM " + ContractUsuari.NOM_TAULA +" "
+                  + "WHERE " +ContractUsuari.EMAIL + " = ?";
+            ps=c.prepareStatement(query);
+            ps.setString(1, emailUser);
+            rs=ps.executeQuery();
+            if(rs.next()){
+                usr=fillUsuari();
+            }
+        } catch(SQLException e){
+            throw new SQLException(e.getMessage(), e.getSQLState(), e.getErrorCode(),e.getCause());
+        } catch(ClassNotFoundException e){
+            throw new ClassNotFoundException(e.getMessage(), e.getCause());
+            
+        } finally{
+            this.close();
+        }
+        return usr;
+    }
     /**
      * Funció que ens retorna tots els usuaris de la base de dades
      *
@@ -41,20 +75,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
             ps = c.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
-                usr = new Usuari();
-                usr.setId(rs.getInt(ContractUsuari.ID));
-                usr.setNom(rs.getString(ContractUsuari.NOM));
-                usr.setPcognom(rs.getString(ContractUsuari.PRIMER_COGNOM));
-                usr.setScognom(ContractUsuari.SEGON_COGNOM);
-                usr.setEmail(ContractUsuari.EMAIL);
-                usr.setTelefonFixe(rs.getString(ContractUsuari.TELEFON_FIX));
-                usr.setTelefonMobil(rs.getString(ContractUsuari.TELEFON_MOBIL));
-                usr.setContrasenya(rs.getString(ContractUsuari.CONTRASENYA));
-                usr.setSalt(rs.getString(ContractUsuari.SALT));
-                usr.setActiu(rs.getBoolean(ContractUsuari.ACTIU));
-                usr.setAdmin(rs.getBoolean(ContractUsuari.ADMIN ));
-                usr.setNivell(rs.getString(ContractUsuari.NIVELL));
-                list.add(usr);
+                list.add(fillUsuari());
             }
 
         } catch (SQLException ex) {
@@ -99,20 +120,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
             ps.setString(6, "%" + usuari.getNivell() + "%");
             rs = ps.executeQuery();
             while (rs.next()) {
-                usr = new Usuari();
-                usr.setId(rs.getInt(ContractUsuari.ID));
-                usr.setNom(rs.getString(ContractUsuari.NOM));
-                usr.setPcognom(rs.getString(ContractUsuari.PRIMER_COGNOM));
-                usr.setScognom(ContractUsuari.SEGON_COGNOM);
-                usr.setEmail(ContractUsuari.EMAIL);
-                usr.setTelefonFixe(rs.getString(ContractUsuari.TELEFON_FIX));
-                usr.setTelefonMobil(rs.getString(ContractUsuari.TELEFON_MOBIL));
-                usr.setContrasenya(rs.getString(ContractUsuari.CONTRASENYA));
-                usr.setSalt(rs.getString(ContractUsuari.SALT));
-                usr.setActiu(rs.getBoolean(ContractUsuari.ACTIU));
-                usr.setAdmin(rs.getBoolean(ContractUsuari.ADMIN ));
-                usr.setNivell(rs.getString(ContractUsuari.NIVELL));
-                list.add(usr);
+                list.add(fillUsuari());
             }
 
         } catch (SQLException ex) {
@@ -344,21 +352,8 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
             ps.setInt(1, id);
             rs=ps.executeQuery();
             if(rs.next()){
-                usr.setId(rs.getInt(ContractUsuari.ID));
-                usr.setNom(rs.getString(ContractUsuari.NOM));
-                usr.setPcognom(rs.getString(ContractUsuari.PRIMER_COGNOM));
-                usr.setScognom(ContractUsuari.SEGON_COGNOM);
-                usr.setEmail(ContractUsuari.EMAIL);
-                usr.setTelefonFixe(rs.getString(ContractUsuari.TELEFON_FIX));
-                usr.setTelefonMobil(rs.getString(ContractUsuari.TELEFON_MOBIL));
-                usr.setContrasenya(rs.getString(ContractUsuari.CONTRASENYA));
-                usr.setSalt(rs.getString(ContractUsuari.SALT));
-                usr.setActiu(rs.getBoolean(ContractUsuari.ACTIU));
-                usr.setAdmin(rs.getBoolean(ContractUsuari.ADMIN ));
-                usr.setNivell(rs.getString(ContractUsuari.NIVELL));
+                usr=fillUsuari();
             }
-            
-            
         }catch (SQLException ex){
             throw new SQLException(ex.getMessage(), ex.getSQLState(), ex.getErrorCode(), ex.getCause());
         }catch (ClassNotFoundException ex){
@@ -367,5 +362,25 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
             this.close();
         }
         return usr;
+    }
+    /**
+     * Retorna un nou usuari amb les dades que conte el ResultSet
+     * @throws SQLException 
+     */
+    private Usuari fillUsuari()throws SQLException{
+        return new Usuari(
+                rs.getInt(ContractUsuari.ID),
+                rs.getString(ContractUsuari.NOM), 
+                rs.getString(ContractUsuari.PRIMER_COGNOM), 
+                rs.getString(ContractUsuari.SEGON_COGNOM), 
+                rs.getString(ContractUsuari.TELEFON_MOBIL),
+                rs.getString(ContractUsuari.TELEFON_FIX),
+                rs.getString(ContractUsuari.EMAIL),
+                rs.getString(ContractUsuari.CONTRASENYA),
+                rs.getBoolean(ContractUsuari.ACTIU),
+                rs.getString(ContractUsuari.SALT),
+                rs.getBoolean(ContractUsuari.ADMIN),
+                rs.getString(ContractUsuari.NIVELL)
+        );
     }
 }
