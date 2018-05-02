@@ -1,7 +1,8 @@
-package com.company.DAM2.Bibliorevolució.objecte;
+package objecte;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class Producte {
@@ -16,14 +17,13 @@ public class Producte {
     private SimpleStringProperty urlPortada;
     private SimpleStringProperty adreçaWeb;
     private SimpleBooleanProperty estat;
-    private SimpleIntegerProperty idTipusProducte;
-    private SimpleIntegerProperty idIdioma;
-    private SimpleIntegerProperty idEditorial;
-    private SimpleIntegerProperty idFormat;
-    private SimpleIntegerProperty idProcedencia;
-    private SimpleIntegerProperty idNivell;
-    private SimpleIntegerProperty idColeccio;
-    private SimpleIntegerProperty idCDU;
+    private SimpleObjectProperty<Idioma> idioma;
+    private SimpleObjectProperty<Editorial> editorial;
+    private SimpleObjectProperty<Format> format;
+    private SimpleObjectProperty<Procedencia> procedencia;
+    private SimpleObjectProperty<Nivell> nivell;
+    private SimpleObjectProperty<Coleccio> coleccio;
+    private SimpleObjectProperty<Cdu> cdu;
 
     //Constructor Buit
 
@@ -39,22 +39,21 @@ public class Producte {
         this.urlPortada = new SimpleStringProperty("");
         this.adreçaWeb = new SimpleStringProperty("");
         this.estat = new SimpleBooleanProperty(false);
-        this.idTipusProducte = new SimpleIntegerProperty(-1);
-        this.idIdioma = new SimpleIntegerProperty(-1);
-        this.idEditorial = new SimpleIntegerProperty(-1);
-        this.idFormat = new SimpleIntegerProperty(-1);
-        this.idProcedencia = new SimpleIntegerProperty(-1);
-        this.idNivell = new SimpleIntegerProperty(-1);
-        this.idColeccio = new SimpleIntegerProperty(-1);
-        this.idCDU = new SimpleIntegerProperty(-1);
+        this.idioma = new SimpleObjectProperty<>();
+        this.editorial = new SimpleObjectProperty<>();
+        this.format = new SimpleObjectProperty<>();
+        this.procedencia = new SimpleObjectProperty<>();
+        this.nivell = new SimpleObjectProperty<>();
+        this.coleccio = new SimpleObjectProperty<>();
+        this.cdu = new SimpleObjectProperty<>();
     }
 
     //Constructor Total
 
     public Producte(Integer id, String ISBN, String nom, Integer num_pag, String dimensions, String data, String resum,
-                    String caracteristiques, String urlPortada, String adreçaWeb, boolean estat, Integer idTipusProducte,
-                    Integer idIdioma, Integer idEditorial, Integer idFormat, Integer idProcedencia, Integer idNivell,
-                    Integer idColeccio, Integer idCDU){
+                    String caracteristiques, String urlPortada, String adreçaWeb, boolean estat, Idioma idioma,
+                    Editorial editorial, Format format, Procedencia procedencia, Nivell nivell, Coleccio coleccio,
+                    Cdu cdu){
         this.id = new SimpleIntegerProperty(id);
         this.ISBN = new SimpleStringProperty(ISBN);
         this.nom = new SimpleStringProperty(nom);
@@ -66,14 +65,13 @@ public class Producte {
         this.urlPortada = new SimpleStringProperty(urlPortada);
         this.adreçaWeb = new SimpleStringProperty(adreçaWeb);
         this.estat = new SimpleBooleanProperty(estat);
-        this.idTipusProducte = new SimpleIntegerProperty(idTipusProducte);
-        this.idIdioma = new SimpleIntegerProperty(idIdioma);
-        this.idEditorial = new SimpleIntegerProperty(idEditorial);
-        this.idFormat = new SimpleIntegerProperty(idFormat);
-        this.idProcedencia = new SimpleIntegerProperty(idProcedencia);
-        this.idNivell = new SimpleIntegerProperty(idNivell);
-        this.idColeccio = new SimpleIntegerProperty(idColeccio);
-        this.idCDU = new SimpleIntegerProperty(idCDU);
+        this.idioma = new SimpleObjectProperty<>(idioma);
+        this.editorial = new SimpleObjectProperty<>(editorial);
+        this.format = new SimpleObjectProperty<>(format);
+        this.procedencia = new SimpleObjectProperty<>(procedencia);
+        this.nivell = new SimpleObjectProperty<>(nivell);
+        this.coleccio = new SimpleObjectProperty<>(coleccio);
+        this.cdu = new SimpleObjectProperty<>(cdu);
     }
 
     //Getters
@@ -89,14 +87,13 @@ public class Producte {
     public String getUrlPortada() { return urlPortada.get(); }
     public String getAdreçaWeb() { return adreçaWeb.get(); }
     public boolean getEstat() { return estat.get(); }
-    public int getIdTipusProducte() { return idTipusProducte.get(); }
-    public int getIdIdioma() { return idIdioma.get(); }
-    public int getIdEditorial() { return idEditorial.get(); }
-    public int getIdFormat() { return idFormat.get(); }
-    public int getIdProcedencia() { return idProcedencia.get(); }
-    public int getIdNivell() { return idNivell.get(); }
-    public int getIdColeccio() { return idColeccio.get(); }
-    public int getIdCDU() { return idCDU.get(); }
+    public Idioma getIdioma() { return idioma.get(); }
+    public Editorial getEditorial() { return editorial.get(); }
+    public Format getFormat() { return format.get(); }
+    public Procedencia getProcedencia() { return procedencia.get(); }
+    public Nivell getNivell() { return nivell.get(); }
+    public Coleccio getColeccio() { return coleccio.get(); }
+    public Cdu getCDU() { return cdu.get(); }
 
     //Setters
 
@@ -111,14 +108,13 @@ public class Producte {
     public void setUrlPortada(String urlPortada) { this.urlPortada.set(urlPortada); }
     public void setAdreçaWeb(String adreçaWeb) { this.adreçaWeb.set(adreçaWeb); }
     public void setEstat(boolean estat) { this.estat.set(estat); }
-    public void setIdTipusProducte(int idTipusProducte) { this.idTipusProducte.set(idTipusProducte); }
-    public void setIdIdioma(int idIdioma) { this.idIdioma.set(idIdioma); }
-    public void setIdEditorial(int idEditorial) { this.idEditorial.set(idEditorial); }
-    public void setIdFormat(int idFormat) { this.idFormat.set(idFormat); }
-    public void setIdProcedencia(int idProcedencia) { this.idProcedencia.set(idProcedencia); }
-    public void setIdNivell(int idNivell) { this.idNivell.set(idNivell); }
-    public void setIdColeccio(int idColeccio) { this.idColeccio.set(idColeccio); }
-    public void setIdCDU(int idCDU) { this.idCDU.set(idCDU); }
+    public void setIdioma(Idioma idioma) { this.idioma.set(idioma); }
+    public void setEditorial(Editorial editorial) { this.editorial.set(editorial); }
+    public void setFormat(Format format) { this.format.set(format); }
+    public void setProcedencia(Procedencia procedencia) { this.procedencia.set(procedencia); }
+    public void setNivell(Nivell nivell) { this.nivell.set(nivell); }
+    public void setColeccio(Coleccio coleccio) { this.coleccio.set(coleccio); }
+    public void setCDU(Cdu cdu) { this.cdu.set(cdu); }
 
     //Properties
 
@@ -133,14 +129,13 @@ public class Producte {
     public SimpleStringProperty urlPortadaProperty() { return urlPortada; }
     public SimpleStringProperty adreçaWebProperty() { return adreçaWeb; }
     public SimpleBooleanProperty estatProperty() { return estat; }
-    public SimpleIntegerProperty idTipusProducteProperty() { return idTipusProducte; }
-    public SimpleIntegerProperty idIdiomaProperty() { return idIdioma; }
-    public SimpleIntegerProperty idEditorialProperty() { return idEditorial; }
-    public SimpleIntegerProperty idFormatProperty() { return idFormat; }
-    public SimpleIntegerProperty idProcedenciaProperty() { return idProcedencia; }
-    public SimpleIntegerProperty idNivellProperty() { return idNivell; }
-    public SimpleIntegerProperty idColeccioProperty() { return idColeccio; }
-    public SimpleIntegerProperty idCDUProperty() { return idCDU; }
+    public SimpleObjectProperty<Idioma> idiomaProperty() { return idioma; }
+    public SimpleObjectProperty<Editorial> editorialProperty() { return editorial; }
+    public SimpleObjectProperty<Format> formatProperty() { return format; }
+    public SimpleObjectProperty<Procedencia> procedenciaProperty() { return procedencia; }
+    public SimpleObjectProperty<Nivell> nivellProperty() { return nivell; }
+    public SimpleObjectProperty<Coleccio> coleccioProperty() { return coleccio; }
+    public SimpleObjectProperty<Cdu> cduProperty() { return cdu; }
 
 
 }

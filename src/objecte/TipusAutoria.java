@@ -1,4 +1,4 @@
-package com.company.DAM2.Bibliorevolució.objecte;
+package objecte;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;

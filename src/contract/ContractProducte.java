@@ -1,4 +1,4 @@
-package com.company.DAM2.Bibliorevolució.BBDD.contract;
+package contract;
 
 /**
  * @author albertCorominas
@@ -10,7 +10,7 @@ public abstract class ContractProducte {
     public static final String ISBN = "ISBN";
     public static final String NOM = "nom";
     public static final String NUM_PAG = "num_pag";
-    public static final String DIMENSIONS = "dimensions(cm)";
+    public static final String DIMENSIONS = "dimensions";
     public static final String DATA = "data";
     public static final String RESUM = "resum";
     public static final String CARACTERISTIQUES = "caracteristiques";
