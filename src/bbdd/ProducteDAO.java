@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ProducteDAO implements IObjectDAO<Producte> {
@@ -71,7 +72,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         return list;
     }
     @Override
-    public List<Producte> select(Producte producte) throws ClassNotFoundException, SQLException{
+    public List<Producte> select(HashMap <String,Object> producte) throws ClassNotFoundException, SQLException{
         List<Producte> list = new ArrayList<>();
         String sql;
         try {

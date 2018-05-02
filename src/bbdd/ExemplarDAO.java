@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ExemplarDAO implements IObjectDAO<Exemplar> {
@@ -53,7 +54,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         return list;
     }
     @Override
-    public List<Exemplar> select(Exemplar exemplar) throws ClassNotFoundException, SQLException{
+    public List<Exemplar> select(HashMap <String,Object> exemplar) throws ClassNotFoundException, SQLException{
         List<Exemplar> list = new ArrayList<>();
         String sql;
         try {

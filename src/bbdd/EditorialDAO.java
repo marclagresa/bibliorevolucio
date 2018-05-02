@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import base.ConnectionFactory;
 import contract.ContractEditorial;
+import java.util.HashMap;
 
 /**
  *
@@ -206,25 +207,44 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
     
     /**
      * Retorna una llista amb totes les editorial que coinicideix amb la rebuda per paràmetre
-     * @param e Editorial que te els valors de busqueda
+     * @param dades Mapa amb els valors que estem buscant 
      * @return List of Editorial
      * @throws SQLException si hi ha hagut algún problema al conectarse a la BBDD o al executar la query
      * @throws ClassNotFoundException Si no s' ha pogut carregar el driver jdbc
      */
     @Override 
-    public List<Editorial> select(Editorial e)throws SQLException,ClassNotFoundException{
+    public List<Editorial> select(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
         List<Editorial> editorials=new ArrayList<>();
         Editorial objEditorial;
+        Object[]valors;
+        String query;
+        int i;
         try {
             c=ConnectionFactory.getInstance().getConnection();
-            pst=c.prepareStatement("SELECT * FROM " + ContractEditorial.NOM_TAULA 
-                    + "WHERE " + ContractEditorial.NOM + "LIKE '%?%' "
-                    + "AND " + ContractEditorial.PAIS + "LIKE '%?%' "
-                    + "AND " + ContractEditorial.ADRECA + "LIKE '%?%' "
-                );
-            pst.setString(1, e.getNom());
-            pst.setString(2, e.getPais());
-            pst.setString(3, e.getAdreca());
+            valors=new Object[dades.size()];
+            query = "SELECT * FROM "+ContractEditorial.NOM_TAULA;
+            i=0;
+            for(String camp:dades.keySet()){
+                if(i ==0){
+                    query += " WHERE ";
+                }
+                else{
+                    query += " AND ";
+                }
+                if(dades.get(camp).getClass().equals(String.class)){
+                    query += camp+" LIKE ?";
+                    valors[i]=dades.get(camp);
+                }
+                else{
+                    query += camp+ " = ?";
+                    valors[i]=dades.get(camp);
+                }
+                i++;
+            }
+            pst=c.prepareStatement(query);
+            for(i=0;i<valors.length;i++){
+                pst.setObject(i+1, valors[i]);
+            }
             rs=pst.executeQuery();
             while(rs.next()){
                 objEditorial= new Editorial(
@@ -233,7 +253,7 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
                     rs.getString(ContractEditorial.PAIS),
                     rs.getString(ContractEditorial.ADRECA)
                 );
-                editorials.add(e);
+                editorials.add(objEditorial);
             }
         } catch (SQLException ex) {
             throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());

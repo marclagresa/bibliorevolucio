@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class NivellDAO implements IObjectDAO<Nivell> {
@@ -46,7 +47,7 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         return list;
     }
     @Override
-    public List<Nivell> select(Nivell nivell) throws ClassNotFoundException, SQLException{
+    public List<Nivell> select(HashMap <String,Object> nivell) throws ClassNotFoundException, SQLException{
         List<Nivell> list = new ArrayList<>();
         String sql;
         try {

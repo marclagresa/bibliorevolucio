@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -52,7 +53,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         return list;
     }
     @Override
-    public List<Biblioteca> select(Biblioteca biblioteca) throws ClassNotFoundException, SQLException{
+    public List<Biblioteca> select(HashMap <String,Object> biblioteca) throws ClassNotFoundException, SQLException{
         List<Biblioteca> list = new ArrayList<>();
         String sql;
         try {

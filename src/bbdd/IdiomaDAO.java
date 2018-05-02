@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class IdiomaDAO implements IObjectDAO<Idioma> {
@@ -46,7 +47,7 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
         return list;
     }
     @Override
-    public List<Idioma> select(Idioma idioma) throws ClassNotFoundException, SQLException{
+    public List<Idioma> select(HashMap <String,Object> idioma) throws ClassNotFoundException, SQLException{
         List<Idioma> list = new ArrayList<>();
         String sql;
         try {

@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class FormatDAO implements IObjectDAO<Format>{
@@ -46,7 +47,7 @@ public class FormatDAO implements IObjectDAO<Format>{
         return list;
     }
     @Override
-    public List<Format> select(Format format) throws ClassNotFoundException, SQLException{
+    public List<Format> select(HashMap <String,Object> format) throws ClassNotFoundException, SQLException{
         List<Format> list = new ArrayList<>();
         String sql;
         try {

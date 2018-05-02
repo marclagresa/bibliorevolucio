@@ -2,13 +2,18 @@ package bbdd;
 
 import base.ConnectionFactory;
 import contract.ContractUsuari;
+import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.sql.Connection;
 import objecte.Usuari;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  * Classe encarregada de llegir/escriure a la taula usuari de la BBDD
  * @author sergiclotas
@@ -18,7 +23,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
     Connection c;
     PreparedStatement ps;
     ResultSet rs;
-
+    String query;
     public UsuariDAO() {
         this.c=null;
         this.ps=null;
@@ -93,32 +98,45 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
     /**
      * Funció que ens retorna una llista d' usuaris amb les condicion que
      * ens marca l' usuari rebut per parametre
-     * @param usuari
+     * @param dades
      * @return List de usuaris que coincideixen amb les dades rebudes de l' objecte usuari
      * @throws SQLException si no s'ha pogut conectar a la bbdd
      * @throws ClassNotFoundException  si no s'ha pogut carregar el driver jdbc
      */
     @Override
-    public List<Usuari> select(Usuari usuari) throws SQLException, ClassNotFoundException {
+    public List<Usuari> select(HashMap <String,Object> dades) throws SQLException, ClassNotFoundException {
         List<Usuari> list = new ArrayList<>();
         Usuari usr;
-        String query;
+        Object[]valors;
+        int i;
         try {
+            
             c = ConnectionFactory.getInstance().getConnection();
-            query = "SELECT * FROM "+ ContractUsuari.NOM_TAULA + " "
-                +   "WHERE " + ContractUsuari.NOM + " LIKE ? "
-                +   "AND " + ContractUsuari.PRIMER_COGNOM + " LIKE ? "
-                +   "AND " + ContractUsuari.SEGON_COGNOM + " LIKE ? "
-                +   "AND " + ContractUsuari.EMAIL + " LIKE ? "
-                +   "AND " + ContractUsuari.ACTIU + " = ? "
-                +   "AND " + ContractUsuari.NIVELL + " LIKE ?";
+            query = "SELECT * FROM "+ ContractUsuari.NOM_TAULA;
+            valors=new Object[dades.size()];
+            i=0;
+            for(String camp:dades.keySet()){
+                if(i ==0){
+                    query+=" WHERE ";
+                }
+                else{
+                    query+=" AND ";
+                }
+                if(dades.get(camp).getClass().equals(String.class)){
+                   query+=camp + " LIKE ?";
+                   valors[i]="%" + dades.get(camp) + "%";
+                }
+                else{
+                    query+=camp + " = ?";
+                    valors[i]=dades.get(camp);
+                }
+                
+                i++;
+            }
             ps = c.prepareStatement(query);
-            ps.setString(1, "%" + usuari.getNom() + "%");
-            ps.setString(2, "%" + usuari.getPcognom() + "%");
-            ps.setString(3, "%" + usuari.getScognom() + "%");
-            ps.setString(4, "%" + usuari.getEmail() + "%");
-            ps.setBoolean(5, usuari.isActiu());
-            ps.setString(6, "%" + usuari.getNivell() + "%");
+            for(i=0;i<valors.length;i++){
+                ps.setObject(i+1, valors[i]);
+            }
             rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(fillUsuari());
