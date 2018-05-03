@@ -60,14 +60,10 @@ public class CduDAO implements IObjectDAO<Cdu> {
             sql = "Select "+ContractCdu.ID+","+ContractCdu.NOM+","+ContractCdu.IDPARE+
                     " from "+ContractCdu.NOM_TAULA+" where "+ContractCdu.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
-            ps.setString(1,'%'+cdu.getNom()+'%');
+           // ps.setString(1,'%'+cdu.getNom()+'%');
             rs = ps.executeQuery();
             while(rs.next()){
-                cdu = new Cdu();
-                cdu.setId(rs.getInt(1));
-                cdu.setNom(rs.getString(2));
-                cdu.setIdPare(rs.getInt(3));
-                list.add(cdu);
+             
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -118,24 +114,7 @@ public class CduDAO implements IObjectDAO<Cdu> {
         }
         return inserit;
     }
-    @Override
-    public boolean delete(Cdu cdu) throws ClassNotFoundException, SQLException{
-        String delete;
-        boolean borrat = false;
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            delete = "Delete from "+ContractCdu.NOM_TAULA+" where "+ContractCdu.ID+" = ?";
-            ps = conn.prepareStatement(delete);
-            ps.setInt(1,cdu.getId());
-            ps.executeUpdate();
-            borrat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
-            this.close();
-        }
-        return borrat;
-    }
+   
     @Override
     public boolean update(Cdu cdu) throws ClassNotFoundException, SQLException{
         String update;

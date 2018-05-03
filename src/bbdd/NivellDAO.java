@@ -55,13 +55,10 @@ public class NivellDAO implements IObjectDAO<Nivell> {
             sql = "Select "+ContractNivell.ID+","+ContractNivell.NOM+" from "+ContractNivell.NOM_TAULA+
                     " where "+ContractNivell.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
-            ps.setString(1,'%'+nivell.getNom()+'%');
+          
             rs = ps.executeQuery();
             while(rs.next()){
-                nivell = new Nivell();
-                nivell.setId(rs.getInt(1));
-                nivell.setNom(rs.getString(2));
-                list.add(nivell);
+             
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -111,24 +108,7 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         }
         return inserit;
     }
-    @Override
-    public boolean delete(Nivell nivell) throws ClassNotFoundException, SQLException{
-        String delete;
-        boolean borrat = false;
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            delete = "Delete from "+ContractNivell.NOM_TAULA+" where "+ContractNivell.ID+" = ?";
-            ps = conn.prepareStatement(delete);
-            ps.setInt(1,nivell.getId());
-            ps.executeUpdate();
-            borrat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
-            this.close();
-        }
-        return borrat;
-    }
+ 
     @Override
     public boolean update(Nivell nivell) throws ClassNotFoundException, SQLException{
         String update;

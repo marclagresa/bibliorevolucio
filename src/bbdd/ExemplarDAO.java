@@ -63,17 +63,10 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
                     ContractExemplar.NUMERO_PRESTEC+","+ContractExemplar.ESTAT+" from "+ContractExemplar.NOM_TAULA+
                     " where "+ContractExemplar.NUMERO_PRESTEC+" = ? ";
             ps = conn.prepareStatement(sql);
-            ps.setInt(1,exemplar.getNumprestecs());
+          
             rs = ps.executeQuery();
             while(rs.next()){
-                exemplar = new Exemplar();
-                exemplar.setId(rs.getInt(1));
-                exemplar.setIdProducte((Producte) rs.getObject(2));
-                exemplar.setIdBiblioteca((Biblioteca) rs.getObject(3));
-                exemplar.setNumprestecs(rs.getInt(4));
-                exemplar.setEstat(rs.getBoolean(5));
-
-                list.add(exemplar);
+              
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -130,24 +123,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         }
         return inserit;
     }
-    @Override
-    public boolean delete(Exemplar exemplar) throws ClassNotFoundException, SQLException{
-        String delete;
-        boolean borrat = false;
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            delete = "Delete from "+ContractExemplar.NOM_TAULA+" where "+ContractExemplar.ID+" = ?";
-            ps = conn.prepareStatement(delete);
-            ps.setInt(1,exemplar.getId());
-            ps.executeUpdate();
-            borrat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
-            this.close();
-        }
-        return borrat;
-    }
+ 
     @Override
     public boolean update(Exemplar exemplar) throws ClassNotFoundException, SQLException{
         String update;

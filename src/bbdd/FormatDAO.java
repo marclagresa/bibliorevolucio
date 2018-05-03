@@ -55,13 +55,10 @@ public class FormatDAO implements IObjectDAO<Format>{
             sql = "Select "+ContractFormat.ID+","+ContractFormat.NOM+" from "+
                     ContractFormat.NOM_TAULA+" where "+ContractFormat.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
-            ps.setString(1,'%'+format.getNom()+'%');
+           
             rs = ps.executeQuery();
             while(rs.next()){
-                format = new Format();
-                format.setId(rs.getInt(1));
-                format.setNom(rs.getString(2));
-                list.add(format);
+              
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -111,24 +108,7 @@ public class FormatDAO implements IObjectDAO<Format>{
         }
         return inserit;
     }
-    @Override
-    public boolean delete(Format format) throws ClassNotFoundException, SQLException{
-        String delete;
-        boolean borrat = false;
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            delete = "Delete from "+ContractFormat.NOM_TAULA+" where "+ContractFormat.ID+" = ?";
-            ps = conn.prepareStatement(delete);
-            ps.setInt(1,format.getId());
-            ps.executeUpdate();
-            borrat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
-            this.close();
-        }
-        return borrat;
-    }
+  
     @Override
     public boolean update(Format format) throws ClassNotFoundException, SQLException{
         String update;

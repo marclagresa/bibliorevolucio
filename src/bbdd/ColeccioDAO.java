@@ -55,13 +55,10 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
             sql = "Select "+ContractColeccio.ID+","+ContractColeccio.NOM+
                     " from "+ContractColeccio.NOM_TAULA+" where "+ContractColeccio.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
-            ps.setString(1,'%'+coleccio.getNom()+'%');
+           // ps.setString(1,'%'+coleccio.getNom()+'%');
             rs = ps.executeQuery();
             while(rs.next()){
-                coleccio = new Coleccio();
-                coleccio.setId(rs.getInt(1));
-                coleccio.setNom(rs.getString(2));
-                list.add(coleccio);
+              
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -109,24 +106,7 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
         }
         return inserit;
     }
-    @Override
-    public boolean delete(Coleccio coleccio) throws ClassNotFoundException, SQLException{
-        String delete;
-        boolean borrat = false;
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            delete = "Delete from "+ContractColeccio.NOM_TAULA+" where "+ContractColeccio.ID+" = ?";
-            ps = conn.prepareStatement(delete);
-            ps.setInt(1,coleccio.getId());
-            ps.executeUpdate();
-            borrat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
-            this.close();
-        }
-        return borrat;
-    }
+   
     @Override
     public boolean update(Coleccio coleccio) throws ClassNotFoundException, SQLException{
         String update;

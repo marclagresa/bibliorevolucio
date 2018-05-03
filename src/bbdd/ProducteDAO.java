@@ -86,29 +86,9 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     +ContractProducte.NIVELL_ID+","+ContractProducte.COLECCIO_ID+","+ContractProducte.CDU_ID+
                     " from "+ ContractProducte.NOM_TAULA + " where " + ContractProducte.ID + " = ? ";
             ps = conn.prepareStatement(sql);
-            ps.setInt(1,producte.getId());
+        //    ps.setInt(1,producte.getId());
             rs = ps.executeQuery();
-            producte = new Producte(
-                    rs.getInt(1),
-                    rs.getString(2),
-                    rs.getString(3),
-                    rs.getInt(4),
-                    rs.getString(5),
-                    rs.getString(6),
-                    rs.getString(7),
-                    rs.getString(8),
-                    rs.getString(9),
-                    rs.getString(10),
-                    rs.getBoolean(11),
-                    (Idioma) rs.getObject(12),
-                    (Editorial) rs.getObject(13),
-                    (Format) rs.getObject(14),
-                    (Procedencia) rs.getObject(15),
-                    (Nivell) rs.getObject(16),
-                    (Coleccio) rs.getObject(17),
-                    (Cdu) rs.getObject(18)
-            );
-            list.add(producte);
+      
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         } finally {
@@ -194,24 +174,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         }
         return inserit;
     }
-    @Override
-    public boolean delete(Producte producte) throws ClassNotFoundException, SQLException{
-        String delete;
-        boolean borrat = false;
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            delete = "Delete from "+ContractProducte.NOM_TAULA+" where "+ContractProducte.ID+" = ?";
-            ps = conn.prepareStatement(delete);
-            ps.setInt(1,producte.getId());
-            ps.executeUpdate();
-            borrat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
-            this.close();
-        }
-        return borrat;
-    }
+ 
     @Override
     public boolean update(Producte producte) throws ClassNotFoundException, SQLException{
         String update;

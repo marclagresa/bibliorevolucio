@@ -55,13 +55,10 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
             sql = "Select "+ContractIdioma.ID+","+ContractIdioma.NOM+" from "+ContractIdioma.NOM_TAULA+
                     " where "+ContractIdioma.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
-            ps.setString(1,'%'+idioma.getNom()+'%');
+           
             rs = ps.executeQuery();
             while(rs.next()){
-                idioma = new Idioma();
-                idioma.setId(rs.getInt(1));
-                idioma.setNom(rs.getString(2));
-                list.add(idioma);
+              
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -112,24 +109,7 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
         }
         return inserit;
     }
-    @Override
-    public boolean delete(Idioma idioma) throws ClassNotFoundException, SQLException{
-        String delete;
-        boolean borrat = false;
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            delete = "Delete from "+ContractIdioma.NOM_TAULA+" where "+ContractIdioma.ID+" = ?";
-            ps = conn.prepareStatement(delete);
-            ps.setInt(1,idioma.getId());
-            ps.executeUpdate();
-            borrat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
-            this.close();
-        }
-        return borrat;
-    }
+
     @Override
     public boolean update(Idioma idioma) throws ClassNotFoundException, SQLException{
         String update;

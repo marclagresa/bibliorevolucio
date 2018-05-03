@@ -55,13 +55,10 @@ public class MateriaDAO implements IObjectDAO<Materia> {
             sql = "Select "+ContractMateria.ID+","+ContractMateria.NOM+ " from "+ContractMateria.NOM_TAULA+
                     " where "+ContractMateria.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
-            ps.setString(1,'%'+materia.getNom()+'%');
+           
             rs = ps.executeQuery();
             while(rs.next()){
-                materia = new Materia();
-                materia.setId(rs.getInt(1));
-                materia.setNom(rs.getString(2));
-                list.add(materia);
+               
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -111,24 +108,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         }
         return inserit;
     }
-    @Override
-    public boolean delete(Materia materia) throws ClassNotFoundException, SQLException{
-        String delete;
-        boolean borrat = false;
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            delete = "Delete from "+ContractMateria.NOM_TAULA+" where "+ContractMateria.ID+" = ?";
-            ps = conn.prepareStatement(delete);
-            ps.setInt(1,materia.getId());
-            ps.executeUpdate();
-            borrat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
-            this.close();
-        }
-        return borrat;
-    }
+  
     @Override
     public boolean update(Materia materia) throws ClassNotFoundException, SQLException{
         String update;

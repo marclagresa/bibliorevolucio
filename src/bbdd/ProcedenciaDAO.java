@@ -56,13 +56,10 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
             sql = "Select "+ContractProcedencia.ID+","+ContractProcedencia.NOM+
                     "from "+ContractProcedencia.NOM_TAULA+" where "+ContractProcedencia.NOM+" LIKE ? ";
             ps = conn.prepareStatement(sql);
-            ps.setString(1,'%'+procedencia.getNom()+'%');
+          
             rs = ps.executeQuery();
             while(rs.next()){
-                procedencia = new Procedencia();
-                procedencia.setId(rs.getInt(1));
-                procedencia.setNom(rs.getString(2));
-                list.add(procedencia);
+             
             }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
@@ -113,24 +110,7 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
         }
         return inserit;
     }
-    @Override
-    public boolean delete(Procedencia procedencia) throws ClassNotFoundException, SQLException{
-        String delete;
-        boolean borrat = false;
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            delete = "Delete from "+ContractProcedencia.NOM_TAULA+" where "+ContractProcedencia.ID+" = ?";
-            ps = conn.prepareStatement(delete);
-            ps.setInt(1,procedencia.getId());
-            ps.executeUpdate();
-            borrat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
-            this.close();
-        }
-        return borrat;
-    }
+  
     @Override
     public boolean update(Procedencia procedencia) throws ClassNotFoundException, SQLException{
         String update;
