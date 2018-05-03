@@ -1,6 +1,7 @@
 package bbdd;
 
 import base.ConnectionFactory;
+import contract.ContractEditorial;
 import contract.ContractUsuari;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -9,6 +10,8 @@ import objecte.Usuari;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLType;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +80,8 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
         String query;
         try {
             c = ConnectionFactory.getInstance().getConnection();
-            query  = "SELECT * FROM "+ ContractUsuari.NOM_TAULA;
+            query  = "SELECT * FROM "+ ContractUsuari.NOM_TAULA 
+                  + " WHERE "+ ContractUsuari.ACTIU + " = 1";
             ps = c.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -109,6 +113,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
         Usuari usr;
         Object[]valors;
         int i;
+        boolean dadesCorrectes=false;
         try {
             
             c = ConnectionFactory.getInstance().getConnection();
@@ -116,21 +121,38 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
             valors=new Object[dades.size()];
             i=0;
             for(String camp:dades.keySet()){
-                if(i ==0){
-                    query+=" WHERE ";
+                switch(ContractUsuari.DEFINICIO.get(camp)){
+                    case Types.BOOLEAN:
+                        dadesCorrectes=dades.get(camp).getClass().equals(Boolean.class);
+                        break;
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                        dadesCorrectes=dades.get(camp).getClass().equals(String.class);
+                        break;
+                    case Types.INTEGER:
+                        dadesCorrectes=dades.get(camp).getClass().equals(Integer.class);
+                        break;
+                }
+                if(dadesCorrectes){
+                    if(i == 0){
+                        query+=" WHERE ";
+                    }
+                    else{
+                        query+=" AND ";
+                    }
+                     query+= camp;
+                    if(dades.get(camp).getClass().equals(String.class)){
+                       query+= " LIKE ?";
+                       valors[i]="%" + dades.get(camp) + "%";
+                    }
+                    else{
+                        query+=" = ?";
+                        valors[i]=dades.get(camp);
+                    }
                 }
                 else{
-                    query+=" AND ";
+                    throw new SQLException("El tipus de dades introduïdes no són correctes.");
                 }
-                if(dades.get(camp).getClass().equals(String.class)){
-                   query+=camp + " LIKE ?";
-                   valors[i]="%" + dades.get(camp) + "%";
-                }
-                else{
-                    query+=camp + " = ?";
-                    valors[i]=dades.get(camp);
-                }
-                
                 i++;
             }
             ps = c.prepareStatement(query);
@@ -142,6 +164,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
                 list.add(fillUsuari());
             }
 
+            
         } catch (SQLException ex) {
             throw new SQLException(ex.getMessage(), ex.getSQLState(), ex.getErrorCode(), ex.getCause());
         } catch (ClassNotFoundException ex) {
@@ -213,26 +236,6 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
      * @throws SQLException si no s'ha pogut conectar a la bbdd
      * @throws ClassNotFoundException si no s' ha pogut carregar el driver jdbc
      */
-    @Override
-    public boolean delete(Usuari usuari) throws SQLException, ClassNotFoundException {
-        boolean deleted = false;
-        String query;
-        try {
-            c = ConnectionFactory.getInstance().getConnection();
-            query = "DELETE FROM "+ContractUsuari.NOM_TAULA+" "
-                  + "WHERE " + ContractUsuari.ID + " = ?";
-            ps = ConnectionFactory.getInstance().getConnection().prepareStatement(query);
-            ps.setInt(1, usuari.getId());
-            deleted = ps.executeUpdate() == 1;
-        } catch (SQLException ex) {
-            throw new SQLException(ex.getMessage(), ex.getSQLState(), ex.getErrorCode(), ex.getCause());
-        } catch (ClassNotFoundException ex) {
-            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
-        } finally {
-            this.close();
-        }
-        return deleted;
-    }
     
     /**
      * Funció que intenta fer l'update de l'usuari rebut per paràmetre
@@ -402,4 +405,23 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
                 rs.getString(ContractUsuari.NIVELL)
         );
     }
+    public static void main(String[] args) {
+        
+        HashMap <String,Object> prova= new HashMap();
+        prova.put(ContractUsuari.ADMIN, true);
+        prova.put(ContractUsuari.ID, 1);
+        prova.put(ContractUsuari.NOM, "blablab");
+        try{
+            ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configLector.txt"));
+            List<Usuari> lstUsr= new UsuariDAO().select(prova);    
+            System.out.println(lstUsr.size());
+        }catch(SQLException|ClassNotFoundException |IOException e){
+            System.err.println(e.getMessage());
+        }
+            
+        
+        
+    
+    }
+    
 }

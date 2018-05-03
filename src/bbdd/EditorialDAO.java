@@ -120,38 +120,6 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
         }
         return editorials;
     }
-    
-    
-    /**
-     * Funció per esborarr una editorial de la BBDD
-     * @param e Editorial a borrar
-     * @return cert si s' ha pogut eliminar altrament retorna fals
-     * @throws  SQLException 
-     * @throws ClassNotFoundException
-     */
-    @Override
-    public boolean delete(Editorial e) throws SQLException,ClassNotFoundException{
-        boolean deletejat = false;
-        String query;
-        try {
-            c=ConnectionFactory.getInstance().getConnection();
-            query=" DELETE FROM " + ContractEditorial.NOM_TAULA 
-                + " WHERE " + ContractEditorial.ID + " = ?";
-            pst=c.prepareStatement(query);
-            pst.setInt(1, e.getId());
-            deletejat = pst.executeUpdate() == 1;
-        } catch (SQLException ex) {
-            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
-        
-        } catch(ClassNotFoundException ex){
-            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
-        } 
-        finally{
-            this.close();
-        }
-        return deletejat;
-    }
-    
     /**
      * Funcio per afegir una nova editorial
      * @param e nova editorial a inserir
@@ -293,6 +261,40 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
         }
         return id;
     }
+    /**
+     * 
+     * @param id
+     * @return Editorial
+     * @throws ClassNotFoundException
+     * @throws SQLException 
+     */
+    @Override
+    public Editorial select(int id) throws ClassNotFoundException, SQLException {
+        Editorial objEditorial = new Editorial();
+        String query;
+        try{
+            c=ConnectionFactory.getInstance().getConnection();
+            query= "SELECT * FROM "+ContractEditorial.NOM_TAULA 
+                 + "WHERE " + ContractEditorial.ID + " = ?";
+            pst=c.prepareStatement(query);
+            pst.setInt(1, id);
+            rs=pst.executeQuery();
+            if(rs.next()){
+                objEditorial.setId(rs.getInt(ContractEditorial.ID));
+                objEditorial.setNom(rs.getString(ContractEditorial.NOM));
+                objEditorial.setPais(rs.getString(ContractEditorial.PAIS));
+                objEditorial.setAdreca(rs.getString(ContractEditorial.ADRECA));
+            }
+        } catch(SQLException e){
+            throw new SQLException (e.getMessage(),e.getSQLState(),e.getErrorCode(),e.getCause());
+        } catch(ClassNotFoundException e){
+            throw new ClassNotFoundException (e.getMessage(),e.getCause());
+        }
+        finally{
+            
+        }
+        return objEditorial;
+    }
     
     /**
      * Métode per tancar les conexions obertes amb la BBDD.
@@ -336,11 +338,5 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
                 
             }
         }
-    }
-
-    @Override
-    public Editorial select(int id) throws ClassNotFoundException, SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+    }  
 }

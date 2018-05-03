@@ -6,6 +6,7 @@
 
 package base;
 
+import com.sun.deploy.config.Platform;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -14,6 +15,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * Classe per obtenir una conexió oberta a la BBDD
@@ -25,7 +27,6 @@ public class ConnectionFactory {
     private String contrasenya;
     public String url;
     public String driver;
-    
     private ConnectionFactory(){
         this.usuari=null;
         this.contrasenya=null;
@@ -39,8 +40,7 @@ public class ConnectionFactory {
         }
         return ConnectionFactory.instance;
     }
-    
-    public void configure(Path configFile) throws IOException{
+    public void configure(Path configFile) throws IOException{   
         List<String> liniesFitxer=Files.readAllLines(configFile, Charset.forName("utf-8"));
         liniesFitxer.forEach(linia->{
             String []dadesLinia=linia.split(";");

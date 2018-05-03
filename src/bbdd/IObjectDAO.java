@@ -14,13 +14,12 @@ import java.util.List;
  * @author sergiclotas
  */
 public interface IObjectDAO<E> {
-    public abstract boolean delete(E e)throws ClassNotFoundException,SQLException;
+    
     public abstract boolean update(E e)throws ClassNotFoundException,SQLException;
     public abstract boolean insert(E e)throws ClassNotFoundException,SQLException;
     public abstract List<E> selectAll()throws ClassNotFoundException,SQLException;
     public abstract List<E> select(HashMap <String,Object> dades)throws ClassNotFoundException,SQLException;
     public abstract int nextId() throws ClassNotFoundException,SQLException;
-
     public abstract E select(int id) throws ClassNotFoundException,SQLException;
     public abstract void close();
 }
