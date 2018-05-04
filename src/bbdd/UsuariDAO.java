@@ -1,7 +1,6 @@
 package bbdd;
 
 import base.ConnectionFactory;
-import contract.ContractEditorial;
 import contract.ContractUsuari;
 import java.io.IOException;
 import java.nio.file.FileSystems;
@@ -10,13 +9,10 @@ import objecte.Usuari;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.SQLType;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 /**
  * Classe encarregada de llegir/escriure a la taula usuari de la BBDD
  * @author sergiclotas
@@ -26,7 +22,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
     Connection c;
     PreparedStatement ps;
     ResultSet rs;
-    String query;
+    
     public UsuariDAO() {
         this.c=null;
         this.ps=null;
@@ -112,6 +108,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
         List<Usuari> list = new ArrayList<>();
         Usuari usr;
         Object[]valors;
+        String query;
         int i;
         boolean dadesCorrectes=false;
         try {
