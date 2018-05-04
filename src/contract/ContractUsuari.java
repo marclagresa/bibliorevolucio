@@ -25,7 +25,7 @@ public abstract class ContractUsuari {
     public static final String ACTIU = NOM_TAULA+".estat";
     public static final String SALT = NOM_TAULA+".saltContr";
     public static final String ADMIN = NOM_TAULA+".esAdmin";
-    public static final String NIVELL = NOM_TAULA+".nivell";
+    public static final String ID_NIVELL = NOM_TAULA+".id_nivell";
     public static final HashMap<String,Integer> DEFINICIO  = new HashMap<String,Integer>(){{
         //Aquest HashMap s' utilitza per comprovar el tipus de dades rebudes en una query
         //Ens defineix cada columna de quin tipus es.
@@ -40,6 +40,6 @@ public abstract class ContractUsuari {
         put(ACTIU, Types.BOOLEAN);
         put(ADMIN,Types.BOOLEAN);
         put(SALT, Types.CHAR);
-        put(NIVELL, Types.VARCHAR);
+        put(ID_NIVELL, Types.INTEGER);
     }};   
 }

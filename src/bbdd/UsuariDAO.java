@@ -195,7 +195,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
                     + ContractUsuari.TELEFON_FIX + ", "
                     + ContractUsuari.TELEFON_MOBIL + ", "
                     + ContractUsuari.EMAIL + ", "
-                    + ContractUsuari.NIVELL + ", "
+                    + ContractUsuari.ID_NIVELL + ", "
                     + ContractUsuari.ADMIN + ", "
                     + ContractUsuari.ACTIU + ", "
                     + ContractUsuari.CONTRASENYA + ", "
@@ -254,7 +254,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
                     + ContractUsuari.TELEFON_MOBIL + " = ?, "
                     + ContractUsuari.TELEFON_FIX + " = ?, "
                     + ContractUsuari.EMAIL + " = ?, "
-                    + ContractUsuari.NIVELL + " = ?, "
+                    + ContractUsuari.ID_NIVELL + " = ?, "
                     + ContractUsuari.ACTIU + " = ?, "
                     + ContractUsuari.ADMIN + " = ?, "
                     + ContractUsuari.SALT + " = ?, "
@@ -399,7 +399,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
                 rs.getBoolean(ContractUsuari.ACTIU),
                 rs.getString(ContractUsuari.SALT),
                 rs.getBoolean(ContractUsuari.ADMIN),
-                rs.getString(ContractUsuari.NIVELL)
+                rs.getString(ContractUsuari.ID_NIVELL)
         );
     }
     public static void main(String[] args) {
@@ -415,10 +415,6 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
         }catch(SQLException|ClassNotFoundException |IOException e){
             System.err.println(e.getMessage());
         }
-            
-        
-        
-    
     }
     
 }

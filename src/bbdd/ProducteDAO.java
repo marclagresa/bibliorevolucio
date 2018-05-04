@@ -8,7 +8,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
@@ -64,33 +67,53 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                 );
                 list.add(selectProducte);
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
         return list;
     }
     @Override
-    public List<Producte> select(HashMap <String,Object> producte) throws ClassNotFoundException, SQLException{
+    public List<Producte> select(HashMap <String,Object> dades) throws ClassNotFoundException, SQLException{
         List<Producte> list = new ArrayList<>();
         String sql;
+        Object [] valors;
+        int i;
+        boolean dadaCorrecte=false;
+        
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ContractProducte.ID+","+ContractProducte.ISBN+","+ContractProducte.NOM+","
-                    +ContractProducte.NUM_PAG+","+ContractProducte.DIMENSIONS+","+ContractProducte.DATA+","
-                    +ContractProducte.RESUM+","+ContractProducte.CARACTERISTIQUES+","
-                    +ContractProducte.URL_PORTADA+","+ContractProducte.ADRECA_WEB+","+ContractProducte.ESTAT+","
-                    +ContractProducte.IDIOMA_ID+","+ContractProducte.EDITORIAL_ID+","
-                    +ContractProducte.FORMAT_ID+","+ContractProducte.PROCEDENCIA_ID+","
-                    +ContractProducte.NIVELL_ID+","+ContractProducte.COLECCIO_ID+","+ContractProducte.CDU_ID+
-                    " from "+ ContractProducte.NOM_TAULA + " where " + ContractProducte.ID + " = ? ";
+            sql = "SELECT * FROM "+ContractProducte.NOM_TAULA;
+            i=0;
+            for(String camp:dades.keySet()){
+                valors=new Object[dades.size()];
+                switch(ContractProducte.DEFINICIO.get(camp)){
+                    case Types.INTEGER:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
+                        break;
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                        dadaCorrecte=dades.get(camp).getClass().equals(String.class);
+                        break;
+                    case Types.BOOLEAN:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
+                        break;
+                    case Types.DATE:
+                       // dadaCorrecte=dades.get(camp).getClass().equals()
+                        
+                }
+            }
             ps = conn.prepareStatement(sql);
         //    ps.setInt(1,producte.getId());
             rs = ps.executeQuery();
       
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
@@ -129,8 +152,11 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             producte.setEstat(rs.getBoolean(11));
             producte.setIdioma(idioma.select(rs.getInt(12)));
 
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+            
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
         } finally {
             this.close();
         }
@@ -167,9 +193,11 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setInt(18,producte.getCDU().getId());
             ps.executeUpdate();
             inserit = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
+        } catch (SQLException ex) {
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        } catch( ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally {
             this.close();
         }
         return inserit;
@@ -208,8 +236,10 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setInt(17,producte.getId());
             ps.executeUpdate();
             actualitzat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
@@ -227,8 +257,10 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             if(rs.next()){
                 id = rs.getInt(1)+1;
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException (ex.getMessage(),ex.getCause());
         }
         return id;
     }
@@ -258,5 +290,9 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                 ex.printStackTrace();
             }
         }
+    }
+   
+    public static void main(String[] args) {
+        
     }
 }
