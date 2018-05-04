@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox id="HboxPrincipalUsuari" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="706.0" prefWidth="1266.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.MenuPrincipalUsuariControlador">
+   <children>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <ImageView id="opcioConsulta" fitHeight="374.0" fitWidth="309.0" pickOnBounds="true" preserveRatio="true" />
+            <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" prefHeight="150.0" prefWidth="309.0" text="CONSULTAR" textAlignment="CENTER" />
+         </children>
+         <HBox.margin>
+            <Insets right="35.0" />
+         </HBox.margin>
+      </VBox>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <ImageView id="opcioEditarPerfil" fitHeight="373.0" fitWidth="287.0" pickOnBounds="true" preserveRatio="true" />
+            <Label alignment="BOTTOM_CENTER" contentDisplay="CENTER" prefHeight="176.0" prefWidth="287.0" text="MODIFICAR PERFIL" textAlignment="CENTER" />
+         </children>
+         <HBox.margin>
+            <Insets left="60.0" />
+         </HBox.margin>
+      </VBox>
+   </children>
+</HBox>

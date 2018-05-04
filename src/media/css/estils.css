@@ -1,32 +1,24 @@
 .root {
-    /*-fx-background-image: url("img2.png");*/
-    -fx-font-family: /*"Lucida Fax"*/'Lucida Fax';
+/*-fx-background-image: url("img2.png");*/
+-fx-font-family: /*"Lucida Fax"*/'Lucida Fax';
 }
 .label {
-    -fx-font-size: 25px;
-    -fx-text-fill: #FF4619;
-}
-.gridpane .label{
-    -fx-font-size:14px;
-    -fx-text-fill:black;
-    -fx-alignment:CENTER_RIGHT;
-    -fx-border-color: black;
+ -fx-font-size: 25px;
+ -fx-text-fill: #FF4619;
 }
 #contingut1{
+    -fx-alignment: CENTER;
+}
+#contingut2{
     -fx-alignment: CENTER;
 }
 #separador{
  /* -fx-background-color: #464646;  */
 }
 #lbCapcelera{
-    -fx-font-size: 720%;
-    -fx-alignment: CENTER;
-    -fx-font-family: /*"sans-serif"*/'Lucida Fax';
-}
-#lbLogin{
-    -fx-alignment: CENTER_LEFT;
-    -fx-font-size: 15px;
-    -fx-text-fill: #FFD29D;
+     -fx-font-size: 720%;
+     -fx-alignment: CENTER;
+     -fx-font-family: /*"sans-serif"*/'Lucida Fax';
 }
 #btEnrere{
     -fx-border:none; 
@@ -40,13 +32,75 @@
     -fx-border-radius: 85px;
     -fx-background-image: url('../img/flexa1.png');
     -fx-text-alignment: left;
-}
+    
 
+}
 #btEnrere:hover{
-    -fx-border-radius: 5px;
-    -fx-background-image: url('../img/flexa2.png');
+     -fx-border-radius: 5px;
+    
+     -fx-background-image: url('../img/flexa2.png');
      /* -fx-box-shadow:inset 0 0 0 3px #3a7999;*/
 }
+/*Login css*/
+#lbLogin{
+    -fx-alignment: CENTER_LEFT;
+    -fx-font-size: 15px;
+    -fx-text-fill:#464646;
+}
+#girdLogin{
+   -fx-text-fill: #464646;
+}
+
+#btsLogin{
+    
+    -fx-text-fill: #FF4619;
+}
+#lbUserLogin{-fx-text-fill:#464646;  -fx-font-weight:bold;}
+#lbContraLogin{-fx-text-fill:#464646;  -fx-font-weight:bold;}
+#lbResutatLogin{-fx-text-fill:#FE0000;  -fx-font-size:12px;}
+
+#bt1Login{-fx-font-size:15px;  -fx-font-weight:bold;  -fx-border-radius:5px;  -fx-border-color:#FF4619;}
+#bt2Login{-fx-font-size:15px;  -fx-font-weight:bold;  -fx-border-radius:5px;  -fx-border-color:#FF4619;}
+#bt1Login:hover{-fx-font-weight:bold;  -fx-background-color:#FF4619}
+#bt2Login:hover{-fx-font-weight:bold;  -fx-background-image:  url('../img/fondoProva.png');}
+#VBoxLogin{
+   -fx-font-size: 25px;
+ -fx-text-fill: #464646; 
+}
+/*Acava el login*/
+
+/*Canvi de color hover menu*/
+#opcioMenuMant{          -fx-image: url('../img/BiblioMant.png');  }
+#opcioMenuMant:hover{    -fx-image: url('../img/BiblioMant2.png');}
+#opcioMenuUsuari{        -fx-image: url('../img/BiblioUsuari.png');}
+#opcioMenuUsuari:hover{  -fx-image: url('../img/BiblioUsuari2.png');  }
+#opcioMenuPrestecs{      -fx-image: url('../img/BiblioPrestecs.png');  }
+#opcioMenuPrestecs:hover{-fx-image: url('../img/BiblioPrestecs2.png');  }
+/*Canvi color hover submenu manteniment*/
+
+#opcioMenuAutor{        -fx-image: url('../img/MantAutor.png'); }
+#opcioMenuAutor:hover{  -fx-image: url('../img/MantAutor2.png'); }
+#opcioMenuCdu{          -fx-image: url('../img/MantCDU.png'); }
+#opcioMenuCdu:hover{    -fx-image: url('../img/MantCDU2.png'); }
+#opcioMenuEditorial{    -fx-image: url('../img/MantEditorial.png'); }
+#opcioMenuEditorial:hover{-fx-image: url('../img/MantEditorial2.png'); }
+#opcioMenuObres{        -fx-image: url('../img/MantObres.png'); }
+#opcioMenuObres:hover{  -fx-image: url('../img/MantObres2.png'); }
+
+
+/*Menu Principal Usuari*/
+#opcioConsulta{-fx-image: url('../img/consultaUsuari.png');}
+#opcioConsulta:hover{-fx-image: url('../img/consultaUsuari2.png');}
+#opcioEditarPerfil{-fx-image: url('../img/editarPerfil.png');}
+#opcioEditarPerfil:hover{-fx-image: url('../img/editarPerfil2.png');}
+#HboxPrincipalUsuari{
+    -fx-alignment: CENTER;
+    -fx-font-size: 15px;
+    -fx-text-fill:#464646;
+}
+
+
+
 
 #VBoxTop {
  /*-fx-font-size: 32px;
@@ -54,17 +108,17 @@
  -fx-fill: #336699;
  -fx-effect: innershadow( three-pass-box , rgba(153,0,204,0.7) ,
 6, 0.0, 0 , 2 );*/
-    -fx-background-color: #464646;
-    -fx-font-weight: bold;
-    -fx-text-fill: #FF4619;
+ -fx-background-color: #464646;
+ -fx-font-weight: bold;
+ -fx-text-fill: #FF4619;
  
 }
 #consultaResult{
     -fx-text-fill:#AE33FF;
 }
 #styleMenu{
-    -fx-font-size: 17px;
-    -fx-font-weight: bold;
-    -fx-text-fill: #D3E1FF;
-    /*-fx-background-color: #AFC8FF;*/
+     -fx-font-size: 17px;
+     -fx-font-weight: bold;
+     -fx-text-fill: #D3E1FF;
+     /*-fx-background-color: #AFC8FF;*/
 }
