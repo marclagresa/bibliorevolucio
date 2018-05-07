@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.effect.Blend?>
-<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
@@ -13,12 +12,8 @@
    <children>
       <VBox alignment="CENTER" prefHeight="550.0" prefWidth="434.0">
          <children>
-            <ImageView fitHeight="417.0" fitWidth="361.0" onMouseClicked="#SubmenuManteniment" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../media/img/BiblioMant.png" />
-               </image>
-            </ImageView>
-            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#ClicMantBiblioteca" prefHeight="37.0" prefWidth="434.0" text="MANTENIMENT BIBLIOTECA" textAlignment="CENTER" />
+            <ImageView id="opcioMenuMant" fitHeight="417.0" fitWidth="361.0" onMouseClicked="#SubmenuManteniment" pickOnBounds="true" preserveRatio="true" />
+            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#ClicMantBiblioteca" prefHeight="37.0" prefWidth="434.0" text="MANTENIMENT " textAlignment="CENTER" />
          </children>
       </VBox>
       <Separator id="separador" opacity="0.8" orientation="VERTICAL" prefHeight="545.0" prefWidth="66.0">
@@ -34,12 +29,8 @@
       </Separator>
       <VBox alignment="CENTER" prefHeight="550.0" prefWidth="417.0">
          <children>
-            <ImageView fitHeight="441.0" fitWidth="312.0" onMouseClicked="#SubmenuUsuaris" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../media/img/BiblioUsuari.png" />
-               </image>
-            </ImageView>
-            <Label alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="37.0" prefWidth="458.0" text="USUARIS" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" />
+            <ImageView id="opcioMenuProducte" fitHeight="441.0" fitWidth="312.0" onMouseClicked="#SubmenuUsuaris" pickOnBounds="true" preserveRatio="true" />
+            <Label alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="37.0" prefWidth="458.0" text="PRODUCTES" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" />
          </children>
       </VBox>
       <Separator id="separador" opacity="0.8" orientation="VERTICAL" prefHeight="346.0" prefWidth="0.0">
@@ -49,11 +40,7 @@
       </Separator>
       <VBox alignment="CENTER" prefHeight="550.0" prefWidth="402.0">
          <children>
-            <ImageView fitHeight="416.0" fitWidth="308.0" onMouseClicked="#SubmenuPrestecs" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../media/img/BiblioPrestecs.png" />
-               </image>
-            </ImageView>
+            <ImageView id="opcioMenuPrestecs" fitHeight="416.0" fitWidth="308.0" onMouseClicked="#SubmenuPrestecs" pickOnBounds="true" preserveRatio="true" />
             <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="37.0" prefWidth="434.0" text="PRESTÉCS" textAlignment="CENTER" />
          </children>
       </VBox>
