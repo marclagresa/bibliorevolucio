@@ -41,7 +41,7 @@
      -fx-background-image: url('../img/flexa2.png');
      /* -fx-box-shadow:inset 0 0 0 3px #3a7999;*/
 }
-/*Login css*/
+/*------------------------------Login css-----------------------------------------*/
 #lbLogin{
     -fx-alignment: CENTER_LEFT;
     -fx-font-size: 15px;
@@ -61,34 +61,48 @@
 
 #bt1Login{-fx-font-size:15px;  -fx-font-weight:bold;  -fx-border-radius:5px;  -fx-border-color:#FF4619;}
 #bt2Login{-fx-font-size:15px;  -fx-font-weight:bold;  -fx-border-radius:5px;  -fx-border-color:#FF4619;}
-#bt1Login:hover{-fx-font-weight:bold;  -fx-background-color:#FF4619}
-#bt2Login:hover{-fx-font-weight:bold;  -fx-background-image:  url('../img/fondoProva.png');}
+#bt1Login:hover{-fx-font-weight:bold;  -fx-background-image:  url('../img/fondoProva2.png');}
+#bt2Login:hover{-fx-font-weight:bold;  -fx-background-image:  url('../img/fondoProva2.png');}
 #VBoxLogin{
    -fx-font-size: 25px;
  -fx-text-fill: #464646; 
 }
 /*Acava el login*/
 
-/*Canvi de color hover menu*/
-#opcioMenuMant{          -fx-image: url('../img/BiblioMant.png');  }
-#opcioMenuMant:hover{    -fx-image: url('../img/BiblioMant2.png');}
-#opcioMenuUsuari{        -fx-image: url('../img/BiblioUsuari.png');}
-#opcioMenuUsuari:hover{  -fx-image: url('../img/BiblioUsuari2.png');  }
+/*----------------------------Menu Principal---------------------------------------*/
+#opcioMenuMant{          -fx-image: url('../img/Manteniment.png');  }
+#opcioMenuMant:hover{    -fx-image: url('../img/Manteniment2.png');}
+#opcioMenuProducte{        -fx-image: url('../img/MantObres.png');}
+#opcioMenuProducte:hover{  -fx-image: url('../img/MantObres2.png');  }
 #opcioMenuPrestecs{      -fx-image: url('../img/BiblioPrestecs.png');  }
 #opcioMenuPrestecs:hover{-fx-image: url('../img/BiblioPrestecs2.png');  }
-/*Canvi color hover submenu manteniment*/
+/*-----------------------------------Submenu---------------------------------------*/
 
-#opcioMenuAutor{        -fx-image: url('../img/MantAutor.png'); }
-#opcioMenuAutor:hover{  -fx-image: url('../img/MantAutor2.png'); }
-#opcioMenuCdu{          -fx-image: url('../img/MantCDU.png'); }
-#opcioMenuCdu:hover{    -fx-image: url('../img/MantCDU2.png'); }
-#opcioMenuEditorial{    -fx-image: url('../img/MantEditorial.png'); }
-#opcioMenuEditorial:hover{-fx-image: url('../img/MantEditorial2.png'); }
-#opcioMenuObres{        -fx-image: url('../img/MantObres.png'); }
-#opcioMenuObres:hover{  -fx-image: url('../img/MantObres2.png'); }
+#opcioSubMenuAutor{               -fx-image: url('../img/MantAutor.png'); }
+#opcioSubMenuAutor:hover{         -fx-image: url('../img/MantAutor2.png'); }
+#opcioMenuCdu{                    -fx-image: url('../img/MantCDU.png'); }
+#opcioMenuCdu:hover{              -fx-image: url('../img/MantCDU2.png'); }
+#opcioSubMenuEditorial{           -fx-image: url('../img/MantEditorial.png'); }
+#opcioSubMenuEditorial:hover{     -fx-image: url('../img/MantEditorial2.png'); }
+#opcioSubMenuUsuari{              -fx-image: url('../img/BiblioUsuari.png');}
+#opcioSubMenuUsuari:hover{        -fx-image: url('../img/BiblioUsuari2.png');}
+#opcioSubMenuProducteMant{        -fx-image: url('../img/MantObres.png');}
+#opcioSubMenuProducteMant:hover{  -fx-image: url('../img/MantObres2.png');  }
+#opcioSubMenuColecions{           -fx-image: url('../img/submenColecions.png');}
+#opcioSubMenuColecions:hover{     -fx-image: url('../img/submenColecions2.png');}
+#opcioSubMenuFormat{              -fx-image: url('../img/submenuFormat.png'); }
+#opcioSubMenuFormat:hover{        -fx-image: url('../img/submenuFormat2.png');}
+#opcioSubMenuIdioma{              -fx-image: url('../img/submenuIdioma.png');}
+#opcioSubMenuIdioma:hover{        -fx-image: url('../img/submenuIdioma2.png');}
+#opcioSubMenuNivells{              -fx-image: url('../img/submenuNivells.png');}
+#opcioSubMenuNivells:hover{        -fx-image: url('../img/submenuNivells2.png');}
+#opcioSubMenuProcedencia{          -fx-image: url('../img/submenuProcedencia.png');}
+#opcioSubMenuProcedencia:hover{    -fx-image: url('../img/submenuProcedencia2.png');}
+#opcioSubMenuMaterias{             -fx-image: url('../img/submenuMaterias.png');}
+#opcioSubMenuMaterias:hover{       -fx-image: url('../img/submenuMaterias2.png');}
 
 
-/*Menu Principal Usuari*/
+/*-------------------------Menu Principal Usuari-------------------------------------*/
 #opcioConsulta{-fx-image: url('../img/consultaUsuari.png');}
 #opcioConsulta:hover{-fx-image: url('../img/consultaUsuari2.png');}
 #opcioEditarPerfil{-fx-image: url('../img/editarPerfil.png');}
