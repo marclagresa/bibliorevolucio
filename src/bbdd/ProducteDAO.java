@@ -1,6 +1,8 @@
 package bbdd;
 
 import base.ConnectionFactory;
+import contract.ContractAutoria;
+import contract.ContractExemplar;
 import contract.ContractProducte;
 import objecte.*;
 
@@ -10,10 +12,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class ProducteDAO implements IObjectDAO<Producte> {
     private Connection conn;
@@ -31,10 +33,17 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         List<Producte> list = new ArrayList<>();
         String sql;
         Producte selectProducte;
+        Idioma objIdioma;
+        Editorial objEditorial;
+        Procedencia objProcedencia;
+        Nivell objNivell;
+        Coleccio objColeccio;
+        Cdu objCdu;
+        Set <Exemplar> exemplars;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ ContractProducte.ID+","+ContractProducte.ISBN+","+ContractProducte.NOM+","
-                    +ContractProducte.NUM_PAG+","+ContractProducte.DIMENSIONS+","+ContractProducte.DATA+","
+                    +ContractProducte.NUM_PAG+","+ContractProducte.DIMENSIONS+","+ContractProducte.ANY_PUBLICACIO+","
                     +ContractProducte.RESUM+","+ContractProducte.CARACTERISTIQUES+","
                     +ContractProducte.URL_PORTADA+","+ContractProducte.ADRECA_WEB+","+ContractProducte.ESTAT+","
                     +ContractProducte.IDIOMA_ID+","+ContractProducte.EDITORIAL_ID+","
@@ -45,26 +54,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             rs = ps.executeQuery();
             list.clear();
             while(rs.next()){
-                selectProducte = new Producte(
-                        rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getInt(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(7),
-                        rs.getString(8),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getBoolean(11),
-                        (Idioma) rs.getObject(12),
-                        (Editorial) rs.getObject(13),
-                        (Format) rs.getObject(14),
-                        (Procedencia) rs.getObject(15),
-                        (Nivell) rs.getObject(16),
-                        (Coleccio) rs.getObject(17),
-                        (Cdu) rs.getObject(18)
-                );
+                selectProducte = this.read();
                 list.add(selectProducte);
             }
         } catch (SQLException ex){
@@ -88,6 +78,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             conn = ConnectionFactory.getInstance().getConnection();
             sql = "SELECT * FROM "+ContractProducte.NOM_TAULA;
             i=0;
+            valors=new Object[dades.size()];
             for(String camp:dades.keySet()){
                 valors=new Object[dades.size()];
                 switch(ContractProducte.DEFINICIO.get(camp)){
@@ -101,13 +92,32 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     case Types.BOOLEAN:
                         dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
                         break;
-                    case Types.DATE:
-                       // dadaCorrecte=dades.get(camp).getClass().equals()
-                        
+                }
+                if(i ==0){
+                    sql += " WHERE " ;
+                }
+                else{
+                    sql += " AND ";
+                }
+                sql+=camp;
+                if(dades.get(camp).getClass().equals(String.class)){
+                    sql +=" LIKE ? ";
+                }
+                else{
+                    sql+=" = ?";
+                }
+                if(dadaCorrecte){
+                    valors[i]=dades.get(camp);
+                    i++;
+                }
+                else{
+                    throw new SQLException("Error tipus de dades incorrectes!!");
                 }
             }
             ps = conn.prepareStatement(sql);
-        //    ps.setInt(1,producte.getId());
+            for(i=0;i<valors.length;i++){
+                ps.setObject(i+1, valors[i]);
+            }
             rs = ps.executeQuery();
       
         } catch (SQLException ex){
@@ -129,7 +139,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         try {
             conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractProducte.ID+","+ContractProducte.ISBN+","+ContractProducte.NOM+","
-                    +ContractProducte.NUM_PAG+","+ContractProducte.DIMENSIONS+","+ContractProducte.DATA+","
+                    +ContractProducte.NUM_PAG+","+ContractProducte.DIMENSIONS+","+ContractProducte.ANY_PUBLICACIO+","
                     +ContractProducte.RESUM+","+ContractProducte.CARACTERISTIQUES+","
                     +ContractProducte.URL_PORTADA+","+ContractProducte.ADRECA_WEB+","+ContractProducte.ESTAT+","
                     +ContractProducte.IDIOMA_ID+","+ContractProducte.EDITORIAL_ID+","
@@ -142,9 +152,9 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             producte.setId(rs.getInt(1));
             producte.setISBN(rs.getString(2));
             producte.setNom(rs.getString(3));
-            producte.setNum_pag(rs.getInt(4));
+            producte.setNumPag(rs.getInt(4));
             producte.setDimensions(rs.getString(5));
-            producte.setData(rs.getString(6));
+            producte.setAnyPublicacio(rs.getString(6));
             producte.setResum(rs.getString(7));
             producte.setCaracteristiques(rs.getString(8));
             producte.setUrlPortada(rs.getString(9));
@@ -176,9 +186,9 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setInt(1,id);
             ps.setString(2,producte.getISBN());
             ps.setString(3,producte.getNom());
-            ps.setInt(4,producte.getNum_pag());
+            ps.setInt(4,producte.getNumPag());
             ps.setString(5,producte.getDimensions());
-            ps.setString(6,producte.getData());
+            ps.setString(6,producte.getAnyPublicacio());
             ps.setString(7,producte.getResum());
             ps.setString(8,producte.getCaracteristiques());
             ps.setString(9,producte.getUrlPortada());
@@ -211,7 +221,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             conn = ConnectionFactory.getInstance().getConnection();
             update = "UPDATE "+ContractProducte.NOM_TAULA+" SET "+ContractProducte.ISBN+" = ?,"
                     +ContractProducte.NOM+" = ?,"+ContractProducte.NUM_PAG+" = ?,"+ContractProducte.DIMENSIONS+" = ?,"
-                    +ContractProducte.DATA+" = ?,"+ContractProducte.RESUM+" = ?,"+ContractProducte.CARACTERISTIQUES+" = ?,"
+                    +ContractProducte.ANY_PUBLICACIO+" = ?,"+ContractProducte.RESUM+" = ?,"+ContractProducte.CARACTERISTIQUES+" = ?,"
                     +ContractProducte.URL_PORTADA+" = ?,"+ContractProducte.ADRECA_WEB+" = ?,"+ContractProducte.IDIOMA_ID+" = ?,"
                     +ContractProducte.EDITORIAL_ID+" = ?,"+ContractProducte.FORMAT_ID+" = ?,"+ContractProducte.PROCEDENCIA_ID+" = ?,"
                     +ContractProducte.NIVELL_ID+" = ?,"+ContractProducte.COLECCIO_ID+" = ?,"+ContractProducte.CDU_ID+" = ?" +
@@ -219,9 +229,9 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps = conn.prepareStatement(update);
             ps.setString(1,producte.getISBN());
             ps.setString(2,producte.getNom());
-            ps.setInt(3,producte.getNum_pag());
+            ps.setInt(3,producte.getNumPag());
             ps.setString(4,producte.getDimensions());
-            ps.setString(5,producte.getData());
+            ps.setString(5,producte.getAnyPublicacio());
             ps.setString(6,producte.getResum());
             ps.setString(7,producte.getCaracteristiques());
             ps.setString(8,producte.getUrlPortada());
@@ -234,8 +244,8 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setInt(15,producte.getColeccio().getId());
             ps.setInt(16,producte.getCDU().getId());
             ps.setInt(17,producte.getId());
-            ps.executeUpdate();
-            actualitzat = true;
+            
+            actualitzat=ps.executeUpdate()==1;
         } catch (SQLException ex){
             throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
         }catch( ClassNotFoundException ex) {
@@ -291,7 +301,34 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             }
         }
     }
-   
+    private Producte read()throws SQLException,ClassNotFoundException{
+        Producte objProducte = new Producte();
+        HashMap<String,Object> hashConsulta;
+        
+        objProducte.setId(rs.getInt(ContractProducte.ID));
+        objProducte.setISBN(rs.getString(ContractProducte.ISBN));
+        objProducte.setNumPag(rs.getInt(ContractProducte.NUM_PAG));
+        objProducte.setDimensions(rs.getString(ContractProducte.DIMENSIONS));
+        objProducte.setAnyPublicacio(rs.getString(ContractProducte.ANY_PUBLICACIO));
+        objProducte.setResum(rs.getString(ContractProducte.RESUM));
+        objProducte.setCaracteristiques(rs.getString(ContractProducte.CARACTERISTIQUES));
+        objProducte.setUrlPortada(rs.getString(ContractProducte.URL_PORTADA));
+        objProducte.setAdreçaWeb(rs.getString(ContractProducte.ADRECA_WEB));
+        objProducte.setEstat(rs.getBoolean(ContractProducte.ESTAT));
+        objProducte.setEditorial(new EditorialDAO().select(rs.getInt(ContractProducte.EDITORIAL_ID)));
+        objProducte.setIdioma(new IdiomaDAO().select(rs.getInt(ContractProducte.IDIOMA_ID)));
+        objProducte.setFormat(new FormatDAO().select(rs.getInt(ContractProducte.FORMAT_ID)));
+        objProducte.setProcedencia(new ProcedenciaDAO().select(rs.getInt(ContractProducte.PROCEDENCIA_ID)));
+        objProducte.setNivell(new NivellDAO().select(rs.getInt(ContractProducte.NIVELL_ID)));
+        objProducte.setColeccio(new ColeccioDAO().select(rs.getInt(ContractProducte.COLECCIO_ID)));
+        objProducte.setCDU(new CduDAO().select(rs.getInt(ContractProducte.CDU_ID)));
+        hashConsulta=new HashMap<>();
+        hashConsulta.put(ContractExemplar.ID_PRODUCTE, objProducte.getId());
+        objProducte.setExemplars(new HashSet<>(new ExemplarDAO().select(hashConsulta)));
+        
+        return objProducte;
+    }
+    
     public static void main(String[] args) {
         
     }

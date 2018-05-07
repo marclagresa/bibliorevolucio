@@ -10,7 +10,7 @@ public class Nivell {
     //Constructor Buit
 
     public Nivell(){
-        this.id = new SimpleIntegerProperty();
+        this.id = new SimpleIntegerProperty(-1);
         this.nom = new SimpleStringProperty("");
     }
 
@@ -35,4 +35,9 @@ public class Nivell {
 
     public SimpleIntegerProperty idProperty() { return id; }
     public SimpleStringProperty nomProperty() { return nom; }
+    
+    @Override
+    public String toString(){
+        return this.getNom();
+    }
 }

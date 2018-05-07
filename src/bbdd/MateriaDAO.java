@@ -173,4 +173,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
             }
         }
     }
+    public static void main(String[] args) {
+        
+    }
 }

@@ -24,7 +24,6 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         rs=null;
         ps=null;
     }
-
     @Override
     public List<Exemplar> selectAll() throws ClassNotFoundException, SQLException{
         List<Exemplar> list = new ArrayList<>();

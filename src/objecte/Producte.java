@@ -1,5 +1,7 @@
 package objecte;
 
+import java.util.HashSet;
+import java.util.Set;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -9,9 +11,9 @@ public class Producte {
     private SimpleIntegerProperty id;
     private SimpleStringProperty ISBN;
     private SimpleStringProperty nom;
-    private SimpleIntegerProperty num_pag;
+    private SimpleIntegerProperty numPag;
     private SimpleStringProperty dimensions;
-    private SimpleStringProperty data;
+    private SimpleStringProperty anyPublicacio;
     private SimpleStringProperty resum;
     private SimpleStringProperty caracteristiques;
     private SimpleStringProperty urlPortada;
@@ -24,28 +26,30 @@ public class Producte {
     private SimpleObjectProperty<Nivell> nivell;
     private SimpleObjectProperty<Coleccio> coleccio;
     private SimpleObjectProperty<Cdu> cdu;
-
+    private SimpleObjectProperty<Set<Exemplar>> exemplars;
+    
     //Constructor Buit
 
     public Producte(){
         this.id = new SimpleIntegerProperty();
         this.ISBN = new SimpleStringProperty("");
         this.nom = new SimpleStringProperty("");
-        this.num_pag = new SimpleIntegerProperty(-1);
+        this.numPag = new SimpleIntegerProperty(-1);
         this.dimensions = new SimpleStringProperty("");
-        this.data = new SimpleStringProperty("");
+        this.anyPublicacio = new SimpleStringProperty("");
         this.resum = new SimpleStringProperty("");
         this.caracteristiques = new SimpleStringProperty("");
         this.urlPortada = new SimpleStringProperty("");
         this.adreçaWeb = new SimpleStringProperty("");
         this.estat = new SimpleBooleanProperty(false);
-        this.idioma = new SimpleObjectProperty<>();
-        this.editorial = new SimpleObjectProperty<>();
-        this.format = new SimpleObjectProperty<>();
-        this.procedencia = new SimpleObjectProperty<>();
-        this.nivell = new SimpleObjectProperty<>();
-        this.coleccio = new SimpleObjectProperty<>();
-        this.cdu = new SimpleObjectProperty<>();
+        this.idioma = new SimpleObjectProperty<>(new Idioma());
+        this.editorial = new SimpleObjectProperty<>(new Editorial());
+        this.format = new SimpleObjectProperty<>(new Format());
+        this.procedencia = new SimpleObjectProperty<>(new Procedencia());
+        this.nivell = new SimpleObjectProperty<>(new Nivell());
+        this.coleccio = new SimpleObjectProperty<>(new Coleccio());
+        this.cdu = new SimpleObjectProperty<>(new Cdu());
+        this.exemplars=new SimpleObjectProperty<>(new HashSet<>(0));
     }
 
     //Constructor Total
@@ -53,13 +57,13 @@ public class Producte {
     public Producte(Integer id, String ISBN, String nom, Integer num_pag, String dimensions, String data, String resum,
                     String caracteristiques, String urlPortada, String adreçaWeb, boolean estat, Idioma idioma,
                     Editorial editorial, Format format, Procedencia procedencia, Nivell nivell, Coleccio coleccio,
-                    Cdu cdu){
+                    Cdu cdu,Set exemplars){
         this.id = new SimpleIntegerProperty(id);
         this.ISBN = new SimpleStringProperty(ISBN);
         this.nom = new SimpleStringProperty(nom);
-        this.num_pag = new SimpleIntegerProperty(num_pag);
+        this.numPag = new SimpleIntegerProperty(num_pag);
         this.dimensions = new SimpleStringProperty(dimensions);
-        this.data = new SimpleStringProperty(data);
+        this.anyPublicacio = new SimpleStringProperty(data);
         this.resum = new SimpleStringProperty(resum);
         this.caracteristiques = new SimpleStringProperty(caracteristiques);
         this.urlPortada = new SimpleStringProperty(urlPortada);
@@ -72,6 +76,7 @@ public class Producte {
         this.nivell = new SimpleObjectProperty<>(nivell);
         this.coleccio = new SimpleObjectProperty<>(coleccio);
         this.cdu = new SimpleObjectProperty<>(cdu);
+        this.exemplars=new SimpleObjectProperty<>(exemplars);
     }
 
     //Getters
@@ -79,9 +84,9 @@ public class Producte {
     public int getId() { return id.get(); }
     public String getISBN() { return ISBN.get(); }
     public String getNom() { return nom.get(); }
-    public int getNum_pag() { return num_pag.get(); }
+    public int getNumPag() { return numPag.get(); }
     public String getDimensions() { return dimensions.get(); }
-    public String getData() { return data.get(); }
+    public String getAnyPublicacio() { return anyPublicacio.get(); }
     public String getResum() { return resum.get(); }
     public String getCaracteristiques() { return caracteristiques.get(); }
     public String getUrlPortada() { return urlPortada.get(); }
@@ -94,15 +99,15 @@ public class Producte {
     public Nivell getNivell() { return nivell.get(); }
     public Coleccio getColeccio() { return coleccio.get(); }
     public Cdu getCDU() { return cdu.get(); }
-
+    public Set<Exemplar> getExemplars(){return this.exemplars.get();}
     //Setters
 
     public void setId(int id) { this.id.set(id); }
     public void setISBN(String ISBN) { this.ISBN.set(ISBN); }
     public void setNom(String nom) { this.nom.set(nom); }
-    public void setNum_pag(int num_pag) { this.num_pag.set(num_pag); }
+    public void setNumPag(int num_pag) { this.numPag.set(num_pag); }
     public void setDimensions(String dimensions) { this.dimensions.set(dimensions); }
-    public void setData(String data) { this.data.set(data); }
+    public void setAnyPublicacio(String data) { this.anyPublicacio.set(data); }
     public void setResum(String resum) { this.resum.set(resum); }
     public void setCaracteristiques(String caracteristiques) { this.caracteristiques.set(caracteristiques); }
     public void setUrlPortada(String urlPortada) { this.urlPortada.set(urlPortada); }
@@ -115,15 +120,15 @@ public class Producte {
     public void setNivell(Nivell nivell) { this.nivell.set(nivell); }
     public void setColeccio(Coleccio coleccio) { this.coleccio.set(coleccio); }
     public void setCDU(Cdu cdu) { this.cdu.set(cdu); }
-
+    public void setExemplars(Set <Exemplar> exemplars){this.exemplars.set(exemplars);}
     //Properties
 
     public SimpleIntegerProperty idProperty() { return id; }
     public SimpleStringProperty ISBNProperty() { return ISBN; }
     public SimpleStringProperty nomProperty() { return nom; }
-    public SimpleIntegerProperty num_pagProperty() { return num_pag; }
+    public SimpleIntegerProperty numPagProperty() { return numPag; }
     public SimpleStringProperty dimensionsProperty() { return dimensions; }
-    public SimpleStringProperty dataProperty() { return data; }
+    public SimpleStringProperty anyPublicacioProperty() { return anyPublicacio; }
     public SimpleStringProperty resumProperty() { return resum; }
     public SimpleStringProperty caracteristiquesProperty() { return caracteristiques; }
     public SimpleStringProperty urlPortadaProperty() { return urlPortada; }
@@ -136,6 +141,6 @@ public class Producte {
     public SimpleObjectProperty<Nivell> nivellProperty() { return nivell; }
     public SimpleObjectProperty<Coleccio> coleccioProperty() { return coleccio; }
     public SimpleObjectProperty<Cdu> cduProperty() { return cdu; }
-
+    public SimpleObjectProperty<Set<Exemplar>>exemplarsProperty(){return this.exemplars;}
 
 }

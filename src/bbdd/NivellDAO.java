@@ -78,10 +78,12 @@ public class NivellDAO implements IObjectDAO<Nivell> {
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs = ps.executeQuery();
-            nivell.setId(rs.getInt(1));
-            nivell.setNom(rs.getString(2));
+            if(rs.next()){
+                nivell.setId(rs.getInt(1));
+                nivell.setNom(rs.getString(2));
+            }
         } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+            System.err.println(ex.getMessage());
         } finally {
             this.close();
         }
@@ -99,8 +101,9 @@ public class NivellDAO implements IObjectDAO<Nivell> {
             ps = conn.prepareStatement(insert);
             ps.setInt(1,id);
             ps.setString(2,nivell.getNom());
-            ps.executeUpdate();
-            inserit = true;
+            
+            inserit=ps.executeUpdate()==1;
+            
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         } finally {

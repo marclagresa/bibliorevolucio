@@ -14,7 +14,7 @@ public abstract class ContractProducte {
     public static final String NOM = NOM_TAULA+".nom";
     public static final String NUM_PAG = NOM_TAULA+".num_pag";
     public static final String DIMENSIONS = NOM_TAULA+".dimensions(cm)";
-    public static final String DATA = NOM_TAULA+".data";
+    public static final String ANY_PUBLICACIO = NOM_TAULA+".any_publicacio";
     public static final String RESUM = NOM_TAULA+".resum";
     public static final String CARACTERISTIQUES = NOM_TAULA+".caracteristiques";
     public static final String URL_PORTADA = NOM_TAULA+".url_portada";
@@ -33,7 +33,7 @@ public abstract class ContractProducte {
         put(NOM, Types.VARCHAR);
         put(NUM_PAG, Types.INTEGER);
         put(DIMENSIONS,Types.VARCHAR);
-        put(DATA, Types.DATE);
+        put(ANY_PUBLICACIO, Types.DATE);
         put(RESUM, Types.VARCHAR);
         put(CARACTERISTIQUES, Types.VARCHAR);
         put(URL_PORTADA, Types.VARCHAR);

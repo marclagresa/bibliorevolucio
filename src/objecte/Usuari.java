@@ -2,6 +2,7 @@ package objecte;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class Usuari {
@@ -17,7 +18,7 @@ public class Usuari {
     private SimpleBooleanProperty actiu;
     private String salt;
     private SimpleBooleanProperty admin;
-    private SimpleStringProperty nivell;
+    private SimpleObjectProperty <Nivell> nivell;
     //</editor-fold>
     //<editor-fold desc="Contructors">
     /**
@@ -36,7 +37,7 @@ public class Usuari {
         this.actiu = new SimpleBooleanProperty(true);
         this.salt = "";
         this.admin = new SimpleBooleanProperty(false);
-        this.nivell = new SimpleStringProperty("");
+        this.nivell = new SimpleObjectProperty<>(new Nivell());
     }
 
     /**
@@ -58,7 +59,7 @@ public class Usuari {
     public Usuari(int id,String nom, String pcognom, String scognom,
         String telefon_mobil, String telefon_fixe,String email,  
         String contrasenya, boolean estat, String salt, boolean esAdmin,
-        String nivell){
+        Nivell nivell){
         this.id=new SimpleIntegerProperty(id);
         this.nom = new SimpleStringProperty(nom);
         this.pCognom = new SimpleStringProperty(pcognom);
@@ -70,7 +71,7 @@ public class Usuari {
         this.actiu = new SimpleBooleanProperty(estat);
         this.salt = salt;
         this.admin = new SimpleBooleanProperty(esAdmin);
-        this.nivell = new SimpleStringProperty(nivell);
+        this.nivell = new SimpleObjectProperty<>(nivell);
     }
     //</editor-fold>
     //<editor-fold desc="Getters Attributs">
@@ -145,7 +146,7 @@ public class Usuari {
      * Getter nivell
      * @return nivell
      */
-    public String getNivell() { return nivell.get(); }
+    public Nivell getNivell() { return nivell.get(); }
     //</editor-fold>
     //<editor-fold desc="Setters Attributs">
     
@@ -219,7 +220,7 @@ public class Usuari {
      * Setter nivell
      * @param nivell 
      */
-    public void setNivell(String nivell) { this.nivell.set(nivell); }
+    public void setNivell(Nivell nivell) { this.nivell.set(nivell); }
     //</editor-fold>
     //<editor-fold desc="Getters Properties">
 
@@ -232,7 +233,7 @@ public class Usuari {
     public SimpleStringProperty getEmailProperty() { return email; }
     public SimpleBooleanProperty isActiuProperty() { return actiu; }
     public SimpleBooleanProperty IsAdminProperty() { return admin; }
-    public SimpleStringProperty nivellProperty() { return nivell; }
+    public SimpleObjectProperty<Nivell> nivellProperty() { return nivell; }
     
     //</editor-fold>
     
