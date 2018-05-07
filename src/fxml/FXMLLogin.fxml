@@ -1,40 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
-<VBox alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLLoginController">
+<VBox id="VBoxLogin" alignment="CENTER" prefHeight="518.0" prefWidth="702.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLLoginController">
    <children>
-      <GridPane alignment="CENTER" gridLinesVisible="true" hgap="10.0" prefHeight="178.0" prefWidth="478.0" styleClass="gridpane" vgap="10.0">
+      <GridPane id="girdLogin" alignment="CENTER" hgap="10.0" prefHeight="256.0" prefWidth="702.0" styleClass="gridpane" vgap="10.0">
          <children>
-            <Label alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="1013.0" text="Email:" textAlignment="RIGHT" />
-            <Label alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="1011.0" styleClass="gridpane" text="Contrasenya:" GridPane.rowIndex="1" />
-            <TextField fx:id="txfEmail" GridPane.columnIndex="1" />
-            <PasswordField fx:id="pwfContrasenya" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <HBox prefHeight="52.0" prefWidth="260.0" spacing="80.0" GridPane.columnSpan="2" GridPane.rowIndex="3">
+            <Label id="lbUserLogin" alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="1013.0" text="Email:" textAlignment="RIGHT" />
+            <Label id="lbContraLogin" alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="1011.0" text="Contrasenya:" GridPane.rowIndex="1" />
+            <TextField fx:id="txfEmail" prefWidth="359.0" GridPane.columnIndex="1" />
+            <PasswordField fx:id="pwfContrasenya" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <GridPane.margin>
+                  <Insets top="5.0" />
+               </GridPane.margin></PasswordField>
+            <HBox prefHeight="52.0" prefWidth="260.0" spacing="100.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
                <children>
-                  <Button fx:id="btnEntrar" mnemonicParsing="false" onAction="#entrar" prefHeight="44.0" prefWidth="120.0" text="ENTRAR" />
-                  <Button fx:id="btnSortir" mnemonicParsing="false" prefHeight="46.0" prefWidth="120.0" text="SORTIR" />
+                  <Button id="bt1Login" fx:id="btnEntrar" mnemonicParsing="false" onAction="#entrar" prefHeight="44.0" prefWidth="120.0" styleClass="btsLogin" text="ENTRAR" />
+                  <Button id="bt2Login" fx:id="btnSortir" mnemonicParsing="false" prefHeight="46.0" prefWidth="120.0" styleClass="btsLogin" text="SORTIR" />
                </children>
-               <padding>
-                  <Insets left="100.0" />
-               </padding>
             </HBox>
-            <Label fx:id="lblLoginFail" prefHeight="15.0" prefWidth="509.0" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+            <Label id="lbResutatLogin" fx:id="lblLoginFail" alignment="BOTTOM_LEFT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="15.0" prefWidth="509.0" styleClass="lbUserLogin" GridPane.columnIndex="1" GridPane.rowIndex="2" />
          </children>
          <columnConstraints>
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="115.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="305.0" minWidth="10.0" prefWidth="301.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="231.0" minWidth="10.0" prefWidth="192.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="371.0" minWidth="10.0" prefWidth="356.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="305.0" minWidth="10.0" prefWidth="125.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="51.0" minHeight="10.0" prefHeight="51.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="110.0" minHeight="10.0" prefHeight="48.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="91.0" minHeight="3.0" prefHeight="20.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="120.0" minHeight="10.0" prefHeight="106.0" vgrow="SOMETIMES" />
          </rowConstraints>
       </GridPane>
    </children>
@@ -42,6 +47,6 @@
       <Insets />
    </opaqueInsets>
    <padding>
-      <Insets top="100.0" />
+      <Insets top="10.0" />
    </padding>
 </VBox>
