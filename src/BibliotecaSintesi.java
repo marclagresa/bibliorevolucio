@@ -9,7 +9,6 @@
  */
 
 
-import base.FXMLCduController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -32,7 +31,7 @@ public class BibliotecaSintesi extends Application {
         
         
         Scene scene = new Scene(root);
-       scene.getStylesheets().add
+        scene.getStylesheets().add
                 (BibliotecaSintesi.class.getResource("/media/css/estils.css").toExternalForm());
         
         stage.setScene(scene);

@@ -54,8 +54,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             rs = ps.executeQuery();
             list.clear();
             while(rs.next()){
-                selectProducte = this.read();
-                list.add(selectProducte);
+                list.add(this.read());
             }
         } catch (SQLException ex){
             throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
@@ -119,6 +118,9 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                 ps.setObject(i+1, valors[i]);
             }
             rs = ps.executeQuery();
+            while(rs.next()){
+                list.add(this.read());
+            }
       
         } catch (SQLException ex){
             throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
@@ -132,9 +134,6 @@ public class ProducteDAO implements IObjectDAO<Producte> {
     @Override
     public Producte select(int id) throws ClassNotFoundException, SQLException{
         Producte producte = new Producte();
-        IdiomaDAO idioma = new IdiomaDAO();
-        EditorialDAO editorial = new EditorialDAO();
-        FormatDAO format = new FormatDAO();
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
@@ -149,19 +148,9 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs = ps.executeQuery();
-            producte.setId(rs.getInt(1));
-            producte.setISBN(rs.getString(2));
-            producte.setNom(rs.getString(3));
-            producte.setNumPag(rs.getInt(4));
-            producte.setDimensions(rs.getString(5));
-            producte.setAnyPublicacio(rs.getString(6));
-            producte.setResum(rs.getString(7));
-            producte.setCaracteristiques(rs.getString(8));
-            producte.setUrlPortada(rs.getString(9));
-            producte.setAdreçaWeb(rs.getString(10));
-            producte.setEstat(rs.getBoolean(11));
-            producte.setIdioma(idioma.select(rs.getInt(12)));
-
+            if(rs.next()){
+                producte=this.read();
+            }
         } catch (SQLException ex) {
             throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
             
@@ -224,8 +213,8 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     +ContractProducte.ANY_PUBLICACIO+" = ?,"+ContractProducte.RESUM+" = ?,"+ContractProducte.CARACTERISTIQUES+" = ?,"
                     +ContractProducte.URL_PORTADA+" = ?,"+ContractProducte.ADRECA_WEB+" = ?,"+ContractProducte.IDIOMA_ID+" = ?,"
                     +ContractProducte.EDITORIAL_ID+" = ?,"+ContractProducte.FORMAT_ID+" = ?,"+ContractProducte.PROCEDENCIA_ID+" = ?,"
-                    +ContractProducte.NIVELL_ID+" = ?,"+ContractProducte.COLECCIO_ID+" = ?,"+ContractProducte.CDU_ID+" = ?" +
-                    " where "+ContractProducte.ID+" = ?";
+                    +ContractProducte.NIVELL_ID+" = ?,"+ContractProducte.COLECCIO_ID+" = ?,"+ContractProducte.CDU_ID+" = ?,"
+                    +ContractProducte.ESTAT + "= ?  where "+ContractProducte.ID+" = ?";
             ps = conn.prepareStatement(update);
             ps.setString(1,producte.getISBN());
             ps.setString(2,producte.getNom());
@@ -244,6 +233,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setInt(15,producte.getColeccio().getId());
             ps.setInt(16,producte.getCDU().getId());
             ps.setInt(17,producte.getId());
+            ps.setBoolean(18, producte.getEstat());
             
             actualitzat=ps.executeUpdate()==1;
         } catch (SQLException ex){

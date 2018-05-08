@@ -10,7 +10,7 @@ public class Format {
     //Constructor Buit
 
     public Format(){
-        this.id = new SimpleIntegerProperty();
+        this.id = new SimpleIntegerProperty(-1);
         this.nom = new SimpleStringProperty("");
     }
 

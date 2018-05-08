@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLTraspasController">
+   <children>
+      <Button fx:id="btnCsvOrigen" layoutX="20.0" layoutY="74.0" mnemonicParsing="false" onAction="#seleccionarCsv" prefHeight="25.0" prefWidth="129.0" text="csv origen" />
+      <Button fx:id="btnCsvDesti" layoutX="20.0" layoutY="120.0" mnemonicParsing="false" onAction="#seleccionarCsv" prefHeight="25.0" prefWidth="129.0" text="csv desti" />
+      <TextField fx:id="txfCsvOrigen" layoutX="158.0" layoutY="74.0" prefHeight="25.0" prefWidth="412.0" />
+      <TextField fx:id="txfCsvDesti" layoutX="158.0" layoutY="120.0" prefHeight="25.0" prefWidth="412.0" />
+      <Label alignment="CENTER_RIGHT" layoutX="40.0" layoutY="228.0" prefHeight="15.0" prefWidth="199.0" text="Registres llegits:" textAlignment="RIGHT" />
+      <Label alignment="CENTER_RIGHT" layoutX="43.0" layoutY="256.0" prefHeight="15.0" prefWidth="199.0" text="Registres traspasats a la bd:" />
+      <Label alignment="BOTTOM_RIGHT" layoutX="43.0" layoutY="284.0" prefHeight="15.0" prefWidth="199.0" text="Registres escrits al csv desti:" />
+      <Button layoutX="269.0" layoutY="167.0" mnemonicParsing="false" onAction="#traspasar" text="Traspassar!" />
+      <TextField fx:id="txfFilesLlegides" alignment="BOTTOM_RIGHT" layoutX="248.0" layoutY="223.0" prefHeight="25.0" prefWidth="129.0" />
+      <TextField fx:id="txfFilesTraspasades" layoutX="248.0" layoutY="251.0" prefHeight="25.0" prefWidth="129.0" />
+      <TextField fx:id="txfFilesNoTraspasades" layoutX="248.0" layoutY="279.0" prefHeight="25.0" prefWidth="129.0" />
+   </children>
+</AnchorPane>

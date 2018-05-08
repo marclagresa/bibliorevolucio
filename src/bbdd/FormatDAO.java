@@ -78,11 +78,35 @@ public class FormatDAO implements IObjectDAO<Format>{
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs = ps.executeQuery();
-            format.setId(rs.getInt(1));
-            format.setNom(rs.getString(2));
+            if(rs.next()){
+                format.setId(rs.getInt(1));
+                format.setNom(rs.getString(2));
+            }
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         } finally {
+            this.close();
+        }
+        return format;
+    }
+    public Format select(String nom)throws ClassNotFoundException,SQLException{
+        Format format=new Format();
+        String sql;
+        try{
+            conn=ConnectionFactory.getInstance().getConnection();
+            sql="SELECT * FROM "+ContractFormat.NOM_TAULA+" WHERE "+ContractFormat.NOM+" LIKE ?";
+            ps=conn.prepareStatement(sql);
+            ps.setString(1, nom);
+            rs=ps.executeQuery();
+            if(rs.next()){
+                format.setId(rs.getInt(ContractFormat.ID));
+                format.setNom(rs.getString(ContractFormat.NOM));
+            }
+        }catch (ClassNotFoundException e){
+            throw new ClassNotFoundException(e.getMessage(),e.getCause());
+        }catch(SQLException e){
+            throw new SQLException(e.getMessage(),e.getSQLState(),e.getErrorCode(),e.getCause());
+        }finally{
             this.close();
         }
         return format;
