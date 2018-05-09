@@ -69,71 +69,76 @@ public class ProducteDAO implements IObjectDAO<Producte> {
     }
     @Override
     public List<Producte> select(HashMap <String,Object> dades) throws ClassNotFoundException, SQLException{
-        List<Producte> list = new ArrayList<>();
-        String sql;
-        Object [] valors;
-        int i;
-        boolean dadaCorrecte=false;
-        
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            sql = "SELECT * FROM "+ContractProducte.NOM_TAULA;
-            i=0;
-            valors=new Object[dades.size()];
-            for(String camp:dades.keySet()){
+        if(dades!=null){
+            List<Producte> list = new ArrayList<>();
+            String sql;
+            Object [] valors;
+            int i;
+            boolean dadaCorrecte=false;
+
+            try {
+                conn = ConnectionFactory.getInstance().getConnection();
+                sql = "SELECT * FROM "+ContractProducte.NOM_TAULA;
+                i=0;
                 valors=new Object[dades.size()];
-                switch(ContractProducte.DEFINICIO.get(camp)){
-                    case Types.INTEGER:
-                        dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
-                        break;
-                    case Types.CHAR:
-                    case Types.VARCHAR:
-                        dadaCorrecte=dades.get(camp).getClass().equals(String.class);
-                        break;
-                    case Types.BOOLEAN:
-                        dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
-                        break;
+                for(String camp:dades.keySet()){
+                    valors=new Object[dades.size()];
+                    switch(ContractProducte.DEFINICIO.get(camp)){
+                        case Types.INTEGER:
+                            dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
+                            break;
+                        case Types.CHAR:
+                        case Types.VARCHAR:
+                            dadaCorrecte=dades.get(camp).getClass().equals(String.class);
+                            break;
+                        case Types.BOOLEAN:
+                            dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
+                            break;
+                    }
+                    if(i ==0){
+                        sql += " WHERE " ;
+                    }
+                    else{
+                        sql += " AND ";
+                    }
+                    sql+=camp;
+                    if(dades.get(camp).getClass().equals(String.class)){
+                        sql +=" LIKE ? ";
+                    }
+                    else{
+                        sql+=" = ?";
+                    }
+                    if(dadaCorrecte){
+                        valors[i]=dades.get(camp);
+                        i++;
+                    }
+                    else{
+                        throw new IllegalArgumentException("Dades incorrectes.");
+                    }
                 }
-                if(i ==0){
-                    sql += " WHERE " ;
+                ps = conn.prepareStatement(sql);
+                for(i=0;i<valors.length;i++){
+                    ps.setObject(i+1, valors[i]);
                 }
-                else{
-                    sql += " AND ";
+                rs = ps.executeQuery();
+                while(rs.next()){
+                    list.add(this.read());
                 }
-                sql+=camp;
-                if(dades.get(camp).getClass().equals(String.class)){
-                    sql +=" LIKE ? ";
-                }
-                else{
-                    sql+=" = ?";
-                }
-                if(dadaCorrecte){
-                    valors[i]=dades.get(camp);
-                    i++;
-                }
-                else{
-                    throw new IllegalArgumentException("Dades incorrectes.");
-                }
+
+            } catch (SQLException ex){
+                throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+            }catch( ClassNotFoundException ex) {
+                throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
+            }catch(IllegalArgumentException ex){
+                throw new IllegalArgumentException(ex.getMessage());
+            } finally {
+                this.close();
             }
-            ps = conn.prepareStatement(sql);
-            for(i=0;i<valors.length;i++){
-                ps.setObject(i+1, valors[i]);
-            }
-            rs = ps.executeQuery();
-            while(rs.next()){
-                list.add(this.read());
-            }
-      
-        } catch (SQLException ex){
-            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
-        }catch( ClassNotFoundException ex) {
-            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
-        }catch(IllegalArgumentException ex){
-            throw new IllegalArgumentException(ex.getMessage());
-        } finally {
-            this.close();
+            return list;
         }
-        return list;
+        else{
+            throw new NullPointerException();
+        }
     }
     @Override
     public Producte select(int id) throws ClassNotFoundException, SQLException{
