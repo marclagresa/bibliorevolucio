@@ -39,8 +39,10 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
                 idioma.setNom(rs.getString(2));
                 list.add(idioma);
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        } catch ( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
         } finally {
             this.close();
         }
@@ -58,10 +60,12 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
            
             rs = ps.executeQuery();
             while(rs.next()){
-              
+              list.add(new Idioma(rs.getInt(ContractIdioma.ID), rs.getString(ContractIdioma.NOM)));
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        } catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
@@ -78,11 +82,14 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs = ps.executeQuery();
-            idioma.setId(rs.getInt(1));
-            idioma.setNom(rs.getString(2));
-
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+            if(rs.next()){
+                idioma.setId(rs.getInt(1));
+                idioma.setNom(rs.getString(2));
+            }
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch (ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
@@ -94,22 +101,49 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
         boolean inserit = false;
         int id;
         try {
-            id = nextId();
             conn = ConnectionFactory.getInstance().getConnection();
-            insert = "Insert into "+ContractIdioma.NOM_TAULA+" values (?,?)";
+            insert = "Insert into "+ContractIdioma.NOM_TAULA+"("
+                    +ContractIdioma.ID+", "
+                    +ContractIdioma.NOM
+                    +") values (?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,id);
+            ps.setInt(1,idioma.getId());
             ps.setString(2,idioma.getNom());
-            ps.executeUpdate();
-            inserit = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+            
+            inserit=ps.executeUpdate()==1;
+            
+        } catch (SQLException e){
+            throw new SQLException(e.getMessage(),e.getSQLState(),e.getErrorCode(),e.getCause());
+        } catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
         return inserit;
     }
-
+    public Idioma select(String nom) throws ClassNotFoundException,SQLException{
+        Idioma idiomaObj=new Idioma();
+        String query;
+        try {
+            conn=ConnectionFactory.getInstance().getConnection();
+            query="SELECT * FROM "+ContractIdioma.NOM_TAULA
+                + " WHERE LOWER("+ContractIdioma.NOM + ") = ?"; 
+            ps=conn.prepareStatement(query);
+            ps.setString(1, nom);
+            rs=ps.executeQuery();
+            if(rs.next()){
+                idiomaObj.setId(rs.getInt(ContractIdioma.ID));
+                idiomaObj.setNom(rs.getString(ContractIdioma.NOM));
+            }
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage(),e.getSQLState(),e.getErrorCode(),e.getCause());
+        } catch(ClassNotFoundException e){
+            throw new ClassNotFoundException(e.getMessage(),e.getCause());
+        } finally{
+            this.close();
+        }
+        return idiomaObj;
+    }
     @Override
     public boolean update(Idioma idioma) throws ClassNotFoundException, SQLException{
         String update;
@@ -121,10 +155,12 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
             ps = conn.prepareStatement(update);
             ps.setString(1,idioma.getNom());
             ps.setInt(2,idioma.getId());
-            ps.executeUpdate();
-            actualitzat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+            actualitzat=ps.executeUpdate()==1;
+            
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        } catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
         } finally {
             this.close();
         }
@@ -142,8 +178,12 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
             if(rs.next()){
                 id = rs.getInt(1)+1;
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException e){
+            throw new SQLException(e.getMessage(),e.getSQLState(),e.getErrorCode(),e.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
+        } finally{
+            this.close();
         }
         return id;
     }

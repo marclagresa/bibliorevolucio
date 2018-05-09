@@ -1,5 +1,5 @@
 user;adminbiblio
 password;pladelestany2018
 driver;com.mysql.jdbc.Driver
-url;jdbc:mysql://172.16.201.11/bibliorevolucio
-url_;jdbc:mysql://localhost/bibliorevolucio
+url_;jdbc:mysql://172.16.201.11/bibliorevolucio
+url;jdbc:mysql://localhost/bibliorevolucio

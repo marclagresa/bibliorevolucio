@@ -5,7 +5,9 @@
  */
 package base;
 
+import bbdd.EditorialDAO;
 import bbdd.FormatDAO;
+import bbdd.IdiomaDAO;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 import java.io.File;
@@ -23,7 +25,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import objecte.Editorial;
 import objecte.Format;
+import objecte.Idioma;
 import objecte.Producte;
 
 
@@ -98,7 +102,7 @@ public class FXMLTraspasController implements Initializable {
                            p=new Producte();
                            registresLlegits++;
                            p.setFormat(getFormat(reader.get("FORMAT")));
-                           //p.setCDU(getCdu(reader.get("CDU")));
+                           p.setIdioma(getIdioma(reader.get("LLENGUA")));
                            registresGuardats++;
                         } catch (Exception e) {
                             registreFallits++;
@@ -121,6 +125,37 @@ public class FXMLTraspasController implements Initializable {
         }.call();
         
     }
+    private Idioma getIdioma(String nomIdioma)throws SQLException,ClassNotFoundException{
+        Idioma idiomaObj = new Idioma();
+        IdiomaDAO idiomaDAOObj = new IdiomaDAO();
+        nomIdioma=nomIdioma.replace(" ", "");
+        if(!nomIdioma.isEmpty()){
+            nomIdioma=nomIdioma.toLowerCase();
+            idiomaObj=idiomaDAOObj.select(nomIdioma);
+            if(idiomaObj.getId()==-1){
+                idiomaObj.setId(idiomaDAOObj.nextId());
+                idiomaObj.setNom(nomIdioma);
+                idiomaDAOObj.insert(idiomaObj);
+            }
+        }
+        
+        return idiomaObj;
+    }
+    private Editorial getEditorial(String nomEditorial)throws SQLException,ClassNotFoundException{
+        Editorial editorialObj;
+        EditorialDAO editorialDAOObj=new EditorialDAO();
+        return new Editorial();
+                
+            
+    }
+    /*
+    private Cdu getCdu(String nomCdu) throws SQLException,ClassNotFoundException{
+        Cdu cduObj;
+        CduDAO cduDAOObj = new CduDAO();
+        if(!nomCdu.isEmpty()){
+            
+        }
+    }*/
     private Format getFormat(String nomFormat) throws SQLException,ClassNotFoundException {
         Format formatObj;
         FormatDAO formatDAOObj = new FormatDAO();

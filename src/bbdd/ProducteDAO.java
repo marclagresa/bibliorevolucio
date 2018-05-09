@@ -4,6 +4,7 @@ import base.ConnectionFactory;
 import contract.ContractAutoria;
 import contract.ContractExemplar;
 import contract.ContractProducte;
+import java.nio.charset.MalformedInputException;
 import objecte.*;
 
 import java.sql.Connection;
@@ -14,6 +15,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Set;
 
@@ -110,7 +112,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     i++;
                 }
                 else{
-                    throw new SQLException("Error tipus de dades incorrectes!!");
+                    throw new IllegalArgumentException("Dades incorrectes.");
                 }
             }
             ps = conn.prepareStatement(sql);
@@ -126,6 +128,8 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
         }catch( ClassNotFoundException ex) {
             throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
+        }catch(IllegalArgumentException ex){
+            throw new IllegalArgumentException(ex.getMessage());
         } finally {
             this.close();
         }
@@ -168,11 +172,29 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         int id;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            id = nextId();
-            insert = "Insert into "+ContractProducte.NOM_TAULA+
-                    " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            
+            insert = "Insert into "+ContractProducte.NOM_TAULA+ " ("
+                    + ContractProducte.ID  + ", "
+                    + ContractProducte.ISBN + ", "
+                    + ContractProducte.NOM +", "
+                    + ContractProducte.NUM_PAG + ", "
+                    + ContractProducte.DIMENSIONS+ ", "
+                    + ContractProducte.ANY_PUBLICACIO + ", "
+                    + ContractProducte.RESUM + ", "
+                    + ContractProducte.CARACTERISTIQUES + ", "
+                    + ContractProducte.URL_PORTADA + ", "
+                    + ContractProducte.ADRECA_WEB + ", "
+                    + ContractProducte.ESTAT + ", "
+                    + ContractProducte.IDIOMA_ID + ", "
+                    + ContractProducte.EDITORIAL_ID + ", "
+                    + ContractProducte.FORMAT_ID + ", "
+                    + ContractProducte.PROCEDENCIA_ID + ", "
+                    + ContractProducte.NIVELL_ID + ", "
+                    + ContractProducte.COLECCIO_ID + ", "
+                    + ContractProducte.CDU_ID + ", "
+                    + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,id);
+            ps.setInt(1,producte.getId());
             ps.setString(2,producte.getISBN());
             ps.setString(3,producte.getNom());
             ps.setInt(4,producte.getNumPag());
@@ -232,8 +254,8 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setInt(14,producte.getNivell().getId());
             ps.setInt(15,producte.getColeccio().getId());
             ps.setInt(16,producte.getCDU().getId());
-            ps.setInt(17,producte.getId());
-            ps.setBoolean(18, producte.getEstat());
+            ps.setBoolean(17, producte.getEstat());
+            ps.setInt(18,producte.getId());
             
             actualitzat=ps.executeUpdate()==1;
         } catch (SQLException ex){

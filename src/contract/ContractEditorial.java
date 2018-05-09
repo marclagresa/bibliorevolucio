@@ -6,8 +6,8 @@ package contract;
  */
 public abstract class ContractEditorial {
     public static final String NOM_TAULA = "editorial";
-    public static final String ID = "id";
-    public static final String NOM = "nom";
-    public static final String PAIS = "pais";
-    public static final String ADRECA = "adreca";
+    public static final String ID = NOM_TAULA+".id";
+    public static final String NOM = NOM_TAULA+".nom";
+    public static final String PAIS = NOM_TAULA+".pais";
+    public static final String ADRECA = NOM_TAULA+".adreca";
 }
