@@ -4,13 +4,16 @@ import base.ConnectionFactory;
 import contract.ContractNivell;
 import objecte.Nivell;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.nio.file.FileSystems;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+/**
+ * @author albertCorominas
+ */
 
 public class NivellDAO implements IObjectDAO<Nivell> {
     private Connection conn;
@@ -24,44 +27,91 @@ public class NivellDAO implements IObjectDAO<Nivell> {
     }
 
     @Override
-    public List<Nivell> selectAll() throws ClassNotFoundException, SQLException{
+    public List<Nivell> selectAll() throws ClassNotFoundException, SQLException {
         List<Nivell> list = new ArrayList<>();
         String sql;
-        Nivell selectNivell;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ ContractNivell.ID+","+ContractNivell.NOM+" from "+ContractNivell.NOM_TAULA;
+            sql = "Select "
+                    +ContractNivell.ID+","
+                    +ContractNivell.NOM+" from "
+                    +ContractNivell.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
+            list.clear();
             while(rs.next()){
-                selectNivell = new Nivell();
-                selectNivell.setId(rs.getInt(1));
-                selectNivell.setNom(rs.getString(2));
-                list.add(selectNivell);
+                list.add(this.read());
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
         return list;
     }
     @Override
-    public List<Nivell> select(HashMap <String,Object> nivell) throws ClassNotFoundException, SQLException{
+    public List<Nivell> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
         List<Nivell> list = new ArrayList<>();
         String sql;
+        Object [] valors;
+        int i;
+        boolean dadaCorrecte=false;
+
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ContractNivell.ID+","+ContractNivell.NOM+" from "+ContractNivell.NOM_TAULA+
-                    " where "+ContractNivell.NOM+" LIKE ? ";
+            sql = "SELECT * FROM "+ContractNivell.NOM_TAULA;
+            i=0;
+            valors=new Object[dades.size()];
+            for(String camp:dades.keySet()){
+                valors=new Object[dades.size()];
+                switch(ContractNivell.DEFINICIO.get(camp)){
+                    case Types.INTEGER:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
+                        break;
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                        dadaCorrecte=dades.get(camp).getClass().equals(String.class);
+                        break;
+                    case Types.BOOLEAN:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
+                        break;
+                }
+                if(i ==0){
+                    sql += " WHERE " ;
+                }
+                else{
+                    sql += " AND ";
+                }
+                sql+=camp;
+                if(dades.get(camp).getClass().equals(String.class)){
+                    sql +=" LIKE ? ";
+                }
+                else{
+                    sql+=" = ?";
+                }
+                if(dadaCorrecte){
+                    valors[i]=dades.get(camp);
+                    i++;
+                }
+                else{
+                    throw new SQLException("Error tipus de dades incorrectes!!");
+                }
+            }
             ps = conn.prepareStatement(sql);
-          
+            for(i=0;i<valors.length;i++){
+                ps.setObject(i+1, valors[i]);
+            }
             rs = ps.executeQuery();
             while(rs.next()){
-             
+                list.add(this.read());
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
@@ -73,17 +123,19 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ContractNivell.ID+","+ContractNivell.NOM+" from "+ContractNivell.NOM_TAULA+
-                    " where "+ContractNivell.ID+" = ? ";
+            sql = "Select "+ContractNivell.ID+","+ContractNivell.NOM+" from "+ ContractNivell.NOM_TAULA
+                    +" where "+ContractNivell.ID +" = ? ";
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs = ps.executeQuery();
             if(rs.next()){
-                nivell.setId(rs.getInt(1));
-                nivell.setNom(rs.getString(2));
+                nivell=this.read();
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.err.println(ex.getMessage());
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
         } finally {
             this.close();
         }
@@ -92,41 +144,41 @@ public class NivellDAO implements IObjectDAO<Nivell> {
     @Override
     public boolean insert(Nivell nivell) throws ClassNotFoundException, SQLException{
         String insert;
-        boolean inserit = false;
-        int id;
+        boolean inserit;
         try {
-            id = nextId();
             conn = ConnectionFactory.getInstance().getConnection();
             insert = "Insert into "+ContractNivell.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,id);
+            ps.setInt(1,nivell.getId());
             ps.setString(2,nivell.getNom());
-            
             inserit=ps.executeUpdate()==1;
-            
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
+        } catch (SQLException ex) {
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        } catch( ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally {
             this.close();
         }
         return inserit;
     }
- 
+
     @Override
     public boolean update(Nivell nivell) throws ClassNotFoundException, SQLException{
         String update;
-        boolean actualitzat = false;
+        boolean actualitzat;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            update = "UPDATE "+ContractNivell.NOM_TAULA+" SET "+
-                    ContractNivell.NOM+" = ? where "+ContractNivell.ID+" = ?";
+            update = "UPDATE "+ContractNivell.NOM_TAULA+" SET "
+                    +ContractNivell.NOM+" = ?, where "
+                    +ContractNivell.ID+" = ?";
             ps = conn.prepareStatement(update);
             ps.setString(1,nivell.getNom());
             ps.setInt(2,nivell.getId());
-            ps.executeUpdate();
-            actualitzat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+            actualitzat=ps.executeUpdate()==1;
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
@@ -144,8 +196,12 @@ public class NivellDAO implements IObjectDAO<Nivell> {
             if(rs.next()){
                 id = rs.getInt(1)+1;
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException (ex.getMessage(),ex.getCause());
+        } finally {
+            this.close();
         }
         return id;
     }
@@ -174,6 +230,20 @@ public class NivellDAO implements IObjectDAO<Nivell> {
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
+        }
+    }
+    private Nivell read() throws SQLException,ClassNotFoundException{
+        Nivell objNivell = new Nivell();
+        objNivell.setId(rs.getInt(ContractNivell.ID));
+        objNivell.setNom(rs.getString(ContractNivell.NOM));
+        return objNivell;
+    }
+
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
+        ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("Bibliorevolucio/src/base", "configBibliotecari"));
+        NivellDAO pro = new NivellDAO();
+        for (Nivell proc: pro.selectAll()) {
+            System.out.println(proc.getNom());
         }
     }
 }
