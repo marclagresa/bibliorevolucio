@@ -81,7 +81,7 @@ public class FXMLTraspasController implements Initializable {
         
     }
     private void traspasarDades()throws Exception{
-        new Task<Void>() {
+        Thread t= new Thread(new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 Producte p;
@@ -101,16 +101,17 @@ public class FXMLTraspasController implements Initializable {
                         try {
                            p=new Producte();
                            registresLlegits++;
-                           p.setFormat(getFormat(reader.get("FORMAT")));
-                           p.setIdioma(getIdioma(reader.get("LLENGUA")));
+                         //  p.setFormat(getFormat(reader.get("FORMAT")));
+                         //  p.setIdioma(getIdioma(reader.get("LLENGUA")));
+                           p.setEditorial(getEditorial(reader.get("EDITORIAL"),reader.get("PAÍS"), reader.get("LLOC")));
                            registresGuardats++;
                         } catch (Exception e) {
                             registreFallits++;
                             System.err.println(e.getMessage());
                         }finally{
-                            txfFilesLlegides.setText(String.format("%d",registresLlegits));
-                            txfFilesNoTraspasades.setText(String.format("%d",registreFallits));
-                            txfFilesTraspasades.setText(String.format("%d", registresGuardats));
+                           // txfFilesLlegides.setText(String.format("%d",registresLlegits));
+                           // txfFilesNoTraspasades.setText(String.format("%d",registreFallits));
+                           // txfFilesTraspasades.setText(String.format("%d", registresGuardats));
                         }
                     }
                 } catch(IOException e){
@@ -122,28 +123,65 @@ public class FXMLTraspasController implements Initializable {
                 }
                 return null;
             }
-        }.call();
+        });
+        t.setDaemon(true);
+        t.start();
         
     }
     private Idioma getIdioma(String nomIdioma)throws SQLException,ClassNotFoundException{
         Idioma idiomaObj = new Idioma();
         IdiomaDAO idiomaDAOObj = new IdiomaDAO();
+        String [] idiomes;   //En un sol registre i poden haver-hi diferents idiomes. es necessitara fer un split.
         nomIdioma=nomIdioma.replace(" ", "");
         if(!nomIdioma.isEmpty()){
-            nomIdioma=nomIdioma.toLowerCase();
-            idiomaObj=idiomaDAOObj.select(nomIdioma);
-            if(idiomaObj.getId()==-1){
-                idiomaObj.setId(idiomaDAOObj.nextId());
-                idiomaObj.setNom(nomIdioma);
-                idiomaDAOObj.insert(idiomaObj);
+            nomIdioma=nomIdioma.toLowerCase(); 
+            idiomes=nomIdioma.split(";");
+            if(idiomes.length==1){
+                idiomes=nomIdioma.split("-");
+            }
+            if(idiomes.length==1){
+                idiomes=nomIdioma.split("/");
+            }
+            for(String idioma:idiomes){
+                switch(idioma){
+                    case "català.":
+                        idioma="català";
+                        break;
+                    case "catala.":
+                        idioma="català";
+                        break;
+                    case "calalà":
+                        idioma="català";
+                        break;
+                    case "catalana":
+                        idioma="català";
+                        break;
+                    case "espanyol":
+                        idioma="castellà";
+                        break;
+                    case "castellana":
+                        idioma="castellà";
+                        break;
+                    case "castellano":
+                        idioma="castellà";
+                        break;
+                }
+                idiomaObj=idiomaDAOObj.select(idioma);
+                if(idiomaObj.getId()==-1){
+                    idiomaObj.setId(idiomaDAOObj.nextId());
+                    idiomaObj.setNom(idioma);
+                    idiomaDAOObj.insert(idiomaObj);
+                }
             }
         }
-        
         return idiomaObj;
     }
-    private Editorial getEditorial(String nomEditorial)throws SQLException,ClassNotFoundException{
+    private Editorial getEditorial(String nomEditorial,String pais,String adreca)throws SQLException,ClassNotFoundException{
         Editorial editorialObj;
         EditorialDAO editorialDAOObj=new EditorialDAO();
+        if(!nomEditorial.matches("\\s*")){
+            
+        }
         return new Editorial();
                 
             

@@ -59,6 +59,7 @@ public class FXMLLoginController extends GenericControlador implements Initializ
        
         try {
             UsuariDAO usrDAO = new UsuariDAO();
+            String email =txfEmail.getText();
             Usuari usr = usrDAO.select(txfEmail.getText());
             if(usr.getId()==-1){
                 lblLoginFail.setText("email incorrecte");

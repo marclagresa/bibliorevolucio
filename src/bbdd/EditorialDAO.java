@@ -201,7 +201,7 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
                 }
                 if(dades.get(camp).getClass().equals(String.class)){
                     query += camp+" LIKE ?";
-                    valors[i]=dades.get(camp);
+                    valors[i]="%"+dades.get(camp)+"%";
                 }
                 else{
                     query += camp+ " = ?";

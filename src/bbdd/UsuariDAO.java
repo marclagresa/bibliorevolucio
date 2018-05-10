@@ -1,12 +1,7 @@
 package bbdd;
 
 import base.ConnectionFactory;
-import base.HashGenerator;
-import base.SaltBuilder;
 import contract.ContractUsuari;
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import objecte.Usuari;
 import java.sql.PreparedStatement;
@@ -50,12 +45,13 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
             c = ConnectionFactory.getInstance().getConnection();
             query = "SELECT * "
                     + "FROM " + ContractUsuari.NOM_TAULA + " "
-                    + "WHERE " + ContractUsuari.EMAIL + " = ?";
+                    + "WHERE " + ContractUsuari.EMAIL + " LIKE ?";
             ps = c.prepareStatement(query);
             ps.setString(1, emailUser);
             rs = ps.executeQuery();
+            
             if (rs.next()) {
-                usr = fillUsuari();
+               usr=this.fillUsuari();
             }
         } catch (SQLException e) {
             throw new SQLException(e.getMessage(), e.getSQLState(), e.getErrorCode(), e.getCause());
@@ -64,6 +60,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
 
         } finally {
             this.close();
+            
         }
         return usr;
     }
