@@ -4,10 +4,7 @@ import base.ConnectionFactory;
 import contract.ContractMateria;
 import objecte.Materia;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,44 +21,91 @@ public class MateriaDAO implements IObjectDAO<Materia> {
     }
 
     @Override
-    public List<Materia> selectAll() throws ClassNotFoundException, SQLException{
+    public List<Materia> selectAll() throws ClassNotFoundException, SQLException {
         List<Materia> list = new ArrayList<>();
         String sql;
-        Materia selectMateria;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ ContractMateria.ID+","+ContractMateria.NOM+" from "+ContractMateria.NOM_TAULA;
+            sql = "Select "
+                    +ContractMateria.ID+","
+                    +ContractMateria.NOM+" from "
+                    +ContractMateria.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
+            list.clear();
             while(rs.next()){
-                selectMateria = new Materia();
-                selectMateria.setId(rs.getInt(1));
-                selectMateria.setNom(rs.getString(2));
-                list.add(selectMateria);
+                list.add(this.read());
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
         return list;
     }
     @Override
-    public List<Materia> select(HashMap <String,Object> materia) throws ClassNotFoundException, SQLException{
+    public List<Materia> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
         List<Materia> list = new ArrayList<>();
         String sql;
+        Object [] valors;
+        int i;
+        boolean dadaCorrecte=false;
+
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ContractMateria.ID+","+ContractMateria.NOM+ " from "+ContractMateria.NOM_TAULA+
-                    " where "+ContractMateria.NOM+" LIKE ? ";
+            sql = "SELECT * FROM "+ContractMateria.NOM_TAULA;
+            i=0;
+            valors=new Object[dades.size()];
+            for(String camp:dades.keySet()){
+                valors=new Object[dades.size()];
+                switch(ContractMateria.DEFINICIO.get(camp)){
+                    case Types.INTEGER:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
+                        break;
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                        dadaCorrecte=dades.get(camp).getClass().equals(String.class);
+                        break;
+                    case Types.BOOLEAN:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
+                        break;
+                }
+                if(i ==0){
+                    sql += " WHERE " ;
+                }
+                else{
+                    sql += " AND ";
+                }
+                sql+=camp;
+                if(dades.get(camp).getClass().equals(String.class)){
+                    sql +=" LIKE ? ";
+                }
+                else{
+                    sql+=" = ?";
+                }
+                if(dadaCorrecte){
+                    valors[i]=dades.get(camp);
+                    i++;
+                }
+                else{
+                    throw new SQLException("Error tipus de dades incorrectes!!");
+                }
+            }
             ps = conn.prepareStatement(sql);
-           
+            for(i=0;i<valors.length;i++){
+                ps.setObject(i+1, valors[i]);
+            }
             rs = ps.executeQuery();
             while(rs.next()){
-               
+                list.add(this.read());
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
@@ -73,15 +117,19 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ContractMateria.ID+","+ContractMateria.NOM+ " from "+ContractMateria.NOM_TAULA+
-                    " where "+ContractMateria.ID+" = ? ";
+            sql = "Select "+ContractMateria.ID+","+ContractMateria.NOM+" from "+ ContractMateria.NOM_TAULA
+                    +" where "+ContractMateria.ID +" = ? ";
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs = ps.executeQuery();
-            materia.setId(rs.getInt(1));
-            materia.setNom(rs.getString(2));
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+            if(rs.next()){
+                materia=this.read();
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
         } finally {
             this.close();
         }
@@ -90,40 +138,41 @@ public class MateriaDAO implements IObjectDAO<Materia> {
     @Override
     public boolean insert(Materia materia) throws ClassNotFoundException, SQLException{
         String insert;
-        boolean inserit = false;
-        int id;
+        boolean inserit;
         try {
-            id = nextId();
             conn = ConnectionFactory.getInstance().getConnection();
             insert = "Insert into "+ContractMateria.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,id);
+            ps.setInt(1,materia.getId());
             ps.setString(2,materia.getNom());
-            ps.executeUpdate();
-            inserit = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
+            inserit=ps.executeUpdate()==1;
+        } catch (SQLException ex) {
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        } catch( ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally {
             this.close();
         }
         return inserit;
     }
-  
+
     @Override
     public boolean update(Materia materia) throws ClassNotFoundException, SQLException{
         String update;
-        boolean actualitzat = false;
+        boolean actualitzat;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            update = "UPDATE "+ContractMateria.NOM_TAULA+" SET "+
-                    ContractMateria.NOM+" = ? where "+ContractMateria.ID+" = ?";
+            update = "UPDATE "+ContractMateria.NOM_TAULA+" SET "
+                    +ContractMateria.NOM+" = ?, where "
+                    +ContractMateria.ID+" = ?";
             ps = conn.prepareStatement(update);
             ps.setString(1,materia.getNom());
             ps.setInt(2,materia.getId());
-            ps.executeUpdate();
-            actualitzat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+            actualitzat=ps.executeUpdate()==1;
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
@@ -141,8 +190,12 @@ public class MateriaDAO implements IObjectDAO<Materia> {
             if(rs.next()){
                 id = rs.getInt(1)+1;
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException (ex.getMessage(),ex.getCause());
+        } finally {
+            this.close();
         }
         return id;
     }
@@ -173,7 +226,14 @@ public class MateriaDAO implements IObjectDAO<Materia> {
             }
         }
     }
-    public static void main(String[] args) {
-        
+    private Materia read() throws SQLException,ClassNotFoundException{
+        Materia objMateria = new Materia();
+        objMateria.setId(rs.getInt(ContractMateria.ID));
+        objMateria.setNom(rs.getString(ContractMateria.NOM));
+        return objMateria;
+    }
+
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+
     }
 }

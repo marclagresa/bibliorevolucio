@@ -1,25 +1,16 @@
 package bbdd;
 
-
-
 import base.ConnectionFactory;
 import contract.ContractBiblioteca;
 import objecte.Biblioteca;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 
 /**
  * @author AlbertCorominas
  */
 
 public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
-
     private Connection conn;
     private ResultSet rs;
     private PreparedStatement ps;
@@ -29,45 +20,93 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         rs=null;
         ps=null;
     }
+
     @Override
-    public List<Biblioteca> selectAll() throws ClassNotFoundException, SQLException{
+    public List<Biblioteca> selectAll() throws ClassNotFoundException, SQLException {
         List<Biblioteca> list = new ArrayList<>();
         String sql;
-        Biblioteca selectBiblioteca;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ ContractBiblioteca.ID+","+ContractBiblioteca.NOM+" from "+ContractBiblioteca.NOM_TAULA;
+            sql = "Select "
+                    +ContractBiblioteca.ID+","
+                    +ContractBiblioteca.NOM+" from "
+                    +ContractBiblioteca.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
+            list.clear();
             while(rs.next()){
-                selectBiblioteca = new Biblioteca();
-                selectBiblioteca.setId(rs.getInt(1));
-                selectBiblioteca.setNom(rs.getString(2));
-                list.add(selectBiblioteca);
+                list.add(this.read());
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
         return list;
     }
     @Override
-    public List<Biblioteca> select(HashMap <String,Object> biblioteca) throws ClassNotFoundException, SQLException{
+    public List<Biblioteca> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
         List<Biblioteca> list = new ArrayList<>();
         String sql;
+        Object [] valors;
+        int i;
+        boolean dadaCorrecte=false;
+
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ContractBiblioteca.ID+","+ContractBiblioteca.NOM+
-                    " from "+ContractBiblioteca.NOM_TAULA+" where "+ContractBiblioteca.NOM+" LIKE ? ";
+            sql = "SELECT * FROM "+ContractBiblioteca.NOM_TAULA;
+            i=0;
+            valors=new Object[dades.size()];
+            for(String camp:dades.keySet()){
+                valors=new Object[dades.size()];
+                switch(ContractBiblioteca.DEFINICIO.get(camp)){
+                    case Types.INTEGER:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
+                        break;
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                        dadaCorrecte=dades.get(camp).getClass().equals(String.class);
+                        break;
+                    case Types.BOOLEAN:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
+                        break;
+                }
+                if(i ==0){
+                    sql += " WHERE " ;
+                }
+                else{
+                    sql += " AND ";
+                }
+                sql+=camp;
+                if(dades.get(camp).getClass().equals(String.class)){
+                    sql +=" LIKE ? ";
+                }
+                else{
+                    sql+=" = ?";
+                }
+                if(dadaCorrecte){
+                    valors[i]=dades.get(camp);
+                    i++;
+                }
+                else{
+                    throw new SQLException("Error tipus de dades incorrectes!!");
+                }
+            }
             ps = conn.prepareStatement(sql);
-           // ps.setString(1,'%'+biblioteca.getNom()+'%');
+            for(i=0;i<valors.length;i++){
+                ps.setObject(i+1, valors[i]);
+            }
             rs = ps.executeQuery();
             while(rs.next()){
-               
+                list.add(this.read());
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
@@ -79,16 +118,22 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ContractBiblioteca.ID+","+ContractBiblioteca.NOM+
-                    " from "+ContractBiblioteca.NOM_TAULA+" where "+ContractBiblioteca.ID+" = ? ";
+            sql = "Select "
+                    +ContractBiblioteca.ID+","
+                    +ContractBiblioteca.NOM+" from "
+                    +ContractBiblioteca.NOM_TAULA + " where " +
+                    ContractBiblioteca.ID + " = ? ";
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs = ps.executeQuery();
-            biblioteca = new Biblioteca();
-            biblioteca.setId(rs.getInt(1));
-            biblioteca.setNom(rs.getString(2));
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+            if(rs.next()){
+                biblioteca=this.read();
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
         } finally {
             this.close();
         }
@@ -97,40 +142,41 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
     @Override
     public boolean insert(Biblioteca biblioteca) throws ClassNotFoundException, SQLException{
         String insert;
-        boolean inserit = false;
-        int id;
+        boolean inserit;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            id = nextId();
             insert = "Insert into "+ContractBiblioteca.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,id);
+            ps.setInt(1,biblioteca.getId());
             ps.setString(2,biblioteca.getNom());
-            ps.executeUpdate();
-            inserit=true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
+            inserit=ps.executeUpdate()==1;
+        } catch (SQLException ex) {
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        } catch( ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally {
             this.close();
         }
         return inserit;
     }
-   
+
     @Override
     public boolean update(Biblioteca biblioteca) throws ClassNotFoundException, SQLException{
         String update;
-        boolean actualitzat = false;
+        boolean actualitzat;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            update = "UPDATE "+ContractBiblioteca.NOM_TAULA+" SET "+ContractBiblioteca.NOM+" = ? " +
-                    "where "+ContractBiblioteca.ID+" = ?";
+            update = "UPDATE "+ContractBiblioteca.NOM_TAULA+" SET "
+                    +ContractBiblioteca.NOM+" = ? where "
+                    +ContractBiblioteca.ID+" = ? ";
             ps = conn.prepareStatement(update);
             ps.setString(1,biblioteca.getNom());
             ps.setInt(2,biblioteca.getId());
-            ps.executeUpdate();
-            actualitzat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+            actualitzat=ps.executeUpdate()==1;
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
@@ -148,8 +194,12 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
             if(rs.next()){
                 id = rs.getInt(1)+1;
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException (ex.getMessage(),ex.getCause());
+        } finally {
+            this.close();
         }
         return id;
     }
@@ -179,5 +229,15 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
                 ex.printStackTrace();
             }
         }
+    }
+    private Biblioteca read() throws SQLException,ClassNotFoundException{
+        Biblioteca objBiblioteca = new Biblioteca();
+        objBiblioteca.setId(rs.getInt(ContractBiblioteca.ID));
+        objBiblioteca.setNom(rs.getString(ContractBiblioteca.NOM));
+        return objBiblioteca;
+    }
+
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+
     }
 }
