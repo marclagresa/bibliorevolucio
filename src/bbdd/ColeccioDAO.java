@@ -81,12 +81,13 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
                 sql+=camp;
                 if(dades.get(camp).getClass().equals(String.class)){
                     sql +=" LIKE ? ";
+                    valors[i]="%"+dades.get(camp)+"%";
                 }
                 else{
                     sql+=" = ?";
+                    valors[i]=dades.get(camp);
                 }
                 if(dadaCorrecte){
-                    valors[i]=dades.get(camp);
                     i++;
                 }
                 else{

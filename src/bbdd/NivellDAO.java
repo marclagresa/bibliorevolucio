@@ -2,6 +2,8 @@ package bbdd;
 
 import base.ConnectionFactory;
 import contract.ContractNivell;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import objecte.Nivell;
 
 import java.io.IOException;
@@ -87,12 +89,13 @@ public class NivellDAO implements IObjectDAO<Nivell> {
                 sql+=camp;
                 if(dades.get(camp).getClass().equals(String.class)){
                     sql +=" LIKE ? ";
+                    valors[i]="%"+dades.get(camp)+"%";
                 }
                 else{
                     sql+=" = ?";
+                    valors[i]=dades.get(camp);
                 }
                 if(dadaCorrecte){
-                    valors[i]=dades.get(camp);
                     i++;
                 }
                 else{
@@ -240,10 +243,14 @@ public class NivellDAO implements IObjectDAO<Nivell> {
     }
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-        ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("Bibliorevolucio/src/base", "configBibliotecari"));
         NivellDAO pro = new NivellDAO();
         for (Nivell proc: pro.selectAll()) {
             System.out.println(proc.getNom());
+        }
+        try {
+            ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("Bibliorevolucio/src/base", "configBibliotecari"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
