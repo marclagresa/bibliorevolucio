@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="vBox" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="591.0" prefWidth="500.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLObraController">
+    <children>
+      <Pane prefHeight="601.0" prefWidth="500.0">
+         <children>
+            <ImageView fx:id="imgProducte" fitHeight="178.0" fitWidth="147.0" layoutX="335.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true" />
+            <VBox layoutX="2.0" prefHeight="506.0" prefWidth="320.0">
+               <children>
+                  <HBox prefHeight="20.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblTipus" prefHeight="17.0" prefWidth="80.0" text="Format">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <ComboBox fx:id="cbFormat" editable="true" prefWidth="150.0" />
+                        <Button fx:id="btnNouFormat" layoutX="280.0" layoutY="12.0" mnemonicParsing="false" onAction="#crearFormat" prefHeight="12.0" prefWidth="21.0" text="+">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblISBN" prefHeight="17.0" prefWidth="80.0" text="ISBN:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField id="tfISBN" fx:id="tfISBN" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="10.0" prefHeight="30.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblCDU" prefHeight="17.0" prefWidth="80.0" text="CDU:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <ComboBox fx:id="cbCDU" editable="true" layoutX="120.0" layoutY="12.0" prefWidth="150.0" />
+                        <Button fx:id="btnNouCDU" mnemonicParsing="false" onAction="#crearCDU" prefHeight="12.0" prefWidth="21.0" text="+">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="69.0" prefHeight="30.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblAny" prefHeight="17.0" prefWidth="80.0" text="Any:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField id="tfAny" fx:id="tfAny" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="69.0" prefHeight="29.0" prefWidth="331.0">
+                     <children>
+                        <Label id="lblPag" prefHeight="17.0" prefWidth="80.0" text="Nº pàgines:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField id="tfPag" fx:id="tfNumPag" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="129.0" prefHeight="30.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblVolum" prefWidth="80.0" text="Col·lecció:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <ComboBox id="cbAutor" fx:id="cbColeccio" editable="true" prefWidth="150.0" />
+                        <Button fx:id="btnNouColeccio" mnemonicParsing="false" prefHeight="12.0" prefWidth="21.0" text="+">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="129.0" prefHeight="30.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblTitol" prefWidth="80.0" text="Títol:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField id="tfTitol" fx:id="tfTitol" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="129.0" prefHeight="30.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblAutor" prefWidth="80.0" text="Autor:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <ComboBox id="cbAutor" fx:id="cbPersona" editable="true" prefWidth="150.0" />
+                        <Button fx:id="btnNouAutor" mnemonicParsing="false" onAction="#crearAutor" prefHeight="12.0" prefWidth="21.0" text="+">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="189.0" prefHeight="30.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblEditorial" prefWidth="80.0" text="Editorial:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <ComboBox id="cbEditorial" fx:id="cbEditorial" editable="true" layoutX="86.0" layoutY="12.0" prefWidth="150.0" />
+                        <Button fx:id="btnNouEditorial" mnemonicParsing="false" onAction="#crearEditorial" prefHeight="12.0" prefWidth="21.0" text="+">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="159.0" prefHeight="30.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblPrestecs" prefHeight="17.0" prefWidth="80.0" text="Nº exemplars:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField id="tfPrestecs" fx:id="tfNumExemplars" prefHeight="25.0" prefWidth="150.0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="189.0" prefHeight="30.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblNivell" prefWidth="80.0" text="Nivell lectura:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <ComboBox id="cbEditorial" fx:id="cbNivellLectura" editable="true" prefWidth="150.0" />
+                        <Button fx:id="btnNouNivell" mnemonicParsing="false" onAction="#crearNivell" prefHeight="12.0" prefWidth="21.0" text="+">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="189.0" prefHeight="30.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblCategoria" prefWidth="80.0" text="Categoria:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField id="tfCategoria" fx:id="tfCategoria" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="189.0" prefHeight="30.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblDimensions" prefWidth="80.0" text="Dimensions:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField id="tfDimensions" fx:id="tfDimensions" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="129.0" prefHeight="30.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblLlengua" prefWidth="80.0" text="Idioma:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <ComboBox id="cbEditorial" fx:id="cbIdioma" editable="true" prefWidth="150.0" />
+                        <Button fx:id="btnNouIdioma" mnemonicParsing="false" onAction="#crearIdioma" prefHeight="12.0" prefWidth="21.0" text="+">
+                           <font>
+                              <Font size="10.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox prefHeight="30.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblCategoria" prefWidth="80.0" text="Adreça web:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextField id="tfCategoria" fx:id="tfAdresaWeb" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
+                     </padding>
+                  </HBox>
+                  <HBox layoutX="10.0" layoutY="129.0" prefHeight="87.0" prefWidth="282.0">
+                     <children>
+                        <Label id="lblResum" prefWidth="80.0" text="Resum llibre:">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Label>
+                        <TextArea id="tfResum" fx:id="taResum" prefHeight="85.0" prefWidth="150.0" />
+                     </children>
+                     <padding>
+                        <Insets bottom="2.0" left="20.0" right="2.0" top="2.0" />
+                     </padding>
+                  </HBox>
+               </children>
+            </VBox>
+            <HBox layoutY="527.0" prefHeight="51.0" prefWidth="447.0">
+               <children>
+                  <Button id="btnGuardar" mnemonicParsing="false" onAction="#guardar" prefHeight="30.0" prefWidth="100.0" text="Guardar">
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button id="btnCancelar" fx:id="btnCancelar" layoutX="110.0" layoutY="20.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="30.0" prefWidth="100.0" text="Cancel·lar" />
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="105.0" right="105.0" top="10.0" />
+               </padding>
+            </HBox>
+            <Button fx:id="btnImatge" layoutX="409.0" layoutY="213.0" mnemonicParsing="false" text="Imatge" />
+         </children>
+         <VBox.margin>
+            <Insets top="10.0" />
+         </VBox.margin>
+      </Pane>
+   </children>
+</VBox>

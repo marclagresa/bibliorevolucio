@@ -1,5 +1,6 @@
 package base;
 
+import static base.FXMLAutorController.tipusA;
 import bbdd.CduDAO;
 import java.io.IOException;
 import java.net.URL;
@@ -21,6 +22,8 @@ import objecte.Cdu;
  */
 public class FXMLCduController extends GenericPopUp implements Initializable {
     
+    static TipusAccio tipusA;
+    
     @FXML
     private Label lblCDU;
     @FXML
@@ -38,9 +41,11 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
         // TODO
     }    
     
-    public static FXMLCduController crear(Window owner, boolean isModal) throws IOException{        
+    public static FXMLCduController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{        
         
-        return crearPopUp("/fxml/FXMLCdu.fxml", FXMLCduController.class, owner, isModal);
+        tipusA = tipus;
+        
+        return crearPopUp("/fxml/FXMLCdu.fxml", FXMLCduController.class, owner, isModal, tipus);
     }
 
     @FXML
@@ -70,5 +75,10 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
                 onAcceptCallBack.accept(cdu);
             }
         }       
+    }
+
+    @Override
+    public void emplenarDades(Object obj) {
+        
     }
 }

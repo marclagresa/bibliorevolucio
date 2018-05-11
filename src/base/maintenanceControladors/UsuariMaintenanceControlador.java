@@ -27,19 +27,7 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
         return "Usuaris";
     }
     
-    @Override
-    public GenericPopUp createPopUpObject() throws IOException {
-        
-        return FXMLCduController.crear( this.getScene().getWindow(), true );
-        
-    }
-
-    @Override
-    public GenericPopUp createPopUpAdvSearch() throws IOException {
-        
-        return FXMLCduController.crear( this.getScene().getWindow(), true );
-        
-    }   
+    
 
     @Override
     public List<AttributeBrick> getAttributeWall() {
@@ -85,6 +73,16 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb); // optional custom init
+    }
+
+    @Override
+    public GenericPopUp createPopUpObject(GenericPopUp.TipusAccio tipusAccio) throws IOException {
+        return FXMLCduController.crear( this.getScene().getWindow(), true, tipusAccio );
+    }
+
+    @Override
+    public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
+        return FXMLCduController.crear( this.getScene().getWindow(), true, tipusAccio );
     }
 
 }

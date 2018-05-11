@@ -1,5 +1,6 @@
 package base;
 
+import base.GenericPopUp.TipusAccio;
 import excepcions.MaintenanceException;
 import java.io.IOException;
 import java.net.URL;
@@ -109,7 +110,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
      * @return GenericPopUp Object
      * @throws IOException 
      */
-    public abstract GenericPopUp createPopUpObject() throws IOException;
+    public abstract GenericPopUp createPopUpObject( TipusAccio tipusAccio ) throws IOException;
     
     /**
      *  Example:
@@ -120,7 +121,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
      * @return GenericPopUp Object
      * @throws IOException 
      */
-    public abstract GenericPopUp createPopUpAdvSearch() throws IOException; 
+    public abstract GenericPopUp createPopUpAdvSearch( TipusAccio tipusAccio) throws IOException; 
         
     /**
      * Do the search and fill the table
@@ -170,7 +171,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         
         try {
                
-            GenericPopUp w = createPopUpAdvSearch();
+            GenericPopUp w = createPopUpAdvSearch( TipusAccio.Buscar );
 
         } catch ( IOException ex ) {
 
@@ -185,7 +186,8 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
        
         try {
 
-            GenericPopUp w = createPopUpObject();
+            GenericPopUp w = createPopUpObject( TipusAccio.Crear );
+            w.show();
 
         } catch ( IOException ex ) {
 
@@ -201,8 +203,8 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         try {
                 
             Object object = _WIDGETLIST.getSelected();
-            GenericPopUp window = createPopUpObject();
-            //window.emplenarDades( object );
+            GenericPopUp window = createPopUpObject(TipusAccio.Modificar );
+            window.emplenarDades( object );
 
         } catch ( IOException ex ) {
 
@@ -223,8 +225,8 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         try {
                 
             Object object = _WIDGETLIST.getSelected();
-            GenericPopUp window = createPopUpObject();
-            //window.emplenarDades( object );
+            GenericPopUp window = createPopUpObject( TipusAccio.Deshabilitar);
+            window.emplenarDades( object );
 
         } catch ( IOException ex ) {
 
@@ -245,8 +247,8 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         try {
                 
             Object object = _WIDGETLIST.getSelected();
-            GenericPopUp window = createPopUpObject();
-            //window.emplenarDades( object );
+            GenericPopUp window = createPopUpObject(TipusAccio.Crear);
+            window.emplenarDades( object );
 
         } catch ( IOException ex ) {
 

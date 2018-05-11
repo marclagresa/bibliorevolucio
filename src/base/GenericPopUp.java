@@ -2,7 +2,6 @@ package base;
 
 import java.io.IOException;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -14,26 +13,30 @@ import javafx.stage.Window;
  *
  * @author AdriaLlop
  */
-public class GenericPopUp extends Stage{
+public abstract class GenericPopUp extends Stage{
     
     protected Consumer<Object> onAcceptCallBack = null;
-    protected Supplier onCancelCallBack = null;
+    protected Runnable onCancelCallBack = null;
+    
+    public enum TipusAccio{
+        Crear,Modificar,Deshabilitar,Buscar;
+    }
     
     protected void setRoot(Parent root){
         this.setScene(new Scene(root));
     }
     
-    protected void onAccept(Consumer<Object> fn){
+    public void onAccept(Consumer<Object> fn){
         
         onAcceptCallBack = fn;
     }
     
-    protected void onCancel(Supplier fn){
+    public void onCancel(Runnable fn){
         
         onCancelCallBack = fn;
     }
     
-    protected static <E extends GenericPopUp> E crearPopUp(String fitxerFXML, Class<E> cl, Window owner, boolean isModal) throws IOException{
+    protected static <E extends GenericPopUp> E crearPopUp(String fitxerFXML, Class<E> cl, Window owner, boolean isModal, TipusAccio tipus) throws IOException{
       
         FXMLLoader loder = new FXMLLoader(cl.getResource(fitxerFXML));
         Parent p = loder.load();
@@ -48,4 +51,6 @@ public class GenericPopUp extends Stage{
         
         return c;
     }
+    
+    public abstract void emplenarDades(Object obj);
 }
