@@ -149,6 +149,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
                     break;
                 case Date:
                 case Integer:
+                    data.put( contractName, Integer.valueOf( sd.getFieldText() ) );
                 case String:
                     data.put( contractName, sd.getFieldText() );
                     break;
@@ -157,8 +158,8 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             list = searchOcurrences( data );
             
         } catch ( IllegalArgumentException e ) {
-            
-            throw new MaintenanceException( getClass().getName() + ": Wrong data - searchAction()" );
+            // Do alert
+            //throw new MaintenanceException( getClass().getName() + ": Wrong data - searchAction()" );
             
         }
         
@@ -186,8 +187,8 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
        
         try {
 
-            GenericPopUp w = createPopUpObject( TipusAccio.Crear );
-            w.show();
+            GenericPopUp window = createPopUpObject( TipusAccio.Crear );
+            window.show();
 
         } catch ( IOException ex ) {
 
@@ -203,9 +204,10 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         try {
                 
             Object object = _WIDGETLIST.getSelected();
-            GenericPopUp window = createPopUpObject(TipusAccio.Modificar );
+            GenericPopUp window = createPopUpObject( TipusAccio.Modificar );
             window.emplenarDades( object );
-
+            window.show();
+            
         } catch ( IOException ex ) {
 
             System.out.println( getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Modify" );
@@ -225,9 +227,10 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         try {
                 
             Object object = _WIDGETLIST.getSelected();
-            GenericPopUp window = createPopUpObject( TipusAccio.Deshabilitar);
+            GenericPopUp window = createPopUpObject( TipusAccio.Deshabilitar );
             window.emplenarDades( object );
-
+            window.show();
+            
         } catch ( IOException ex ) {
 
             System.out.println( getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Delete" );
@@ -247,9 +250,10 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         try {
                 
             Object object = _WIDGETLIST.getSelected();
-            GenericPopUp window = createPopUpObject(TipusAccio.Crear);
+            GenericPopUp window = createPopUpObject( TipusAccio.Crear );
             window.emplenarDades( object );
-
+            window.show();
+            
         } catch ( IOException ex ) {
 
             System.out.println( getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Duplicate" );

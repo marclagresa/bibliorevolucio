@@ -1,5 +1,6 @@
 package maintenance;
 
+import excepcions.MaintenanceException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -31,8 +32,9 @@ public interface AttributeWall {
      * @param contractName
      * @param object
      * @return 
+     * @throws excepcions.MaintenanceException 
      */
-    public Integer parseObject( String contractName, Object object );
+    public Integer parseObject( String contractName, Object object ) throws MaintenanceException ;
     
     /**
      * This methode be need implemented with attributs of his representing class

@@ -14,6 +14,7 @@ import java.util.ResourceBundle;
 import objecte.Nivell;
 import maintenance.AttributeBrick;
 import base.GenericMaintenanceControlador;
+import excepcions.MaintenanceException;
 import maintenance.AttributeWall;
 
 /**
@@ -50,13 +51,15 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     }
 
     @Override
-    public Integer parseObject( String contractName, Object object ) {
+    public Integer parseObject( String contractName, Object object ) throws MaintenanceException {
         
         int id = 0;
         switch( contractName ) {
             case "nivell":
                 id = ((Nivell) object).getId();
                 break;
+            default:
+                throw new MaintenanceException( "This object: " + contractName + " not parsed ina parseObject" );
         }
         
         return id;
@@ -72,17 +75,23 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
         super.initialize(url, rb); // optional custom init
+        
     }
 
     @Override
     public GenericPopUp createPopUpObject(GenericPopUp.TipusAccio tipusAccio) throws IOException {
+        
         return FXMLCduController.crear( this.getScene().getWindow(), true, tipusAccio );
+        
     }
 
     @Override
     public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
+        
         return FXMLCduController.crear( this.getScene().getWindow(), true, tipusAccio );
+        
     }
 
 }
