@@ -6,8 +6,10 @@ import bbdd.ColeccioDAO;
 import bbdd.EditorialDAO;
 import bbdd.FormatDAO;
 import bbdd.IdiomaDAO;
+import bbdd.MateriaDAO;
 import bbdd.NivellDAO;
 import bbdd.PersonaDAO;
+import bbdd.ProcedenciaDAO;
 import contract.ContractEditorial;
 import contract.ContractFormat;
 import contract.ContractIdioma;
@@ -22,6 +24,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -42,8 +45,10 @@ import objecte.Coleccio;
 import objecte.Editorial;
 import objecte.Format;
 import objecte.Idioma;
+import objecte.Materia;
 import objecte.Nivell;
 import objecte.Persona;
+import objecte.Procedencia;
 
 /**
  *
@@ -58,6 +63,8 @@ public class FXMLObraController extends GenericPopUp implements Initializable  {
     NivellDAO objNivellDAO;
     IdiomaDAO objIdiomaDAO;
     ColeccioDAO objColeccioDAO;
+    MateriaDAO objMateriaDAO;
+    ProcedenciaDAO objProcedenciaDAO;
     static TipusAccio tipusA;
     
     @FXML
@@ -70,8 +77,6 @@ public class FXMLObraController extends GenericPopUp implements Initializable  {
     private TextField tfNumPag;
     @FXML
     private TextField tfTitol;
-    @FXML
-    private TextField tfCategoria;
     @FXML
     private TextField tfDimensions;
     @FXML
@@ -112,6 +117,18 @@ public class FXMLObraController extends GenericPopUp implements Initializable  {
     private VBox vBox;
     @FXML
     private ImageView imgProducte;
+    @FXML
+    private Button btnNouColeccio;
+    @FXML
+    private ComboBox<Materia> cbMateria;
+    @FXML
+    private Button btnNouMateria;
+    @FXML
+    private ComboBox<Procedencia> cbProcedencia;
+    @FXML
+    private Button btnNouProcedencia;
+    @FXML
+    private TextArea taCaract;
     
     public static FXMLObraController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{
 
@@ -228,12 +245,10 @@ public class FXMLObraController extends GenericPopUp implements Initializable  {
             objColeccio = cbColeccio.getValue();
             coleccio = objColeccio.getNom();
             System.out.println("Col·lecció: "+coleccio);    
-        }
-        
+        }        
 
         String nom = tfTitol.getText();
         String ISBN = tfISBN.getText();        
-        String categoria = tfCategoria.getText();
         String dimensions = tfDimensions.getText();
         String resum = taResum.getText();
        
@@ -308,7 +323,6 @@ public class FXMLObraController extends GenericPopUp implements Initializable  {
             cbColeccio.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             tfTitol.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             cbNivellLectura.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
-            tfCategoria.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             tfDimensions.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             cbIdioma.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             cbPersona.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
@@ -360,7 +374,7 @@ public class FXMLObraController extends GenericPopUp implements Initializable  {
         }
         
         //Nivell
-        objNivellDAO= new NivellDAO();       
+        /*objNivellDAO= new NivellDAO();       
         ObservableList<Nivell> opcionsNivell = null;
         try {
             opcionsNivell = FXCollections.observableArrayList(objNivellDAO.selectAll());
@@ -369,7 +383,7 @@ public class FXMLObraController extends GenericPopUp implements Initializable  {
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }
+        }*/
         
         //Idioma
         objIdiomaDAO= new IdiomaDAO();
@@ -457,7 +471,7 @@ public class FXMLObraController extends GenericPopUp implements Initializable  {
         }
         
         ClNivell clNivell = new ClNivell();
-        clNivell.opcionsNivell = opcionsNivell;       
+        //clNivell.opcionsNivell = opcionsNivell;       
         cbNivellLectura.getEditor().textProperty().addListener(clNivell);
         
         //Classe listener per idioma
@@ -688,6 +702,84 @@ public class FXMLObraController extends GenericPopUp implements Initializable  {
         try{
             opcionsIdioma = FXCollections.observableArrayList(objIdiomaDAO.selectAll());
             cbIdioma.setItems(opcionsIdioma);
+        }catch(ClassNotFoundException ex){
+            System.out.println("ClassNotFoundException: "+ex.getMessage());
+        } catch (SQLException ex) {
+            System.out.println("SQLException: "+ex.getMessage());
+        }
+    }
+    
+    @FXML
+    private void crearColeccio(ActionEvent event) throws IOException {
+        
+        FXMLColeccioController c = FXMLColeccioController.crear(this, true, Crear);
+        
+        c.onAccept( (Object o)->{
+            actualitzarColeccio();
+        });
+        
+        c.show();
+    }
+    
+    public void actualitzarColeccio(){
+        
+        objColeccioDAO= new ColeccioDAO();       
+        ObservableList<Coleccio> opcionsColeccio;
+        try{
+            opcionsColeccio = FXCollections.observableArrayList(objColeccioDAO.selectAll());
+            cbColeccio.setItems(opcionsColeccio);
+        }catch(ClassNotFoundException ex){
+            System.out.println("ClassNotFoundException: "+ex.getMessage());
+        } catch (SQLException ex) {
+            System.out.println("SQLException: "+ex.getMessage());
+        }
+    }
+
+    @FXML
+    private void crearMateria(ActionEvent event) throws IOException {
+        
+        FXMLMateriaController c = FXMLMateriaController.crear(this, true, Crear);
+        
+        c.onAccept( (Object o)->{
+            actualitzarMateria();
+        });
+        
+        c.show();
+    }
+    
+    public void actualitzarMateria(){
+        
+        objMateriaDAO = new MateriaDAO();       
+        ObservableList<Materia> opcionsMateria;
+        try{
+            opcionsMateria = FXCollections.observableArrayList(objMateriaDAO.selectAll());
+            cbMateria.setItems(opcionsMateria);
+        }catch(ClassNotFoundException ex){
+            System.out.println("ClassNotFoundException: "+ex.getMessage());
+        } catch (SQLException ex) {
+            System.out.println("SQLException: "+ex.getMessage());
+        }
+    }
+    
+     @FXML
+    private void crearProcedencia(ActionEvent event) throws IOException {
+        
+        /*FXMLProcedenciaController c = FXMLProcedenciaController.crear(this, true, Crear);
+        
+        c.onAccept( (Object o)->{
+            actualitzarProcedencia();
+        });
+        
+        c.show();*/
+    }
+    
+    public void actualitzarProcedencia(){
+        
+        objProcedenciaDAO = new ProcedenciaDAO();       
+        ObservableList<Procedencia> opcionsProcedencia;
+        try{
+            opcionsProcedencia = FXCollections.observableArrayList(objProcedenciaDAO.selectAll());
+            cbProcedencia.setItems(opcionsProcedencia);
         }catch(ClassNotFoundException ex){
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
