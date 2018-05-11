@@ -136,3 +136,11 @@
      -fx-text-fill: #D3E1FF;
      /*-fx-background-color: #AFC8FF;*/
 }
+
+
+#spManteniment{
+    	-fx-background-radius: 5;
+    	-fx-border-color: #2e8b57;
+    	-fx-border-width: 2px;
+	-fx-border-radius: 5;
+}
