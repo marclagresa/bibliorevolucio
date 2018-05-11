@@ -4,10 +4,7 @@ import base.ConnectionFactory;
 import contract.ContractFormat;
 import objecte.Format;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,44 +21,92 @@ public class FormatDAO implements IObjectDAO<Format>{
     }
 
     @Override
-    public List<Format> selectAll() throws ClassNotFoundException, SQLException{
+    public List<Format> selectAll() throws ClassNotFoundException, SQLException {
         List<Format> list = new ArrayList<>();
         String sql;
-        Format selectFormat;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ ContractFormat.ID+","+ContractFormat.NOM+" from "+ContractFormat.NOM_TAULA;
+            sql = "Select "
+                    +ContractFormat.ID+","
+                    +ContractFormat.NOM+" from "
+                    +ContractFormat.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
+            list.clear();
             while(rs.next()){
-                selectFormat = new Format();
-                selectFormat.setId(rs.getInt(1));
-                selectFormat.setNom(rs.getString(2));
-                list.add(selectFormat);
+                list.add(this.read());
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
         return list;
     }
     @Override
-    public List<Format> select(HashMap <String,Object> format) throws ClassNotFoundException, SQLException{
+    public List<Format> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
         List<Format> list = new ArrayList<>();
         String sql;
+        Object [] valors;
+        int i;
+        boolean dadaCorrecte=false;
+
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ContractFormat.ID+","+ContractFormat.NOM+" from "+
-                    ContractFormat.NOM_TAULA+" where "+ContractFormat.NOM+" LIKE ? ";
+            sql = "SELECT * FROM "+ContractFormat.NOM_TAULA;
+            i=0;
+            valors=new Object[dades.size()];
+            for(String camp:dades.keySet()){
+                valors=new Object[dades.size()];
+                switch(ContractFormat.DEFINICIO.get(camp)){
+                    case Types.INTEGER:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
+                        break;
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                        dadaCorrecte=dades.get(camp).getClass().equals(String.class);
+                        break;
+                    case Types.BOOLEAN:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
+                        break;
+                }
+                if(i ==0){
+                    sql += " WHERE " ;
+                }
+                else{
+                    sql += " AND ";
+                }
+                sql+=camp;
+                if(dades.get(camp).getClass().equals(String.class)){
+                    sql +=" LIKE ? ";
+                    valors[i]="%"+dades.get(camp)+"%";
+                }
+                else{
+                    sql+=" = ?";
+                    valors[i]=dades.get(camp);
+                }
+                if(dadaCorrecte){
+                    i++;
+                }
+                else{
+                    throw new SQLException("Error tipus de dades incorrectes!!");
+                }
+            }
             ps = conn.prepareStatement(sql);
-           
+            for(i=0;i<valors.length;i++){
+                ps.setObject(i+1, valors[i]);
+            }
             rs = ps.executeQuery();
             while(rs.next()){
-              
+                list.add(this.read());
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
@@ -73,40 +118,23 @@ public class FormatDAO implements IObjectDAO<Format>{
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ContractFormat.ID+","+ContractFormat.NOM+" from "+
-                    ContractFormat.NOM_TAULA+" where "+ContractFormat.ID+" = ? ";
+            sql = "Select "
+                    +ContractFormat.ID+","
+                    +ContractFormat.NOM+" from "
+                    +ContractFormat.NOM_TAULA + " where " +
+                    ContractFormat.ID + " = ? ";
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs = ps.executeQuery();
             if(rs.next()){
-                format.setId(rs.getInt(1));
-                format.setNom(rs.getString(2));
+                format=this.read();
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
         } finally {
-            this.close();
-        }
-        return format;
-    }
-    public Format select(String nom)throws ClassNotFoundException,SQLException{
-        Format format=new Format();
-        String sql;
-        try{
-            conn=ConnectionFactory.getInstance().getConnection();
-            sql="SELECT * FROM "+ContractFormat.NOM_TAULA+" WHERE "+ContractFormat.NOM+" LIKE ?";
-            ps=conn.prepareStatement(sql);
-            ps.setString(1, nom);
-            rs=ps.executeQuery();
-            if(rs.next()){
-                format.setId(rs.getInt(ContractFormat.ID));
-                format.setNom(rs.getString(ContractFormat.NOM));
-            }
-        }catch (ClassNotFoundException e){
-            throw new ClassNotFoundException(e.getMessage(),e.getCause());
-        }catch(SQLException e){
-            throw new SQLException(e.getMessage(),e.getSQLState(),e.getErrorCode(),e.getCause());
-        }finally{
             this.close();
         }
         return format;
@@ -114,40 +142,41 @@ public class FormatDAO implements IObjectDAO<Format>{
     @Override
     public boolean insert(Format format) throws ClassNotFoundException, SQLException{
         String insert;
-        boolean inserit = false;
-        int id;
+        boolean inserit;
         try {
-            id = nextId();
             conn = ConnectionFactory.getInstance().getConnection();
             insert = "Insert into "+ContractFormat.NOM_TAULA+" values (?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,id);
+            ps.setInt(1,format.getId());
             ps.setString(2,format.getNom());
-            ps.executeUpdate();
-            inserit = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
+            inserit=ps.executeUpdate()==1;
+        } catch (SQLException ex) {
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        } catch( ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally {
             this.close();
         }
         return inserit;
     }
-  
+
     @Override
     public boolean update(Format format) throws ClassNotFoundException, SQLException{
         String update;
-        boolean actualitzat = false;
+        boolean actualitzat;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            update = "UPDATE "+ContractFormat.NOM_TAULA+" SET "+ContractFormat.NOM+" = ? " +
-                    "where "+ContractFormat.ID+" = ?";
+            update = "UPDATE "+ContractFormat.NOM_TAULA+" SET "
+                    +ContractFormat.NOM+" = ? where "
+                    +ContractFormat.ID+" = ? ";
             ps = conn.prepareStatement(update);
             ps.setString(1,format.getNom());
             ps.setInt(2,format.getId());
-            ps.executeUpdate();
-            actualitzat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+            actualitzat=ps.executeUpdate()==1;
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
@@ -159,14 +188,18 @@ public class FormatDAO implements IObjectDAO<Format>{
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "SELECT max("+ ContractFormat.ID+") FROM "+ContractFormat.NOM_TAULA;
+            sql = "SELECT max("+ContractFormat.ID+") FROM "+ContractFormat.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             if(rs.next()){
                 id = rs.getInt(1)+1;
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException (ex.getMessage(),ex.getCause());
+        } finally {
+            this.close();
         }
         return id;
     }
@@ -196,5 +229,15 @@ public class FormatDAO implements IObjectDAO<Format>{
                 ex.printStackTrace();
             }
         }
+    }
+    private Format read() throws SQLException,ClassNotFoundException{
+        Format objFormat = new Format();
+        objFormat.setId(rs.getInt(ContractFormat.ID));
+        objFormat.setNom(rs.getString(ContractFormat.NOM));
+        return objFormat;
+    }
+
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+
     }
 }
