@@ -6,8 +6,6 @@
 package objecte;
 
 
-import contract.ContractEditorial;
-import java.util.HashMap;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -22,8 +20,7 @@ public class Editorial {
     
     private final IntegerProperty id; //Id de la editorial
     private final StringProperty nom;  //Nom de la editorial
-    private final StringProperty pais; //Pais de la editorial
-    private final StringProperty adreca; //Adreça de la editorial
+
     
     /**
      * Constructor amb valors per defecte:
@@ -36,8 +33,7 @@ public class Editorial {
     public Editorial() {
         this.id = new SimpleIntegerProperty(-1);
         this.nom = new SimpleStringProperty("");
-        this.pais = new SimpleStringProperty("");
-        this.adreca = new SimpleStringProperty("");
+
     }
     /**
      * Constructor amb parametres
@@ -46,32 +42,11 @@ public class Editorial {
      * @param pais Editorial 
      * @param adreca Editorial
      */
-    public Editorial(int id,String nom,String pais,String adreca){
+    public Editorial(int id,String nom){
         this.id=new SimpleIntegerProperty(id);
         this.nom = new SimpleStringProperty(nom);
-        this.pais = new SimpleStringProperty(pais);
-        this.adreca=new SimpleStringProperty(adreca);
+
     
-    }
-    public Editorial mountEditorial(HashMap <String,Object> dades){
-        Editorial e=new Editorial();
-        dades.forEach((k, v) -> {
-            switch (k){
-                case ContractEditorial.ID:
-                    e.setId((Integer)v);
-                    break;
-                case ContractEditorial.NOM:
-                    e.setNom((String)v);
-                    break;
-                case ContractEditorial.ADRECA:
-                    e.setAdreca((String)v);
-                    break;
-                case ContractEditorial.PAIS:
-                    e.setPais((String)v);
-                    break;
-            }
-        });
-        return e;
     }
     //<editor-fold desc="Getters">
     /**
@@ -89,22 +64,7 @@ public class Editorial {
     public String getNom(){
         return this.nom.get();
     }
-    
-    /**
-     * getter pais
-     * @return this.pais.get()
-     */
-    public String getPais(){
-        return this.pais.get();
-    }
-    
-    /**
-     * getter adreça
-     * @return this.adreca.get()
-     */
-    public String getAdreca(){
-        return this.adreca.get();
-    }
+
     //</editor-fold>
     //<editor-fold desc="Setters">
     
@@ -123,20 +83,6 @@ public class Editorial {
     public void setNom(String nom){
         this.nom.set(nom);
     }
-    /**
-     * Setter pais
-     * @param pais nou
-     */
-    public void setPais(String pais){
-        this.pais.set(pais);
-    }
-    /**
-     * Setter adreça
-     * @param adreca nova 
-     */
-    public void setAdreca(String adreca){
-        this.adreca.set(adreca);
-    }
     //</editor-fold>
     //<editor-fold desc="Property Getters">
     /**
@@ -154,24 +100,7 @@ public class Editorial {
     public StringProperty getNomProperty(){
         return this.nom;
     }
-    
-    /**
-     * Getter propietat pais
-     * @return this.pais
-     */
-    public StringProperty getPaisProperty(){
-        return this.pais;
-    }
-    
-    /**
-     * Getter propietat adreça
-     * @return this.adreca
-     */
-    public StringProperty getAdrecaProperty(){
-        return this.adreca;
-    }
-    //</editor-fold>
-    
+    //</editor-fold>    
     /**
      *  
      * @return el nom de la editorial 

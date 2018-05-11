@@ -10,12 +10,15 @@ import bbdd.FormatDAO;
 import bbdd.IdiomaDAO;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
+import contract.ContractEditorial;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.List;
 import java.util.ResourceBundle;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -103,7 +106,7 @@ public class FXMLTraspasController implements Initializable {
                            registresLlegits++;
                          //  p.setFormat(getFormat(reader.get("FORMAT")));
                          //  p.setIdioma(getIdioma(reader.get("LLENGUA")));
-                           p.setEditorial(getEditorial(reader.get("EDITORIAL"),reader.get("PAÍS"), reader.get("LLOC")));
+                           p.setEditorial(getEditorial(reader.get("EDITORIAL")));
                            registresGuardats++;
                         } catch (Exception e) {
                             registreFallits++;
@@ -176,15 +179,25 @@ public class FXMLTraspasController implements Initializable {
         }
         return idiomaObj;
     }
-    private Editorial getEditorial(String nomEditorial,String pais,String adreca)throws SQLException,ClassNotFoundException{
-        Editorial editorialObj;
+    private Editorial getEditorial(String nomEditorial)throws SQLException,ClassNotFoundException{
+        Editorial editorialObj = new Editorial();
         EditorialDAO editorialDAOObj=new EditorialDAO();
+        HashMap <String,Object> consulta;
+        List<Editorial>editorials;
         if(!nomEditorial.matches("\\s*")){
-            
+            consulta=new HashMap<>();
+            consulta.put(ContractEditorial.NOM, nomEditorial);
+            editorials=editorialDAOObj.select(consulta);
+            if(editorials.size() >0){
+                editorialObj=editorials.get(0);
+            }
+            else{
+                editorialObj.setNom(nomEditorial);
+                editorialObj.setId(editorialDAOObj.nextId());
+                editorialDAOObj.insert(editorialObj);
+            }
         }
-        return new Editorial();
-                
-            
+        return editorialObj;
     }
     /*
     private Cdu getCdu(String nomCdu) throws SQLException,ClassNotFoundException{

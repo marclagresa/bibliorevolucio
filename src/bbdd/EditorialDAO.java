@@ -52,14 +52,10 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
             c=ConnectionFactory.getInstance().getConnection();
             query="UPDATE " + ContractEditorial.NOM_TAULA + " SET "
                 + ContractEditorial.NOM + " = ?, "
-                + ContractEditorial.PAIS + " = ?, "
-                + ContractEditorial.ADRECA + " = ?"
                 + "WHERE " + ContractEditorial.ID + " = ?";
             pst=c.prepareStatement(query);
             pst.setString(1, e.getNom());
-            pst.setString(2, e.getPais());
-            pst.setString(3, e.getAdreca());
-            pst.setInt(4, e.getId());
+            pst.setInt(2, e.getId());
             updated=pst.executeUpdate() == 1;
         } catch(SQLException | ClassNotFoundException ex){
             System.out.println(ex.getMessage());
@@ -84,32 +80,20 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
         try {
             c=ConnectionFactory.getInstance().getConnection();
             q= "SELECT "+ContractEditorial.ID + ", "
-                + ContractEditorial.NOM + ", "
-                + ContractEditorial.ADRECA + ", "
-                + ContractEditorial.PAIS  
+                + ContractEditorial.NOM
             + " FROM "+ContractEditorial.NOM_TAULA  
             + " ORDER BY "+ContractEditorial.ID;
             st=c.createStatement();
             rs=st.executeQuery(q);
             while(rs.next()){
                 nom=rs.getString(ContractEditorial.NOM);
-                pais=rs.getString(ContractEditorial.PAIS);
-                adreca=rs.getString(ContractEditorial.ADRECA);
                 id=rs.getInt(ContractEditorial.ID);
                 if(nom==null){
                     nom="";
                 }
-                if(adreca==null){
-                    adreca="";
-                }
-                if(pais==null){
-                    pais="";
-                }
                 editorial=new Editorial(
                     id,
-                    nom,
-                    adreca,
-                    pais
+                    nom
                 );
                 editorials.add(editorial);
             }
@@ -135,10 +119,8 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
             c=ConnectionFactory.getInstance().getConnection();
             query="INSERT INTO "+ContractEditorial.NOM_TAULA + " ("
                     + ContractEditorial.ID + ", "
-                    + ContractEditorial.NOM + ", "
-                    + ContractEditorial.PAIS + ", "
-                    + ContractEditorial.ADRECA + " ) "
-            + "VALUES (?,?,?,?)";
+                    + ContractEditorial.NOM + ") "
+            + "VALUES (?,?)";
             pst=c.prepareStatement(query);
             pst.setInt(1, e.getId());
             
@@ -147,18 +129,6 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
             }
             else{
                 pst.setString(2,e.getNom());
-            }
-            if(e.getAdreca().equals("")){
-                pst.setString(4, null);
-            }
-            else{
-                pst.setString(4, e.getAdreca());
-            }
-            if(e.getPais().equals("")){
-                pst.setString(3, null);
-            }
-            else{
-                pst.setString(3, e.getPais());
             }
             inserit=pst.executeUpdate()==1;
         } catch (ClassNotFoundException ex) {
@@ -217,9 +187,7 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
             while(rs.next()){
                 objEditorial= new Editorial(
                     rs.getInt(ContractEditorial.ID), 
-                    rs.getString(ContractEditorial.NOM),
-                    rs.getString(ContractEditorial.PAIS),
-                    rs.getString(ContractEditorial.ADRECA)
+                    rs.getString(ContractEditorial.NOM)
                 );
                 editorials.add(objEditorial);
             }
@@ -233,7 +201,6 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
         
         return editorials;
     }
-    
     
     /**
      * Funció per seleccionar un nou id
@@ -282,8 +249,6 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
             if(rs.next()){
                 objEditorial.setId(rs.getInt(ContractEditorial.ID));
                 objEditorial.setNom(rs.getString(ContractEditorial.NOM));
-                objEditorial.setPais(rs.getString(ContractEditorial.PAIS));
-                objEditorial.setAdreca(rs.getString(ContractEditorial.ADRECA));
             }
         } catch(SQLException e){
             throw new SQLException (e.getMessage(),e.getSQLState(),e.getErrorCode(),e.getCause());

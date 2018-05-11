@@ -2,6 +2,8 @@ package bbdd;
 
 import base.ConnectionFactory;
 import contract.ContractUsuari;
+import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.sql.Connection;
 import objecte.Usuari;
 import java.sql.PreparedStatement;
@@ -431,18 +433,20 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
      * @param args
      */
     public static void main(String[] args) {
-
         //Exemple de com fer una cerca amb hashMap.
+        HashMap <String,Object> prova= new HashMap();
+        prova.put(ContractUsuari.ADMIN, false); 
+        prova.put(ContractUsuari.ACTIU, false);
+        try{
+           ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
+           List<Usuari> lstUsr= new UsuariDAO().select(prova);
+           lstUsr.forEach(usuari->{System.out.println(usuari.toString()+"\n"+usuari.getNivell().toString());});
+
+        }catch(SQLException|ClassNotFoundException|IOException e){
+         
+            System.err.println(e.getMessage()); 
+        }
         
-        /**
-         * HashMap <String,Object> prova= new HashMap();
-         * prova.put(ContractUsuari.ADMIN, false); try{
-         *
-         * List<Usuari> lstUsr= new UsuariDAO().select(prova);
-         * lstUsr.forEach(usuari->{System.out.println(usuari.toString()+"\n"+usuari.getNivell().toString());});
-         * }catch(SQLException|ClassNotFoundException |IOException e){
-         * System.err.println(e.getMessage()); }
-         */
         //Exemple de com crear un nou usuari a la taula.
         /**
          * 
