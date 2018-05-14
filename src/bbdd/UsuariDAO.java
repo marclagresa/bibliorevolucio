@@ -110,7 +110,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
      * @throws SQLException si no s'ha pogut conectar a la bbdd
      * @throws ClassNotFoundException si no s'ha pogut carregar el driver jdbc
      */
-    @Override
+
     public List<Usuari> select(HashMap<String, Object> dades) throws SQLException, ClassNotFoundException {
         List<Usuari> list = new ArrayList<>();
         Usuari usr;
@@ -495,6 +495,11 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
             
         
                 
+    }
+
+    @Override
+    public List<Usuari> select(HashMap<String, Object> dades, String campOrdre, Integer totalRegistres, Integer registreInicial, Boolean ascendent) throws SQLException, ClassNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 

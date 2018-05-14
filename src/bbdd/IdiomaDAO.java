@@ -48,7 +48,7 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
         }
         return list;
     }
-    @Override
+    
     public List<Idioma> select(HashMap <String,Object> idioma) throws ClassNotFoundException, SQLException{
         List<Idioma> list = new ArrayList<>();
         String sql;
@@ -213,5 +213,10 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
                 ex.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public List<Idioma> select(HashMap<String, Object> dades, String campOrdre, Integer totalRegistres, Integer registreInicial, Boolean ascendent) throws SQLException, ClassNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

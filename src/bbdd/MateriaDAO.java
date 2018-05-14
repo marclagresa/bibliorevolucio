@@ -2,9 +2,14 @@ package bbdd;
 
 import base.ConnectionFactory;
 import contract.ContractMateria;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import objecte.Materia;
 
-import java.sql.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -45,7 +50,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         }
         return list;
     }
-    @Override
+
     public List<Materia> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
         List<Materia> list = new ArrayList<>();
         String sql;
@@ -236,5 +241,10 @@ public class MateriaDAO implements IObjectDAO<Materia> {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
+    }
+
+    @Override
+    public List<Materia> select(HashMap<String, Object> dades, String campOrdre, Integer totalRegistres, Integer registreInicial, Boolean ascendent) throws SQLException, ClassNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -51,7 +51,7 @@ public class CduDAO implements IObjectDAO<Cdu> {
         }
         return list;
     }
-    @Override
+    
     public List<Cdu> select(HashMap <String,Object> cdu) throws ClassNotFoundException, SQLException{
         List<Cdu> list = new ArrayList<>();
         String sql;
@@ -179,5 +179,10 @@ public class CduDAO implements IObjectDAO<Cdu> {
                 ex.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public List<Cdu> select(HashMap<String, Object> dades, String campOrdre, Integer totalRegistres, Integer registreInicial, Boolean ascendent) throws SQLException, ClassNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

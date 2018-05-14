@@ -1,11 +1,9 @@
 package bbdd;
 
 import base.ConnectionFactory;
-import contract.ContractAutoria;
 import contract.ContractExemplar;
 import contract.ContractProducte;
-import java.nio.charset.MalformedInputException;
-import objecte.*;
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,9 +13,16 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Set;
+import objecte.Cdu;
+import objecte.Coleccio;
+import objecte.Editorial;
+import objecte.Exemplar;
+import objecte.Idioma;
+import objecte.Nivell;
+import objecte.Procedencia;
+import objecte.Producte;
 
 public class ProducteDAO implements IObjectDAO<Producte> {
     private Connection conn;
@@ -67,7 +72,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         }
         return list;
     }
-    @Override
+
     public List<Producte> select(HashMap <String,Object> dades) throws ClassNotFoundException, SQLException{
         if(dades!=null){
             List<Producte> list = new ArrayList<>();
@@ -348,5 +353,10 @@ public class ProducteDAO implements IObjectDAO<Producte> {
     
     public static void main(String[] args) {
         
+    }
+
+    @Override
+    public List<Producte> select(HashMap<String, Object> dades, String campOrdre, Integer totalRegistres, Integer registreInicial, Boolean ascendent) throws SQLException, ClassNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

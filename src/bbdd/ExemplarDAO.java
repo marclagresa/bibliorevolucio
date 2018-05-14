@@ -51,7 +51,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         }
         return list;
     }
-    @Override
+    
     public List<Exemplar> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
         List<Exemplar> list = new ArrayList<>();
         String sql;
@@ -261,5 +261,10 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
+    }
+
+    @Override
+    public List<Exemplar> select(HashMap<String, Object> dades, String campOrdre, Integer totalRegistres, Integer registreInicial, Boolean ascendent) throws SQLException, ClassNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

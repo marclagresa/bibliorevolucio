@@ -2,9 +2,14 @@ package bbdd;
 
 import base.ConnectionFactory;
 import contract.ContractFormat;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
 import objecte.Format;
 
-import java.sql.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -66,7 +71,7 @@ public class FormatDAO implements IObjectDAO<Format>{
         }
         return list;
     }
-    @Override
+    
     public List<Format> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
         List<Format> list = new ArrayList<>();
         String sql;
@@ -260,5 +265,10 @@ public class FormatDAO implements IObjectDAO<Format>{
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
+    }
+
+    @Override
+    public List<Format> select(HashMap<String, Object> dades, String campOrdre, Integer totalRegistres, Integer registreInicial, Boolean ascendent) throws SQLException, ClassNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

@@ -18,7 +18,7 @@ public interface IObjectDAO<E> {
     public abstract boolean update(E e)throws ClassNotFoundException,SQLException;
     public abstract boolean insert(E e)throws ClassNotFoundException,SQLException;
     public abstract List<E> selectAll()throws ClassNotFoundException,SQLException;
-    public abstract List<E> select(HashMap <String,Object> dades)throws ClassNotFoundException,SQLException;
+    public List<E> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException;
     public abstract int nextId() throws ClassNotFoundException,SQLException;
     public abstract E select(int id) throws ClassNotFoundException,SQLException;
     public abstract void close();

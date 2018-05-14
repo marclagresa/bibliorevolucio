@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 import base.ConnectionFactory;
 import contract.ContractEditorial;
+import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.util.HashMap;
 
 /**
@@ -151,15 +153,15 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
      * @throws ClassNotFoundException Si no s' ha pogut carregar el driver jdbc
      */
     @Override 
-    public List<Editorial> select(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
+    public List<Editorial> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
         List<Editorial> editorials=new ArrayList<>();
         Editorial objEditorial;
-        Object[]valors;
+        ArrayList<Object>valors;
         String query;
         int i;
         try {
             c=ConnectionFactory.getInstance().getConnection();
-            valors=new Object[dades.size()];
+            valors=new ArrayList<>();
             query = "SELECT * FROM "+ContractEditorial.NOM_TAULA;
             i=0;
             for(String camp:dades.keySet()){
@@ -171,17 +173,42 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
                 }
                 if(dades.get(camp).getClass().equals(String.class)){
                     query += camp+" LIKE ?";
-                    valors[i]="%"+dades.get(camp)+"%";
+                    valors.add("%"+dades.get(camp)+"%");
                 }
                 else{
                     query += camp+ " = ?";
-                    valors[i]=dades.get(camp);
+                    valors.add(dades.get(camp));
                 }
-                i++;
+                
+            }
+            if(campOrdre!=null){
+                query+=" ORDER BY ? ";
+                valors.add(campOrdre);
+            }
+            if(ascendent){
+                query+=" ASC ";
+            }
+            else{
+                query+= " DESC ";
+            }
+            if(registreInicial!=null || totalRegistres!=null){
+                query += " LIMIT ";
+                if(registreInicial!=null){
+                    query += " ?, ";
+                    valors.add(registreInicial);
+                }
+                if(totalRegistres==null){
+                    query +=" 18446744073709551615";
+                }
+                else{
+                    query +=" ?";
+                    valors.add(totalRegistres);
+                }
+                
             }
             pst=c.prepareStatement(query);
-            for(i=0;i<valors.length;i++){
-                pst.setObject(i+1, valors[i]);
+            for(Object valor:valors){
+                pst.setObject(valors.indexOf(valor)+1, valor);
             }
             rs=pst.executeQuery();
             while(rs.next()){
@@ -303,5 +330,14 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
                 
             }
         }
-    }  
+    }
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
+        ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
+        EditorialDAO editorialDAOObj=new EditorialDAO();
+        List<Editorial>editorials;
+        HashMap<String,Object>consulta=new HashMap<>();
+        consulta.put(ContractEditorial.NOM, "Ed");
+        editorials=editorialDAOObj.select(consulta, ContractEditorial.NOM, 20, 5, true);
+        editorials.forEach(editorial->{System.out.println(editorial.toString());});
+    }
 }

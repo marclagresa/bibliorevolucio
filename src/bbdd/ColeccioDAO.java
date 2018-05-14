@@ -45,7 +45,7 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
         }
         return list;
     }
-    @Override
+    
     public List<Coleccio> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
         List<Coleccio> list = new ArrayList<>();
         String sql;
@@ -239,5 +239,10 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
 
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
+    }
+
+    @Override
+    public List<Coleccio> select(HashMap<String, Object> dades, String campOrdre, Integer totalRegistres, Integer registreInicial, Boolean ascendent) throws SQLException, ClassNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

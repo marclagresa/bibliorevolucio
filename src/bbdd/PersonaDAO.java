@@ -6,7 +6,12 @@ import objecte.Persona;
 
 import java.io.IOException;
 import java.nio.file.FileSystems;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +52,7 @@ public class PersonaDAO implements IObjectDAO<Persona> {
         }
         return list;
     }
-    @Override
+ 
     public List<Persona> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
         List<Persona> list = new ArrayList<>();
         String sql;
@@ -242,5 +247,10 @@ public class PersonaDAO implements IObjectDAO<Persona> {
         for (Persona proc: pro.selectAll()) {
             System.out.println(proc.getNom());
         }
+    }
+
+    @Override
+    public List<Persona> select(HashMap<String, Object> dades, String campOrdre, Integer totalRegistres, Integer registreInicial, Boolean ascendent) throws SQLException, ClassNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }

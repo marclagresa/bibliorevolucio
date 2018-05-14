@@ -2,8 +2,6 @@ package bbdd;
 
 import base.ConnectionFactory;
 import contract.ContractNivell;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import objecte.Nivell;
 
 import java.io.IOException;
@@ -53,7 +51,7 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         }
         return list;
     }
-    @Override
+
     public List<Nivell> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
         List<Nivell> list = new ArrayList<>();
         String sql;
@@ -252,5 +250,10 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public List<Nivell> select(HashMap<String, Object> dades, String campOrdre, Integer totalRegistres, Integer registreInicial, Boolean ascendent) throws SQLException, ClassNotFoundException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
