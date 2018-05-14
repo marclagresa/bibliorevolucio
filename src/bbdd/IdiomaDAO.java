@@ -4,6 +4,8 @@ import base.ConnectionFactory;
 import contract.ContractIdioma;
 import objecte.Idioma;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,28 +50,76 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
         }
         return list;
     }
-    
-    public List<Idioma> select(HashMap <String,Object> idioma) throws ClassNotFoundException, SQLException{
-        List<Idioma> list = new ArrayList<>();
-        String sql;
+    @Override
+    public List<Idioma> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
+        List<Idioma> idiomes =new ArrayList<>();
+        ArrayList<Object>valors;
+        String query;
+        int i;
         try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ContractIdioma.ID+","+ContractIdioma.NOM+" from "+ContractIdioma.NOM_TAULA+
-                    " where "+ContractIdioma.NOM+" LIKE ? ";
-            ps = conn.prepareStatement(sql);
-           
-            rs = ps.executeQuery();
-            while(rs.next()){
-              list.add(new Idioma(rs.getInt(ContractIdioma.ID), rs.getString(ContractIdioma.NOM)));
+            conn=ConnectionFactory.getInstance().getConnection();
+            valors=new ArrayList<>();
+            query = "SELECT * FROM "+ContractIdioma.NOM_TAULA;
+            i=0;
+            for(String camp:dades.keySet()){
+                if(i ==0){
+                    query += " WHERE ";
+                }
+                else{
+                    query += " AND ";
+                }
+                if(dades.get(camp).getClass().equals(String.class)){
+                    query += camp+" LIKE ?";
+                    valors.add("%"+dades.get(camp)+"%");
+                }
+                else{
+                    query += camp+ " = ?";
+                    valors.add(dades.get(camp));
+                }
+
             }
-        } catch (SQLException ex){
-            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
-        } catch( ClassNotFoundException ex) {
-            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
-        } finally {
+            if(campOrdre!=null){
+                query+=" ORDER BY ? ";
+                valors.add(campOrdre);
+            }
+            if(ascendent){
+                query+=" ASC ";
+            }
+            else{
+                query+= " DESC ";
+            }
+            if(registreInicial!=null || totalRegistres!=null){
+                query += " LIMIT ";
+                if(registreInicial!=null){
+                    query += " ?, ";
+                    valors.add(registreInicial);
+                }
+                if(totalRegistres==null){
+                    query +=" 18446744073709551615";
+                }
+                else{
+                    query +=" ?";
+                    valors.add(totalRegistres);
+                }
+
+            }
+            ps=conn.prepareStatement(query);
+            for(Object valor:valors){
+                ps.setObject(valors.indexOf(valor)+1, valor);
+            }
+            rs=ps.executeQuery();
+            while(rs.next()){
+                idiomes.add(this.read());
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally{
             this.close();
         }
-        return list;
+
+        return idiomes;
     }
     @Override
     public Idioma select(int id) throws ClassNotFoundException, SQLException{
@@ -214,9 +264,19 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
             }
         }
     }
-
-    @Override
-    public List<Idioma> select(HashMap<String, Object> dades, String campOrdre, Integer totalRegistres, Integer registreInicial, Boolean ascendent) throws SQLException, ClassNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    private Idioma read() throws SQLException,ClassNotFoundException{
+        Idioma objIdioma = new Idioma();
+        objIdioma.setId(rs.getInt(ContractIdioma.ID));
+        objIdioma.setNom(rs.getString(ContractIdioma.NOM));
+        return objIdioma;
+    }
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
+        ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
+        IdiomaDAO i = new IdiomaDAO();
+        HashMap<String,Object>consulta=new HashMap<>();
+        List<Idioma> idiomes;
+        consulta.put(ContractIdioma.NOM, "catala");
+        idiomes=i.select(consulta, ContractIdioma.NOM, 20, 0, true);
+        idiomes.forEach(idioma->{System.out.println(idioma.toString());});
     }
 }
