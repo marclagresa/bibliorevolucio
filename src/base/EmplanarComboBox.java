@@ -49,12 +49,13 @@ class ClEditorial implements ChangeListener<String>{
 
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        String campOrdre = ContractEditorial.ID;
         if(!newValue.equals("")){
             HashMap<String,Object> cercaEditorial=new HashMap<>();
             cercaEditorial.put(ContractEditorial.NOM, newValue);
             try {
                 EditorialDAO objEditorialDAO= new EditorialDAO();
-                ObservableList<Editorial> opcionsEditorial = FXCollections.observableArrayList(objEditorialDAO.select(cercaEditorial));
+                ObservableList<Editorial> opcionsEditorial = FXCollections.observableArrayList(objEditorialDAO.select(cercaEditorial,campOrdre,10,1,false));
                 cb.setItems(opcionsEditorial);
 
             } catch (Exception e) {
@@ -206,5 +207,61 @@ class ClNivell implements ChangeListener<String>{
         }
     }
 }
+class ClMateria implements ChangeListener<String>{
+
+    ComboBox cb;
+
+    public ClMateria(ComboBox combo){
+        this.cb = combo;
+    }
+
+    @Override
+    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        if(!newValue.equals("")){
+            HashMap<String,Object> cercaMateria=new HashMap<>();
+            cercaMateria.put(ContractMateria.NOM, newValue);
+            try {
+                MateriaDAO objMateriaDAO= new MateriaDAO();
+                ObservableList<Materia> opcionsMateria = FXCollections.observableArrayList(objMateriaDAO.select(cercaMateria));
+                cb.setItems(opcionsMateria);
+
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }else{
+            ObservableList<Materia> opcionsMateria = null;
+            cb.setItems(opcionsMateria);
+        }
+    }
+}
+
+class ClProcedencia implements ChangeListener<String>{
+
+    ComboBox cb;
+
+    public ClProcedencia(ComboBox combo){
+        this.cb = combo;
+    }
+
+    @Override
+    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        if(!newValue.equals("")){
+            HashMap<String,Object> cercaProcedencia=new HashMap<>();
+            cercaProcedencia.put(ContractProcedencia.NOM, newValue);
+            try {
+                ProcedenciaDAO objProcedenciaDAO= new ProcedenciaDAO();
+                ObservableList<Procedencia> opcionsProcedencia = FXCollections.observableArrayList(objProcedenciaDAO.select(cercaProcedencia));
+                cb.setItems(opcionsProcedencia);
+
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        }else{
+            ObservableList<Procedencia> opcionsProcedencia = null;
+            cb.setItems(opcionsProcedencia);
+        }
+    }
+}
+
 
 
