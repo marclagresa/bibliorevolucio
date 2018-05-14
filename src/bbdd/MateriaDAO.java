@@ -2,12 +2,11 @@ package bbdd;
 
 import base.ConnectionFactory;
 import contract.ContractMateria;
-import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import objecte.Materia;
 
 
@@ -122,6 +121,73 @@ public class MateriaDAO implements IObjectDAO<Materia> {
 
         return materies;
     }
+
+    public List<Materia> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
+        List<Materia> list = new ArrayList<>();
+        String sql;
+        Object [] valors;
+        int i;
+        boolean dadaCorrecte=false;
+
+        try {
+            conn = ConnectionFactory.getInstance().getConnection();
+            sql = "SELECT * FROM "+ContractMateria.NOM_TAULA;
+            i=0;
+            valors=new Object[dades.size()];
+            for(String camp:dades.keySet()){
+                valors=new Object[dades.size()];
+                switch(ContractMateria.DEFINICIO.get(camp)){
+                    case Types.INTEGER:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
+                        break;
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                        dadaCorrecte=dades.get(camp).getClass().equals(String.class);
+                        break;
+                    case Types.BOOLEAN:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
+                        break;
+                }
+                if(i ==0){
+                    sql += " WHERE " ;
+                }
+                else{
+                    sql += " AND ";
+                }
+                sql+=camp;
+                if(dades.get(camp).getClass().equals(String.class)){
+                    sql +=" LIKE ? ";
+                    valors[i]="%"+dades.get(camp)+"%";
+                }
+                else{
+                    sql+=" = ?";
+                    valors[i]=dades.get(camp);
+                }
+                if(dadaCorrecte){
+                    i++;
+                }
+                else{
+                    throw new SQLException("Error tipus de dades incorrectes!!");
+                }
+            }
+            ps = conn.prepareStatement(sql);
+            for(i=0;i<valors.length;i++){
+                ps.setObject(i+1, valors[i]);
+            }
+            rs = ps.executeQuery();
+            while(rs.next()){
+                list.add(this.read());
+            }
+
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
+        } finally {
+            this.close();
+        }
+        return list;
+    }
     @Override
     public Materia select(int id) throws ClassNotFoundException, SQLException{
         Materia materia = new Materia();
@@ -166,7 +232,6 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         }
         return inserit;
     }
-
     @Override
     public boolean update(Materia materia) throws ClassNotFoundException, SQLException{
         String update;
@@ -237,6 +302,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
             }
         }
     }
+
     private Materia read() throws SQLException,ClassNotFoundException{
         Materia objMateria = new Materia();
         objMateria.setId(rs.getInt(ContractMateria.ID));
@@ -244,13 +310,5 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         return objMateria;
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-        ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
-        MateriaDAO m = new MateriaDAO();
-        HashMap<String,Object>consulta=new HashMap<>();
-        List<Materia> materies;
-        consulta.put(ContractMateria.NOM, "test");
-        materies=m.select(consulta, ContractMateria.NOM, 20, 0, true);
-        materies.forEach(materia ->{System.out.println(materia.toString());});
-    }
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {}
 }

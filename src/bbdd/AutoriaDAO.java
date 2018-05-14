@@ -3,9 +3,6 @@ package bbdd;
 import base.ConnectionFactory;
 import contract.ContractAutoria;
 import objecte.Autoria;
-
-import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.sql.*;
 import java.util.*;
 
@@ -121,6 +118,73 @@ public class AutoriaDAO implements IObjectDAO<Autoria> {
             this.close();
         }
         return autories;
+    }
+
+    public List<Autoria> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
+        List<Autoria> list = new ArrayList<>();
+        String sql;
+        Object [] valors;
+        int i;
+        boolean dadaCorrecte=false;
+
+        try {
+            conn = ConnectionFactory.getInstance().getConnection();
+            sql = "SELECT * FROM "+ContractAutoria.NOM_TAULA;
+            i=0;
+            valors=new Object[dades.size()];
+            for(String camp:dades.keySet()){
+                valors=new Object[dades.size()];
+                switch(ContractAutoria.DEFINICIO.get(camp)){
+                    case Types.INTEGER:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
+                        break;
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                        dadaCorrecte=dades.get(camp).getClass().equals(String.class);
+                        break;
+                    case Types.BOOLEAN:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
+                        break;
+                }
+                if(i ==0){
+                    sql += " WHERE " ;
+                }
+                else{
+                    sql += " AND ";
+                }
+                sql+=camp;
+                if(dades.get(camp).getClass().equals(String.class)){
+                    sql +=" LIKE ? ";
+                    valors[i]="%"+dades.get(camp)+"%";
+                }
+                else{
+                    sql+=" = ?";
+                    valors[i]=dades.get(camp);
+                }
+                if(dadaCorrecte){
+                    i++;
+                }
+                else{
+                    throw new SQLException("Error tipus de dades incorrectes!!");
+                }
+            }
+            ps = conn.prepareStatement(sql);
+            for(i=0;i<valors.length;i++){
+                ps.setObject(i+1, valors[i]);
+            }
+            rs = ps.executeQuery();
+            while(rs.next()){
+                list.add(this.read());
+            }
+
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
+        } finally {
+            this.close();
+        }
+        return list;
     }
     @Override
     public Autoria select(int id) throws ClassNotFoundException, SQLException{
@@ -243,6 +307,7 @@ public class AutoriaDAO implements IObjectDAO<Autoria> {
             }
         }
     }
+
     private Autoria read() throws SQLException,ClassNotFoundException{
         Autoria objAutoria = new Autoria();
         objAutoria.setId(rs.getInt(ContractAutoria.ID));
@@ -252,13 +317,7 @@ public class AutoriaDAO implements IObjectDAO<Autoria> {
         return objAutoria;
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-        ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
-        AutoriaDAO a = new AutoriaDAO();
-        HashMap<String,Object>consulta=new HashMap<>();
-        List<Autoria> autories;
-        consulta.put(ContractAutoria.DESCRIPCIO, "test");
-        autories=a.select(consulta, ContractAutoria.DESCRIPCIO, 20, 0, true);
-        autories.forEach(autoria->{System.out.println(autoria.toString());});
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+
     }
 }

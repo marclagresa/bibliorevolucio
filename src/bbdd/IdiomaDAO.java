@@ -4,12 +4,7 @@ import base.ConnectionFactory;
 import contract.ContractIdioma;
 import objecte.Idioma;
 
-import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -121,6 +116,73 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
 
         return idiomes;
     }
+
+    public List<Idioma> select(HashMap <String,Object> dades) throws ClassNotFoundException, SQLException{
+        List<Idioma> list = new ArrayList<>();
+        String sql;
+        Object [] valors;
+        int i;
+        boolean dadaCorrecte=false;
+
+        try {
+            conn = ConnectionFactory.getInstance().getConnection();
+            sql = "SELECT * FROM "+ContractIdioma.NOM_TAULA;
+            i=0;
+            valors=new Object[dades.size()];
+            for(String camp:dades.keySet()){
+                valors=new Object[dades.size()];
+                switch(ContractIdioma.DEFINICIO.get(camp)){
+                    case Types.INTEGER:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
+                        break;
+                    case Types.CHAR:
+                    case Types.VARCHAR:
+                        dadaCorrecte=dades.get(camp).getClass().equals(String.class);
+                        break;
+                    case Types.BOOLEAN:
+                        dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
+                        break;
+                }
+                if(i ==0){
+                    sql += " WHERE " ;
+                }
+                else{
+                    sql += " AND ";
+                }
+                sql+=camp;
+                if(dades.get(camp).getClass().equals(String.class)){
+                    sql +=" LIKE ? ";
+                    valors[i]="%"+dades.get(camp)+"%";
+                }
+                else{
+                    sql+=" = ?";
+                    valors[i]=dades.get(camp);
+                }
+                if(dadaCorrecte){
+                    i++;
+                }
+                else{
+                    throw new SQLException("Error tipus de dades incorrectes!!");
+                }
+            }
+            ps = conn.prepareStatement(sql);
+            for(i=0;i<valors.length;i++){
+                ps.setObject(i+1, valors[i]);
+            }
+            rs = ps.executeQuery();
+            while(rs.next()){
+                list.add(this.read());
+            }
+
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
+        } finally {
+            this.close();
+        }
+        return list;
+    }
     @Override
     public Idioma select(int id) throws ClassNotFoundException, SQLException{
         Idioma idioma = new Idioma();
@@ -171,6 +233,7 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
         }
         return inserit;
     }
+
     public Idioma select(String nom) throws ClassNotFoundException,SQLException{
         Idioma idiomaObj=new Idioma();
         String query;
@@ -264,19 +327,11 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
             }
         }
     }
+
     private Idioma read() throws SQLException,ClassNotFoundException{
         Idioma objIdioma = new Idioma();
         objIdioma.setId(rs.getInt(ContractIdioma.ID));
         objIdioma.setNom(rs.getString(ContractIdioma.NOM));
         return objIdioma;
-    }
-    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-        ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
-        IdiomaDAO i = new IdiomaDAO();
-        HashMap<String,Object>consulta=new HashMap<>();
-        List<Idioma> idiomes;
-        consulta.put(ContractIdioma.NOM, "catala");
-        idiomes=i.select(consulta, ContractIdioma.NOM, 20, 0, true);
-        idiomes.forEach(idioma->{System.out.println(idioma.toString());});
     }
 }
