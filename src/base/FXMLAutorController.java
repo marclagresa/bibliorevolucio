@@ -1,6 +1,5 @@
 package base;
 
-
 import bbdd.PersonaDAO;
 import java.io.IOException;
 import java.net.URL;
@@ -72,7 +71,7 @@ public class FXMLAutorController extends GenericPopUp implements Initializable {
                 }finally{
                    if(onAcceptCallBack!= null){
                         onAcceptCallBack.accept(persona);
-                    }                   
+                    }     
                 }
                 break;
             case Modificar:
@@ -104,7 +103,7 @@ public class FXMLAutorController extends GenericPopUp implements Initializable {
     }
 
     @Override
-    public void emplenarDades(Object obj) {
+    public void emplenarDades(Object obj, TipusAccio tipus) {
         
         Persona autor;
         PersonaDAO objPersonaDAO = new PersonaDAO();
@@ -113,7 +112,19 @@ public class FXMLAutorController extends GenericPopUp implements Initializable {
         if (autor!=null){
             personaRebuda = autor;
             tfAutor.setText(autor.getNom());
-            btnCrearAutor.setText("Modificar");            
+            
+            switch(tipus){
+                case Modificar:
+                    btnCrearAutor.setText("Modificar");     
+                    break;
+                case Deshabilitar:
+                    btnCrearAutor.setText("Deshabilitar");     
+                    break;
+                case Buscar:
+                    btnCrearAutor.setText("Buscar");
+                    btnCrearAutor.setDisable(true);
+                    break;
+            }          
         }
     }
 }

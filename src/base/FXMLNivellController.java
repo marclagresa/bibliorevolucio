@@ -87,7 +87,7 @@ public class FXMLNivellController extends GenericPopUp implements Initializable 
     }*/
 
     @Override
-    public void emplenarDades(Object obj) {
+    public void emplenarDades(Object obj, TipusAccio tipus) {
         
         Nivell nivell;
         NivellDAO objNivellDAO = new NivellDAO();
@@ -95,8 +95,19 @@ public class FXMLNivellController extends GenericPopUp implements Initializable 
         
         if (nivell!=null){            
             tfNivell.setText(nivell.getNom());
-            btnCrearNivell.setText("Modificar");            
+            
+            switch(tipus){
+                case Modificar:
+                    btnCrearNivell.setText("Modificar");     
+                    break;
+                case Deshabilitar:
+                    btnCrearNivell.setText("Deshabilitar");     
+                    break;
+                case Buscar:
+                    btnCrearNivell.setText("Buscar");
+                    btnCrearNivell.setDisable(true);
+                    break;
+            }         
         }    
-    }
-   
+    }   
 }

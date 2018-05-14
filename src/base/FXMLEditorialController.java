@@ -77,7 +77,7 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
     }
 
     @Override
-    public void emplenarDades(Object obj) {
+    public void emplenarDades(Object obj, TipusAccio tipus) {
         
         Editorial editorial;
         EditorialDAO objEditorialDAO = new EditorialDAO();
@@ -85,7 +85,19 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
         
         if (editorial!=null){            
             tfNomEditorial.setText(editorial.getNom());
-            btnCrearEditorial.setText("Modificar");            
+            
+            switch(tipus){
+                case Modificar:
+                    btnCrearEditorial.setText("Modificar");     
+                    break;
+                case Deshabilitar:
+                    btnCrearEditorial.setText("Deshabilitar");     
+                    break;
+                case Buscar:
+                    btnCrearEditorial.setText("Buscar");
+                    btnCrearEditorial.setDisable(true);
+                    break;
+            }           
         }    
     }
 }

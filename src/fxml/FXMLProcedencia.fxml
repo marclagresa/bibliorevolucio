@@ -7,19 +7,19 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" stylesheets="/media/css/estilsPopUps.css" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLMateriaController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" stylesheets="/media/css/estilsPopUps.css" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLProcedenciaController">
    <children>
-      <Label fx:id="lblMateria" text="Nom materia:">
+      <Label fx:id="lblProcedencia" text="Procedencia:">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <TextField fx:id="tfMateria">
+      <TextField fx:id="tfProcedencia">
          <VBox.margin>
             <Insets top="10.0" />
          </VBox.margin>
       </TextField>
-      <Button fx:id="btnCrearMateria" mnemonicParsing="false" onAction="#crearMateria" prefHeight="40.0" prefWidth="80.0" text="Crear">
+      <Button fx:id="btnCrearProcedencia" mnemonicParsing="false" onAction="#crearProcedencia" prefHeight="40.0" prefWidth="80.0" text="Crear">
          <VBox.margin>
             <Insets left="60.0" right="60.0" top="25.0" />
          </VBox.margin>
