@@ -420,7 +420,7 @@ public class FXMLObraController extends GenericPopUp implements Initializable  {
             HashMap<String,Object> cercaEditorial=new HashMap<>();
             cercaEditorial.put(ContractEditorial.NOM, newValue);
             try {
-                opcionsEditorial.setAll(FXCollections.observableArrayList(objEditorialDAO.select(cercaEditorial))); 
+                opcionsEditorial.setAll(FXCollections.observableArrayList(objEditorialDAO.select(cercaEditorial,null,null,null,null))); 
             } catch (Exception e) {
                 System.err.println(e.getMessage());
             }      

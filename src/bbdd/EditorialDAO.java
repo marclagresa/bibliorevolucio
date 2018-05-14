@@ -151,7 +151,53 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
      * @return List of Editorial
      * @throws SQLException si hi ha hagut algún problema al conectarse a la BBDD o al executar la query
      * @throws ClassNotFoundException Si no s' ha pogut carregar el driver jdbc
+     *
      */
+    
+    public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
+        int count=0;
+        ArrayList<Object> valors;
+        int i;
+        String query;
+        try {
+            c=ConnectionFactory.getInstance().getConnection();
+            valors=new ArrayList<>();
+            query = "SELECT COUNT(*) FROM "+ContractEditorial.NOM_TAULA;
+            i=0;
+            for(String camp:dades.keySet()){
+                if(i ==0){
+                    query += " WHERE ";
+                }
+                else{
+                    query += " AND ";
+                }
+                if(dades.get(camp).getClass().equals(String.class)){
+                    query += camp+" LIKE ?";
+                    valors.add("%"+dades.get(camp)+"%");
+                }
+                else{
+                    query += camp+ " = ?";
+                    valors.add(dades.get(camp));
+                }
+                
+            }
+            pst=c.prepareStatement(query);
+            for(Object valor:valors){
+                pst.setObject(valors.indexOf(valor)+1, valor);
+            }
+            rs=pst.executeQuery();
+            if(rs.next()){
+                count=rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally{
+            this.close();
+        }
+        return count;
+    }
     @Override 
     public List<Editorial> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
         List<Editorial> editorials=new ArrayList<>();
@@ -184,13 +230,14 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
             if(campOrdre!=null){
                 query+=" ORDER BY ? ";
                 valors.add(campOrdre);
+                if(ascendent){
+                    query+=" ASC ";
+                }
+                else{
+                    query+= " DESC ";
+                }
             }
-            if(ascendent){
-                query+=" ASC ";
-            }
-            else{
-                query+= " DESC ";
-            }
+            
             if(registreInicial!=null || totalRegistres!=null){
                 query += " LIMIT ";
                 if(registreInicial!=null){
@@ -337,7 +384,9 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
         List<Editorial>editorials;
         HashMap<String,Object>consulta=new HashMap<>();
         consulta.put(ContractEditorial.NOM, "Ed");
-        editorials=editorialDAOObj.select(consulta, ContractEditorial.NOM, 20, 5, true);
-        editorials.forEach(editorial->{System.out.println(editorial.toString());});
+        editorials=editorialDAOObj.select(consulta, null, null, null, null);
+      //  editorials.forEach(editorial->{System.out.println(editorial.toString());});
+        System.out.println(editorials.size()+" llargada llista");
+        System.out.println(editorialDAOObj.selectCount(consulta)+ " CONSULTA COUNT");
     }
 }
