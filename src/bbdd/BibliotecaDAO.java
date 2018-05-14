@@ -3,9 +3,6 @@ package bbdd;
 import base.ConnectionFactory;
 import contract.ContractBiblioteca;
 import objecte.Biblioteca;
-
-import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.sql.*;
 import java.util.*;
 
@@ -51,7 +48,8 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
     }
     @Override
     public List<Biblioteca> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
-        List<Biblioteca> biblioteques =new ArrayList<>();
+        List<Biblioteca> editorials=new ArrayList<>();
+        Biblioteca objBiblioteca;
         ArrayList<Object>valors;
         String query;
         int i;
@@ -108,7 +106,11 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
             }
             rs=ps.executeQuery();
             while(rs.next()){
-                biblioteques.add(this.read());
+                objBiblioteca= new Biblioteca(
+                        rs.getInt(ContractBiblioteca.ID),
+                        rs.getString(ContractBiblioteca.NOM)
+                );
+                editorials.add(objBiblioteca);
             }
         } catch (SQLException ex) {
             throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
@@ -118,7 +120,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
             this.close();
         }
 
-        return biblioteques;
+        return editorials;
     }
     @Override
     public Biblioteca select(int id) throws ClassNotFoundException, SQLException{
@@ -245,13 +247,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         return objBiblioteca;
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
-        ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
-        BibliotecaDAO b = new BibliotecaDAO();
-        HashMap<String,Object>consulta=new HashMap<>();
-        List<Biblioteca> biblioteques;
-        consulta.put(ContractBiblioteca.NOM, "test");
-        biblioteques=b.select(consulta, ContractBiblioteca.NOM, 20, 0, true);
-        biblioteques.forEach(biblioteca->{System.out.println(biblioteca.toString());});
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+
     }
 }
