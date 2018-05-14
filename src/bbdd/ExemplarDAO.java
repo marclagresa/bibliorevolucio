@@ -2,9 +2,10 @@ package bbdd;
 
 import base.ConnectionFactory;
 import contract.ContractExemplar;
-import objecte.Biblioteca;
 import objecte.Exemplar;
 
+import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.sql.*;
 import java.util.*;
 
@@ -51,72 +52,77 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         }
         return list;
     }
-    
-    public List<Exemplar> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
-        List<Exemplar> list = new ArrayList<>();
-        String sql;
-        Object [] valors;
+
+    @Override
+    public List<Exemplar> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
+        List<Exemplar> exemplars =new ArrayList<>();
+        ArrayList<Object>valors;
+        String query;
         int i;
-        boolean dadaCorrecte=false;
-
         try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            sql = "SELECT * FROM "+ContractExemplar.NOM_TAULA;
+            conn=ConnectionFactory.getInstance().getConnection();
+            valors=new ArrayList<>();
+            query = "SELECT * FROM "+ContractExemplar.NOM_TAULA;
             i=0;
-            valors=new Object[dades.size()];
             for(String camp:dades.keySet()){
-                valors=new Object[dades.size()];
-                switch(ContractExemplar.DEFINICIO.get(camp)){
-                    case Types.INTEGER:
-                        dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
-                        break;
-                    case Types.CHAR:
-                    case Types.VARCHAR:
-                        dadaCorrecte=dades.get(camp).getClass().equals(String.class);
-                        break;
-                    case Types.BOOLEAN:
-                        dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
-                        break;
-                }
                 if(i ==0){
-                    sql += " WHERE " ;
+                    query += " WHERE ";
                 }
                 else{
-                    sql += " AND ";
+                    query += " AND ";
                 }
-                sql+=camp;
                 if(dades.get(camp).getClass().equals(String.class)){
-                    sql +=" LIKE ? ";
-                    valors[i]="%"+dades.get(camp)+"%";
+                    query += camp+" LIKE ?";
+                    valors.add("%"+dades.get(camp)+"%");
                 }
                 else{
-                    sql+=" = ?";
-                    valors[i]=dades.get(camp);
+                    query += camp+ " = ?";
+                    valors.add(dades.get(camp));
                 }
-                if(dadaCorrecte){
-                    i++;
-                }
-                else{
-                    throw new SQLException("Error tipus de dades incorrectes!!");
-                }
-            }
-            ps = conn.prepareStatement(sql);
-            for(i=0;i<valors.length;i++){
-                ps.setObject(i+1, valors[i]);
-            }
-            rs = ps.executeQuery();
-            while(rs.next()){
-                list.add(this.read());
-            }
 
-        } catch (SQLException ex){
-            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
-        }catch( ClassNotFoundException ex) {
-            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
-        } finally {
+            }
+            if(campOrdre!=null){
+                query+=" ORDER BY ? ";
+                valors.add(campOrdre);
+            }
+            if(ascendent){
+                query+=" ASC ";
+            }
+            else{
+                query+= " DESC ";
+            }
+            if(registreInicial!=null || totalRegistres!=null){
+                query += " LIMIT ";
+                if(registreInicial!=null){
+                    query += " ?, ";
+                    valors.add(registreInicial);
+                }
+                if(totalRegistres==null){
+                    query +=" 18446744073709551615";
+                }
+                else{
+                    query +=" ?";
+                    valors.add(totalRegistres);
+                }
+
+            }
+            ps=conn.prepareStatement(query);
+            for(Object valor:valors){
+                ps.setObject(valors.indexOf(valor)+1, valor);
+            }
+            rs=ps.executeQuery();
+            while(rs.next()){
+                exemplars.add(this.read());
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally{
             this.close();
         }
-        return list;
+
+        return exemplars;
     }
     @Override
     public Exemplar select(int id) throws ClassNotFoundException, SQLException{
@@ -259,12 +265,13 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         return objExemplar;
     }
 
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-
-    }
-
-    @Override
-    public List<Exemplar> select(HashMap<String, Object> dades, String campOrdre, Integer totalRegistres, Integer registreInicial, Boolean ascendent) throws SQLException, ClassNotFoundException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, IOException {
+        ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
+        ExemplarDAO e = new ExemplarDAO();
+        HashMap<String,Object>consulta=new HashMap<>();
+        List<Exemplar> exemplars;
+        consulta.put(ContractExemplar.ESTAT, true);
+        exemplars=e.select(consulta, ContractExemplar.ESTAT, 20, 0, true);
+        exemplars.forEach(biblioteca->{System.out.println(biblioteca.toString());});
     }
 }
