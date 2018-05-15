@@ -83,7 +83,7 @@ class ClColeccio implements ChangeListener<String>{
             cercaColeccio.put(ContractColeccio.NOM, newValue);
             try {
                 ColeccioDAO objColeccioDAO= new ColeccioDAO();
-                ObservableList<Coleccio> opcionsColeccio = FXCollections.observableArrayList(objColeccioDAO.select(cercaColeccio));
+                ObservableList<Coleccio> opcionsColeccio = FXCollections.observableArrayList(objColeccioDAO.select(cercaColeccio,null,null,null,null));
                 cb.setItems(opcionsColeccio);
 
             } catch (Exception e) {
@@ -139,7 +139,7 @@ class ClIdioma implements ChangeListener<String>{
             cercaIdioma.put(ContractIdioma.NOM, newValue);
             try {
                 IdiomaDAO objIdiomaDAO= new IdiomaDAO();
-                ObservableList<Idioma> opcionsIdioma = FXCollections.observableArrayList(objIdiomaDAO.select(cercaIdioma));
+                ObservableList<Idioma> opcionsIdioma = FXCollections.observableArrayList(objIdiomaDAO.select(cercaIdioma,null,null,null,null));
                 cb.setItems(opcionsIdioma);
 
             } catch (Exception e) {
@@ -167,7 +167,7 @@ class ClFormat implements ChangeListener<String>{
             cercaFormat.put(ContractFormat.NOM, newValue);
             try {
                 FormatDAO objFormatDAO= new FormatDAO();
-                ObservableList<Format> opcionsFormat = FXCollections.observableArrayList(objFormatDAO.select(cercaFormat));
+                ObservableList<Format> opcionsFormat = FXCollections.observableArrayList(objFormatDAO.select(cercaFormat,null,null,null,null));
                 cb.setItems(opcionsFormat);
 
             } catch (Exception e) {

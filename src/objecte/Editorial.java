@@ -89,7 +89,7 @@ public class Editorial {
      * Getter propietat id
      * @return this.id
      */
-    public IntegerProperty getIdProperty(){
+    public IntegerProperty idProperty(){
         return this.id;
     }
     
@@ -97,7 +97,7 @@ public class Editorial {
      * Getter propietat nom
      * @return this.nom
      */
-    public StringProperty getNomProperty(){
+    public StringProperty nomProperty(){
         return this.nom;
     }
     //</editor-fold>    
