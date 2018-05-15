@@ -23,6 +23,7 @@ import objecte.Nivell;
 public class FXMLNivellController extends GenericPopUp implements Initializable {
 
     static TipusAccio tipusA;
+    static Nivell nivellRebut;
     
     @FXML
     private Label lblNivell;
@@ -42,27 +43,53 @@ public class FXMLNivellController extends GenericPopUp implements Initializable 
     public void crearNivell(){
         
         Nivell nivell = null;
+        int id = -1;
+        String nomNivell = tfNivell.getText();
+        NivellDAO nivellDAO = new NivellDAO();
         
-        try {
-            String nomNivell = tfNivell.getText();
-            
-            NivellDAO nivellDAO = new NivellDAO();
-            
-            int id = nivellDAO.nextId();
-            
-            nivell = new Nivell(id, nomNivell);                    
-            nivellDAO.insert(nivell);
-            
-            nivellDAO.close();
-            
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ClassNotFoundException: "+ex.getMessage());
-        } catch (SQLException ex) {
-            System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            if(onAcceptCallBack!= null){
-                onAcceptCallBack.accept(nivell);
-            }
+        switch(tipusA){
+            case Crear:
+                try {
+                    id = nivellDAO.nextId();
+                    nivell = new Nivell(id, nomNivell);
+                    nivellDAO.insert(nivell);
+                    nivellDAO.close();
+
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(nivell);
+                    }     
+                }
+                break;
+            case Modificar:
+                id = nivellRebut.getId();
+                nivell = new Nivell(id, nomNivell);
+        
+                try {
+                    nivellDAO.update(nivell);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(nivell);
+                    }
+                    nivellDAO.close();
+                }      
+                break;
+            case Deshabilitar:
+                id = nivellRebut.getId();
+                nivell = new Nivell();
+                nivell.setId(id);
+                
+                //nivellDAO.delete(nivell);
+                nivellDAO.close();     
+                break;
         }
         
         btnCrearNivell.setOnAction((ActionEvent event1) -> {
@@ -78,16 +105,10 @@ public class FXMLNivellController extends GenericPopUp implements Initializable 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-    }    
-    
-    
-    /*void setParentController(FXMLObraController pare) {
-        
-        obraPare = pare;
-    }*/
+    }
 
     @Override
-    public void emplenarDades(Object obj, TipusAccio tipus) {
+    public void emplenarDades(Object obj) {
         
         Nivell nivell;
         NivellDAO objNivellDAO = new NivellDAO();
@@ -96,7 +117,7 @@ public class FXMLNivellController extends GenericPopUp implements Initializable 
         if (nivell!=null){            
             tfNivell.setText(nivell.getNom());
             
-            switch(tipus){
+            switch(tipusA){
                 case Modificar:
                     btnCrearNivell.setText("Modificar");     
                     break;

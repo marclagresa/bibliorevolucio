@@ -23,6 +23,7 @@ import objecte.Materia;
 public class FXMLMateriaController extends GenericPopUp implements Initializable {
 
     static TipusAccio tipusA;
+    static Materia materiaRebuda;
     
     @FXML
     private Label lblNivell;
@@ -53,7 +54,7 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
     }    
 
     @Override
-    public void emplenarDades(Object obj, TipusAccio tipus) {
+    public void emplenarDades(Object obj) {
         
         Materia materia;
         MateriaDAO objMateriaDAO = new MateriaDAO();
@@ -62,7 +63,7 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
         if (materia!=null){            
             tfMateria.setText(materia.getNom());
             
-            switch(tipus){
+            switch(tipusA){
                 case Modificar:
                     btnCrearMateria.setText("Modificar");     
                     break;
@@ -81,27 +82,53 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
     private void crearMateria(ActionEvent event) {
         
         Materia materia = null;
+        int id = -1;
+        String nomMateria = tfMateria.getText();
+        MateriaDAO materiaDAO = new MateriaDAO();
         
-        try {
-            String nomMateria = tfMateria.getText();
-            
-            MateriaDAO materiaDAO = new MateriaDAO();
-            
-            int id = -1
-                    ;
-                id = materiaDAO.nextId();
-                materia = new Materia(id, nomMateria);                    
-                materiaDAO.insert(materia);
-                materiaDAO.close();
-            
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ClassNotFoundException: "+ex.getMessage());
-        } catch (SQLException ex) {
-            System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            if(onAcceptCallBack!= null){
-                onAcceptCallBack.accept(materia);
-            }
+        switch(tipusA){
+            case Crear:
+                try {
+                    id = materiaDAO.nextId();
+                    materia = new Materia(id, nomMateria);
+                    materiaDAO.insert(materia);
+                    materiaDAO.close();
+
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(materia);
+                    }     
+                }
+                break;
+            case Modificar:
+                id = materiaRebuda.getId();
+                materia = new Materia(id, nomMateria);
+        
+                try {
+                    materiaDAO.update(materia);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(materia);
+                    }
+                    materiaDAO.close();
+                }      
+                break;
+            case Deshabilitar:
+                id = materiaRebuda.getId();
+                materia = new Materia();
+                materia.setId(id);
+                
+                //materiaDAO.delete(materia);
+                materiaDAO.close();     
+                break;
         }
         
         btnCrearMateria.setOnAction((ActionEvent event1) -> {

@@ -86,7 +86,7 @@ public class FXMLProcedenciaController extends GenericPopUp implements Initializ
     }
 
     @Override
-    public void emplenarDades(Object obj, TipusAccio tipus) {
+    public void emplenarDades(Object obj) {
         
         Procedencia procedencia;
         ProcedenciaDAO objProcedenciaDAO = new ProcedenciaDAO();
@@ -94,7 +94,7 @@ public class FXMLProcedenciaController extends GenericPopUp implements Initializ
         
         if (procedencia!=null){            
             tfProcedencia.setText(procedencia.getNom());
-            switch(tipus){
+            switch(tipusA){
                 case Modificar:
                     btnCrearProcedencia.setText("Modificar");     
                     break;

@@ -23,6 +23,7 @@ import objecte.Idioma;
 public class FXMLIdiomaController extends GenericPopUp implements Initializable {
 
     static TipusAccio tipusA;
+    static Idioma idiomaRebut;
     
     @FXML
     private Label lblIdioma;
@@ -42,27 +43,53 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
     public void crearIdioma(){
         
         Idioma idioma = null;
+        int id = -1;
+        String nomIdioma = tfNomIdioma.getText();
+        IdiomaDAO idiomaDAO = new IdiomaDAO();
         
-        try {
-            String nomIdioma = tfNomIdioma.getText();
-            
-            IdiomaDAO idiomaDAO = new IdiomaDAO();
-            
-            int id = idiomaDAO.nextId();
-            
-            idioma = new Idioma(id, nomIdioma);                    
-            idiomaDAO.insert(idioma);
-            
-            idiomaDAO.close();
-            
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ClassNotFoundException: "+ex.getMessage());
-        } catch (SQLException ex) {
-            System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            if(onAcceptCallBack!= null){
-                onAcceptCallBack.accept(idioma);
-            }
+        switch(tipusA){
+            case Crear:
+                try {
+                    id = idiomaDAO.nextId();
+                    idioma = new Idioma(id, nomIdioma);
+                    idiomaDAO.insert(idioma);
+                    idiomaDAO.close();
+
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(idioma);
+                    }     
+                }
+                break;
+            case Modificar:
+                id = idiomaRebut.getId();
+                idioma = new Idioma(id, nomIdioma);
+        
+                try {
+                    idiomaDAO.update(idioma);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(idioma);
+                    }
+                    idiomaDAO.close();
+                }      
+                break;
+            case Deshabilitar:
+                id = idiomaRebut.getId();
+                idioma = new Idioma();
+                idioma.setId(id);
+                
+                //idiomaDAO.delete(idioma);
+                idiomaDAO.close();     
+                break;
         }
         
         btnCrearIdioma.setOnAction((ActionEvent event1) -> {
@@ -81,7 +108,7 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
     }     
 
     @Override
-    public void emplenarDades(Object obj, TipusAccio tipus) {
+    public void emplenarDades(Object obj) {
         
         Idioma idioma;
         IdiomaDAO objIdiomaDAO = new IdiomaDAO();
@@ -90,7 +117,7 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
         if (idioma!=null){            
             tfNomIdioma.setText(idioma.getNom());
             
-            switch(tipus){
+            switch(tipusA){
                 case Modificar:
                     btnCrearIdioma.setText("Modificar");     
                     break;

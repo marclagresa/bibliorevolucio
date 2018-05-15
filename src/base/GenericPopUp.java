@@ -52,5 +52,5 @@ public abstract class GenericPopUp extends Stage{
         return c;
     }
     
-    public abstract void emplenarDades(Object obj, TipusAccio tipus);
+    public abstract void emplenarDades(Object obj);
 }

@@ -21,6 +21,7 @@ import objecte.Editorial;
 public class FXMLEditorialController extends GenericPopUp implements Initializable {
 
     static TipusAccio tipusA;
+    static Editorial editorialRebutda;
     
     @FXML
     private TextField tfNomEditorial;
@@ -47,29 +48,55 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
     @FXML
     private void crearEditorial(ActionEvent event) {
         
-        String nomEditorial = tfNomEditorial.getText();;
-        
         Editorial editorial = null;
+        int id = -1;
+        String nomEditorial = tfNomEditorial.getText();
         EditorialDAO editorialDAO = new EditorialDAO();
         
-        int id = -1;
-        try {
-            id = editorialDAO.nextId();
-            
-            editorial = new Editorial(id, nomEditorial);        
-            editorialDAO.insert(editorial);
-            
-            editorialDAO.close();
-            
-        } catch (SQLException ex) {
-            System.out.println("SQLException: "+ex.getMessage());
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ClassNotFoundException: "+ex.getMessage());
-        }finally{
-            if(onAcceptCallBack!= null){
-                onAcceptCallBack.accept(editorial);
-            }
-        }
+        switch(tipusA){
+            case Crear:
+                try {
+                    id = editorialDAO.nextId();
+                    editorial = new Editorial(id, nomEditorial);
+                    editorialDAO.insert(editorial);
+                    editorialDAO.close();
+
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(editorial);
+                    }     
+                }
+                break;
+            case Modificar:
+                id = editorialRebutda.getId();
+                editorial = new Editorial(id, nomEditorial);
+        
+                try {
+                    editorialDAO.update(editorial);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(editorial);
+                    }
+                    editorialDAO.close();
+                }      
+                break;
+            case Deshabilitar:
+                id = editorialRebutda.getId();
+                editorial = new Editorial();
+                editorial.setId(id);
+                
+                //editorialDAO.delete(editorial);
+                editorialDAO.close();     
+                break;
+        }        
         
         btnCrearEditorial.setOnAction((ActionEvent event1) -> {
             ((Stage) (btnCrearEditorial.getScene().getWindow())).close();
@@ -77,7 +104,7 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
     }
 
     @Override
-    public void emplenarDades(Object obj, TipusAccio tipus) {
+    public void emplenarDades(Object obj) {
         
         Editorial editorial;
         EditorialDAO objEditorialDAO = new EditorialDAO();
@@ -86,7 +113,7 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
         if (editorial!=null){            
             tfNomEditorial.setText(editorial.getNom());
             
-            switch(tipus){
+            switch(tipusA){
                 case Modificar:
                     btnCrearEditorial.setText("Modificar");     
                     break;
