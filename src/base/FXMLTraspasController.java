@@ -21,8 +21,10 @@ import java.nio.file.FileSystems;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,6 +37,7 @@ import objecte.Coleccio;
 import objecte.Editorial;
 import objecte.Format;
 import objecte.Idioma;
+import objecte.Materia;
 import objecte.Producte;
 
 
@@ -114,7 +117,7 @@ public class FXMLTraspasController implements Initializable {
                          //  p.setLloc(reader.get("LLOC"));
                          //  p.setNom(reader.get("TITOL"));
                          //  p.setColeccio(getColeccio(reader.get("COL·LECCIÓ")));
-                           
+                           p.setMateries(getMateries(reader.get("MATERIA")));
                            registresGuardats++;
                         } catch (Exception e) {
                             registreFallits++;
@@ -138,6 +141,14 @@ public class FXMLTraspasController implements Initializable {
         t.setDaemon(true);
         t.start();
         
+    }
+    private Set<Materia> getMateries(String materiesReg) throws SQLException,ClassNotFoundException{
+        Set<Materia> materiesSet = new HashSet<>();
+        String [] materiesLst;
+        if(!materiesReg.isEmpty()){
+            materiesLst=materiesReg.split("---");
+        }
+        return materiesSet;
     }
     private Coleccio getColeccio(String coleccioNom) throws SQLException,ClassNotFoundException{
         Coleccio coleccioObj = new Coleccio();

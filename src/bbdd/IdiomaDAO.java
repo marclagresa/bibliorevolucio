@@ -76,12 +76,12 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
             if(campOrdre!=null){
                 query+=" ORDER BY ? ";
                 valors.add(campOrdre);
-            }
-            if(ascendent){
+                if(ascendent){
                 query+=" ASC ";
-            }
-            else{
-                query+= " DESC ";
+                }
+                else{
+                    query+= " DESC ";
+                }
             }
             if(registreInicial!=null || totalRegistres!=null){
                 query += " LIMIT ";

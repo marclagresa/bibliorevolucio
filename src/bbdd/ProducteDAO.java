@@ -55,8 +55,9 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     +ContractProducte.URL_PORTADA+","+ContractProducte.ADRECA_WEB+","+ContractProducte.ESTAT+","
                     +ContractProducte.IDIOMA_ID+","+ContractProducte.EDITORIAL_ID+","
                     +ContractProducte.FORMAT_ID+","+ContractProducte.PROCEDENCIA_ID+","
-                    +ContractProducte.NIVELL_ID+","+ContractProducte.COLECCIO_ID+","+ContractProducte.CDU_ID+
-                    "from "+ ContractProducte.NOM_TAULA;
+                    +ContractProducte.NIVELL_ID+","+ContractProducte.COLECCIO_ID+","+ContractProducte.CDU_ID+" , "
+                    +ContractProducte.LLOC + " "
+                    + "FROM "+ ContractProducte.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             list.clear();
@@ -199,10 +200,11 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     + ContractProducte.EDITORIAL_ID + ", "
                     + ContractProducte.FORMAT_ID + ", "
                     + ContractProducte.PROCEDENCIA_ID + ", "
-                    + ContractProducte.NIVELL_ID + ", "
+                //    + ContractProducte.NIVELL_ID + ", " RELACION NM
                     + ContractProducte.COLECCIO_ID + ", "
                     + ContractProducte.CDU_ID + ", "
-                    + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    + ContractProducte.LLOC + " )"
+                    + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,producte.getId());
             ps.setString(2,producte.getISBN());
@@ -222,8 +224,9 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setInt(16,producte.getNivell().getId());
             ps.setInt(17,producte.getColeccio().getId());
             ps.setInt(18,producte.getCDU().getId());
-            ps.executeUpdate();
-            inserit = true;
+            ps.setString(19, producte.getLloc());
+            inserit= ps.executeUpdate() == 1;
+            
         } catch (SQLException ex) {
             throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
         } catch( ClassNotFoundException ex){
@@ -246,7 +249,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     +ContractProducte.URL_PORTADA+" = ?,"+ContractProducte.ADRECA_WEB+" = ?,"+ContractProducte.IDIOMA_ID+" = ?,"
                     +ContractProducte.EDITORIAL_ID+" = ?,"+ContractProducte.FORMAT_ID+" = ?,"+ContractProducte.PROCEDENCIA_ID+" = ?,"
                     +ContractProducte.NIVELL_ID+" = ?,"+ContractProducte.COLECCIO_ID+" = ?,"+ContractProducte.CDU_ID+" = ?,"
-                    +ContractProducte.ESTAT + "= ?  where "+ContractProducte.ID+" = ?";
+                    +ContractProducte.ESTAT + "= ?,"+ContractProducte.LLOC+"=?  where "+ContractProducte.ID+" = ?";
             ps = conn.prepareStatement(update);
             ps.setString(1,producte.getISBN());
             ps.setString(2,producte.getNom());
@@ -266,7 +269,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setInt(16,producte.getCDU().getId());
             ps.setBoolean(17, producte.getEstat());
             ps.setInt(18,producte.getId());
-            
+            ps.setString(19, producte.getLloc());
             actualitzat=ps.executeUpdate()==1;
         } catch (SQLException ex){
             throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
@@ -325,7 +328,6 @@ public class ProducteDAO implements IObjectDAO<Producte> {
     }
     private Producte read()throws SQLException,ClassNotFoundException{
         Producte objProducte = new Producte();
-        HashMap<String,Object> hashConsulta;
         
         objProducte.setId(rs.getInt(ContractProducte.ID));
         objProducte.setISBN(rs.getString(ContractProducte.ISBN));
@@ -341,13 +343,11 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         objProducte.setIdioma(new IdiomaDAO().select(rs.getInt(ContractProducte.IDIOMA_ID)));
         objProducte.setFormat(new FormatDAO().select(rs.getInt(ContractProducte.FORMAT_ID)));
         objProducte.setProcedencia(new ProcedenciaDAO().select(rs.getInt(ContractProducte.PROCEDENCIA_ID)));
-        objProducte.setNivell(new NivellDAO().select(rs.getInt(ContractProducte.NIVELL_ID)));
+       // objProducte.setNivell(new NivellDAO().select(rs.getInt(ContractProducte.NIVELL_ID))); es una relacio n m s' ha de canviar
         objProducte.setColeccio(new ColeccioDAO().select(rs.getInt(ContractProducte.COLECCIO_ID)));
         objProducte.setCDU(new CduDAO().select(rs.getInt(ContractProducte.CDU_ID)));
-        hashConsulta=new HashMap<>();
-        hashConsulta.put(ContractExemplar.ID_PRODUCTE, objProducte.getId());
-        objProducte.setExemplars(new HashSet<>(new ExemplarDAO().select(hashConsulta)));
-        
+        objProducte.setExemplars(new HashSet<>(0));
+        objProducte.setLloc(rs.getString(ContractProducte.LLOC));
         return objProducte;
     }
     

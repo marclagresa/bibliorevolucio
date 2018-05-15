@@ -28,6 +28,7 @@ public class Producte {
     private SimpleObjectProperty<Coleccio> coleccio;
     private SimpleObjectProperty<Cdu> cdu;
     private SimpleObjectProperty<Set<Exemplar>> exemplars;
+    private SimpleObjectProperty<Set<Materia>> materias;
     
     //Constructor Buit
 
@@ -52,6 +53,7 @@ public class Producte {
         this.coleccio = new SimpleObjectProperty<>(new Coleccio());
         this.cdu = new SimpleObjectProperty<>(new Cdu());
         this.exemplars=new SimpleObjectProperty<>(new HashSet<>(0));
+        this.materias= new SimpleObjectProperty<>(new HashSet<>(0));
     }
 
     //Constructor Total
@@ -59,7 +61,7 @@ public class Producte {
     public Producte(Integer id, String ISBN, String nom, Integer num_pag, String dimensions, String data, String resum,
                     String caracteristiques, String urlPortada, String adreçaWeb, boolean estat, Idioma idioma,
                     Editorial editorial, Format format, Procedencia procedencia, Nivell nivell, Coleccio coleccio,
-                    Cdu cdu,Set exemplars,String lloc){
+                    Cdu cdu,Set exemplars,String lloc,Set <Materia> materies){
         this.lloc=new SimpleStringProperty(lloc);
         this.id = new SimpleIntegerProperty(id);
         this.ISBN = new SimpleStringProperty(ISBN);
@@ -80,9 +82,11 @@ public class Producte {
         this.coleccio = new SimpleObjectProperty<>(coleccio);
         this.cdu = new SimpleObjectProperty<>(cdu);
         this.exemplars=new SimpleObjectProperty<>(exemplars);
+        this.materias=new SimpleObjectProperty<>(materies);
     }
 
     //Getters
+    public Set getMateries(){return this.materias.get();};
     public String getLloc(){return this.lloc.get();}
     public int getId() { return id.get(); }
     public String getISBN() { return ISBN.get(); }
@@ -104,6 +108,7 @@ public class Producte {
     public Cdu getCDU() { return cdu.get(); }
     public Set<Exemplar> getExemplars(){return this.exemplars.get();}
     //Setters
+    public void setMateries(Set<Materia> materies){this.materias.set(materies);}
     public void setLloc(String lloc){this.lloc.set(lloc);}
     public void setId(int id) { this.id.set(id); }
     public void setISBN(String ISBN) { this.ISBN.set(ISBN); }
@@ -125,6 +130,7 @@ public class Producte {
     public void setCDU(Cdu cdu) { this.cdu.set(cdu); }
     public void setExemplars(Set <Exemplar> exemplars){this.exemplars.set(exemplars);}
     //Properties
+    public SimpleObjectProperty<Set<Materia>> materiesProperty(){return this.materias;}
     public SimpleStringProperty llocProperty(){return this.lloc;}
     public SimpleIntegerProperty idProperty() { return id; }
     public SimpleStringProperty ISBNProperty() { return ISBN; }

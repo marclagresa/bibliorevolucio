@@ -224,15 +224,15 @@ public class Usuari {
     //</editor-fold>
     //<editor-fold desc="Getters Properties">
 
-    public SimpleIntegerProperty getIdProperty() { return id; }
-    public SimpleStringProperty getNomProperty() { return nom; }
-    public SimpleStringProperty getPCognomProperty() { return pCognom; }
-    public SimpleStringProperty getSCognomProperty() { return sCognom; }
-    public SimpleStringProperty getTelefonMobilProperty() { return telefonMobil; }
-    public SimpleStringProperty getTelefonFixeProperty() { return telefonFixe; }
-    public SimpleStringProperty getEmailProperty() { return email; }
-    public SimpleBooleanProperty isActiuProperty() { return actiu; }
-    public SimpleBooleanProperty IsAdminProperty() { return admin; }
+    public SimpleIntegerProperty idProperty() { return id; }
+    public SimpleStringProperty nomProperty() { return nom; }
+    public SimpleStringProperty pCognomProperty() { return pCognom; }
+    public SimpleStringProperty sCognomProperty() { return sCognom; }
+    public SimpleStringProperty telefonMobilProperty() { return telefonMobil; }
+    public SimpleStringProperty telefonFixeProperty() { return telefonFixe; }
+    public SimpleStringProperty emailProperty() { return email; }
+    public SimpleBooleanProperty actiuProperty() { return actiu; }
+    public SimpleBooleanProperty adminProperty() { return admin; }
     public SimpleObjectProperty<Nivell> nivellProperty() { return nivell; }
     
     //</editor-fold>
