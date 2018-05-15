@@ -27,6 +27,7 @@ public abstract class ContractProducte {
     public static final String NIVELL_ID = NOM_TAULA+".nivell_id";
     public static final String COLECCIO_ID = NOM_TAULA+".coleccio_id";
     public static final String CDU_ID = NOM_TAULA+".cdu_id";
+    public static final String LLOC = NOM_TAULA+".lloc";
     public static HashMap<String,Integer> DEFINICIO = new HashMap<String,Integer>(){{
         put(ID, Types.INTEGER);
         put(ISBN, Types.VARCHAR);
@@ -46,5 +47,6 @@ public abstract class ContractProducte {
         put(NIVELL_ID, Types.INTEGER);
         put(COLECCIO_ID, Types.INTEGER);
         put(CDU_ID, Types.INTEGER);
+        put(LLOC, Types.VARCHAR);
     }};
 }

@@ -110,7 +110,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
      * @throws SQLException si no s'ha pogut conectar a la bbdd
      * @throws ClassNotFoundException si no s'ha pogut carregar el driver jdbc
      */
-    @Override
+
     public List<Usuari> select(HashMap<String, Object> dades) throws SQLException, ClassNotFoundException {
         List<Usuari> list = new ArrayList<>();
         Usuari usr;
@@ -174,6 +174,123 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
         }
         return list;
 
+    }
+
+    @Override
+    public List<Usuari> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
+        List<Usuari> usuaris =new ArrayList<>();
+        ArrayList<Object>valors;
+        String query;
+        int i;
+        try {
+            c=ConnectionFactory.getInstance().getConnection();
+            valors=new ArrayList<>();
+            query = "SELECT * FROM "+ContractUsuari.NOM_TAULA;
+            i=0;
+            for(String camp:dades.keySet()){
+                if(i ==0){
+                    query += " WHERE ";
+                }
+                else{
+                    query += " AND ";
+                }
+                if(dades.get(camp).getClass().equals(String.class)){
+                    query += camp+" LIKE ?";
+                    valors.add("%"+dades.get(camp)+"%");
+                }
+                else{
+                    query += camp+ " = ?";
+                    valors.add(dades.get(camp));
+                }
+
+            }
+            if(campOrdre!=null){
+                query+=" ORDER BY ? ";
+                valors.add(campOrdre);
+            }
+            if(ascendent){
+                query+=" ASC ";
+            }
+            else{
+                query+= " DESC ";
+            }
+            if(registreInicial!=null || totalRegistres!=null){
+                query += " LIMIT ";
+                if(registreInicial!=null){
+                    query += " ?, ";
+                    valors.add(registreInicial);
+                }
+                if(totalRegistres==null){
+                    query +=" 18446744073709551615";
+                }
+                else{
+                    query +=" ?";
+                    valors.add(totalRegistres);
+                }
+
+            }
+            ps=c.prepareStatement(query);
+            for(Object valor:valors){
+                ps.setObject(valors.indexOf(valor)+1, valor);
+            }
+            rs=ps.executeQuery();
+            while(rs.next()){
+                usuaris.add(fillUsuari());
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally{
+            this.close();
+        }
+
+        return usuaris;
+    }
+
+    public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
+        int count=0;
+        ArrayList<Object> valors;
+        int i;
+        String query;
+        try {
+            c=ConnectionFactory.getInstance().getConnection();
+            valors=new ArrayList<>();
+            query = "SELECT COUNT(*) FROM "+ContractUsuari.NOM_TAULA;
+            i=0;
+            for(String camp:dades.keySet()){
+                if(i ==0){
+                    query += " WHERE ";
+                }
+                else{
+                    query += " AND ";
+                }
+                if(dades.get(camp).getClass().equals(String.class)){
+                    query += camp+" LIKE ?";
+                    valors.add("%"+dades.get(camp)+"%");
+                }
+                else{
+                    query += camp+ " = ?";
+                    valors.add(dades.get(camp));
+                }
+
+            }
+            ps=c.prepareStatement(query);
+            for(Object valor:valors){
+                ps.setObject(valors.indexOf(valor)+1, valor);
+            }
+            rs=ps.executeQuery();
+            if(rs.next()){
+                count=rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally{
+            this.close();
+        }
+        return count;
     }
 
     /**
@@ -496,6 +613,5 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
         
                 
     }
-    
 
 }

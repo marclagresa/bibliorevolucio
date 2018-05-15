@@ -1,11 +1,9 @@
 package bbdd;
 
 import base.ConnectionFactory;
-import contract.ContractAutoria;
 import contract.ContractExemplar;
 import contract.ContractProducte;
-import java.nio.charset.MalformedInputException;
-import objecte.*;
+
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,9 +13,16 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Set;
+import objecte.Cdu;
+import objecte.Coleccio;
+import objecte.Editorial;
+import objecte.Exemplar;
+import objecte.Idioma;
+import objecte.Nivell;
+import objecte.Procedencia;
+import objecte.Producte;
 
 public class ProducteDAO implements IObjectDAO<Producte> {
     private Connection conn;
@@ -68,6 +73,77 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         return list;
     }
     @Override
+    public List<Producte> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
+        List<Producte> productes =new ArrayList<>();
+        ArrayList<Object>valors;
+        String query;
+        int i;
+        try {
+            conn=ConnectionFactory.getInstance().getConnection();
+            valors=new ArrayList<>();
+            query = "SELECT * FROM "+ContractProducte.NOM_TAULA;
+            i=0;
+            for(String camp:dades.keySet()){
+                if(i ==0){
+                    query += " WHERE ";
+                }
+                else{
+                    query += " AND ";
+                }
+                if(dades.get(camp).getClass().equals(String.class)){
+                    query += camp+" LIKE ?";
+                    valors.add("%"+dades.get(camp)+"%");
+                }
+                else{
+                    query += camp+ " = ?";
+                    valors.add(dades.get(camp));
+                }
+
+            }
+            if(campOrdre!=null){
+                query+=" ORDER BY ? ";
+                valors.add(campOrdre);
+            }
+            if(ascendent){
+                query+=" ASC ";
+            }
+            else{
+                query+= " DESC ";
+            }
+            if(registreInicial!=null || totalRegistres!=null){
+                query += " LIMIT ";
+                if(registreInicial!=null){
+                    query += " ?, ";
+                    valors.add(registreInicial);
+                }
+                if(totalRegistres==null){
+                    query +=" 18446744073709551615";
+                }
+                else{
+                    query +=" ?";
+                    valors.add(totalRegistres);
+                }
+
+            }
+            ps=conn.prepareStatement(query);
+            for(Object valor:valors){
+                ps.setObject(valors.indexOf(valor)+1, valor);
+            }
+            rs=ps.executeQuery();
+            while(rs.next()){
+                productes.add(this.read());
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally{
+            this.close();
+        }
+
+        return productes;
+    }
+
     public List<Producte> select(HashMap <String,Object> dades) throws ClassNotFoundException, SQLException{
         if(dades!=null){
             List<Producte> list = new ArrayList<>();
@@ -139,6 +215,51 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         else{
             throw new NullPointerException();
         }
+    }
+
+    public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
+        int count=0;
+        ArrayList<Object> valors;
+        int i;
+        String query;
+        try {
+            conn=ConnectionFactory.getInstance().getConnection();
+            valors=new ArrayList<>();
+            query = "SELECT COUNT(*) FROM "+ContractProducte.NOM_TAULA;
+            i=0;
+            for(String camp:dades.keySet()){
+                if(i ==0){
+                    query += " WHERE ";
+                }
+                else{
+                    query += " AND ";
+                }
+                if(dades.get(camp).getClass().equals(String.class)){
+                    query += camp+" LIKE ?";
+                    valors.add("%"+dades.get(camp)+"%");
+                }
+                else{
+                    query += camp+ " = ?";
+                    valors.add(dades.get(camp));
+                }
+
+            }
+            ps=conn.prepareStatement(query);
+            for(Object valor:valors){
+                ps.setObject(valors.indexOf(valor)+1, valor);
+            }
+            rs=ps.executeQuery();
+            if(rs.next()){
+                count=rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally{
+            this.close();
+        }
+        return count;
     }
     @Override
     public Producte select(int id) throws ClassNotFoundException, SQLException{
@@ -228,7 +349,6 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         }
         return inserit;
     }
- 
     @Override
     public boolean update(Producte producte) throws ClassNotFoundException, SQLException{
         String update;
@@ -318,6 +438,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             }
         }
     }
+
     private Producte read()throws SQLException,ClassNotFoundException{
         Producte objProducte = new Producte();
         HashMap<String,Object> hashConsulta;
@@ -341,7 +462,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         objProducte.setCDU(new CduDAO().select(rs.getInt(ContractProducte.CDU_ID)));
         hashConsulta=new HashMap<>();
         hashConsulta.put(ContractExemplar.ID_PRODUCTE, objProducte.getId());
-        objProducte.setExemplars(new HashSet<>(new ExemplarDAO().select(hashConsulta)));
+        objProducte.setExemplars(new HashSet<>(new ExemplarDAO().select(hashConsulta,ContractExemplar.ID,0,1,true)));
         
         return objProducte;
     }

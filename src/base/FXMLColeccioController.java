@@ -76,7 +76,7 @@ public class FXMLColeccioController extends GenericPopUp implements Initializabl
     }
 
     @Override
-    public void emplenarDades(Object obj) {
+    public void emplenarDades(Object obj, TipusAccio tipus) {
         
         Coleccio coleccio;
         ColeccioDAO objColeccioDAO = new ColeccioDAO();
@@ -84,7 +84,19 @@ public class FXMLColeccioController extends GenericPopUp implements Initializabl
 
         if (coleccio!=null){
             tfColeccio.setText(coleccio.getNom());
-            btnCrearColeccio.setText("Modificar");            
+            
+            switch(tipus){
+                case Modificar:
+                    btnCrearColeccio.setText("Modificar");     
+                    break;
+                case Deshabilitar:
+                    btnCrearColeccio.setText("Deshabilitar");     
+                    break;
+                case Buscar:
+                    btnCrearColeccio.setText("Buscar");
+                    btnCrearColeccio.setDisable(true);
+                    break;
+            }           
         }    
     }
 }

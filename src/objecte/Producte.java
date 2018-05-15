@@ -18,6 +18,7 @@ public class Producte {
     private SimpleStringProperty caracteristiques;
     private SimpleStringProperty urlPortada;
     private SimpleStringProperty adreçaWeb;
+    private SimpleStringProperty lloc;
     private SimpleBooleanProperty estat;
     private SimpleObjectProperty<Idioma> idioma;
     private SimpleObjectProperty<Editorial> editorial;
@@ -31,6 +32,7 @@ public class Producte {
     //Constructor Buit
 
     public Producte(){
+        this.lloc=new SimpleStringProperty("");
         this.id = new SimpleIntegerProperty();
         this.ISBN = new SimpleStringProperty("");
         this.nom = new SimpleStringProperty("");
@@ -57,7 +59,8 @@ public class Producte {
     public Producte(Integer id, String ISBN, String nom, Integer num_pag, String dimensions, String data, String resum,
                     String caracteristiques, String urlPortada, String adreçaWeb, boolean estat, Idioma idioma,
                     Editorial editorial, Format format, Procedencia procedencia, Nivell nivell, Coleccio coleccio,
-                    Cdu cdu,Set exemplars){
+                    Cdu cdu,Set exemplars,String lloc){
+        this.lloc=new SimpleStringProperty(lloc);
         this.id = new SimpleIntegerProperty(id);
         this.ISBN = new SimpleStringProperty(ISBN);
         this.nom = new SimpleStringProperty(nom);
@@ -80,7 +83,7 @@ public class Producte {
     }
 
     //Getters
-
+    public String getLloc(){return this.lloc.get();}
     public int getId() { return id.get(); }
     public String getISBN() { return ISBN.get(); }
     public String getNom() { return nom.get(); }
@@ -101,7 +104,7 @@ public class Producte {
     public Cdu getCDU() { return cdu.get(); }
     public Set<Exemplar> getExemplars(){return this.exemplars.get();}
     //Setters
-
+    public void setLloc(String lloc){this.lloc.set(lloc);}
     public void setId(int id) { this.id.set(id); }
     public void setISBN(String ISBN) { this.ISBN.set(ISBN); }
     public void setNom(String nom) { this.nom.set(nom); }
@@ -122,7 +125,7 @@ public class Producte {
     public void setCDU(Cdu cdu) { this.cdu.set(cdu); }
     public void setExemplars(Set <Exemplar> exemplars){this.exemplars.set(exemplars);}
     //Properties
-
+    public SimpleStringProperty llocProperty(){return this.lloc;}
     public SimpleIntegerProperty idProperty() { return id; }
     public SimpleStringProperty ISBNProperty() { return ISBN; }
     public SimpleStringProperty nomProperty() { return nom; }

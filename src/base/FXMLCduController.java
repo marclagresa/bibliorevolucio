@@ -78,7 +78,28 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
     }
 
     @Override
-    public void emplenarDades(Object obj) {
+    public void emplenarDades(Object obj, TipusAccio tipus) {
         
+        Cdu cdu;
+        CduDAO objCduDAO = new CduDAO();
+        cdu = (Cdu) obj;        
+        
+        if (cdu!=null){
+            //personaRebuda = autor;
+            tfCDU.setText(cdu.getNom());
+            
+            switch(tipus){
+                case Modificar:
+                    btnCrearCDU.setText("Modificar");     
+                    break;
+                case Deshabilitar:
+                    btnCrearCDU.setText("Deshabilitar");     
+                    break;
+                case Buscar:
+                    btnCrearCDU.setText("Buscar");
+                    btnCrearCDU.setDisable(true);
+                    break;
+            }          
+        }
     }
 }

@@ -5,11 +5,13 @@
  */
 package base;
 
+import bbdd.ColeccioDAO;
 import bbdd.EditorialDAO;
 import bbdd.FormatDAO;
 import bbdd.IdiomaDAO;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
+import contract.ContractColeccio;
 import contract.ContractEditorial;
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +19,7 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.FileSystems;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -28,6 +31,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import objecte.Coleccio;
 import objecte.Editorial;
 import objecte.Format;
 import objecte.Idioma;
@@ -106,7 +110,11 @@ public class FXMLTraspasController implements Initializable {
                            registresLlegits++;
                          //  p.setFormat(getFormat(reader.get("FORMAT")));
                          //  p.setIdioma(getIdioma(reader.get("LLENGUA")));
-                           p.setEditorial(getEditorial(reader.get("EDITORIAL")));
+                         //  p.setEditorial(getEditorial(reader.get("EDITORIAL")));
+                         //  p.setLloc(reader.get("LLOC"));
+                         //  p.setNom(reader.get("TITOL"));
+                         //  p.setColeccio(getColeccio(reader.get("COL·LECCIÓ")));
+                           
                            registresGuardats++;
                         } catch (Exception e) {
                             registreFallits++;
@@ -130,6 +138,28 @@ public class FXMLTraspasController implements Initializable {
         t.setDaemon(true);
         t.start();
         
+    }
+    private Coleccio getColeccio(String coleccioNom) throws SQLException,ClassNotFoundException{
+        Coleccio coleccioObj = new Coleccio();
+        ColeccioDAO coleccioDAOObj;
+        List<Coleccio> coleccions;
+        if(!coleccioNom.isEmpty()){
+            coleccioDAOObj=new ColeccioDAO();
+            HashMap <String,Object> consulta = new HashMap<>();
+            consulta.put(ContractColeccio.NOM, coleccioNom);
+            coleccions=coleccioDAOObj.select(consulta);
+            if(coleccions.size()==1){
+                coleccioObj=coleccions.get(0);
+            }
+            else{
+                if(coleccions.isEmpty()){
+                    coleccioObj.setId(coleccioDAOObj.nextId());
+                    coleccioObj.setNom(coleccioNom);
+                    coleccioDAOObj.insert(coleccioObj);
+                }
+            }
+        }
+        return coleccioObj;
     }
     private Idioma getIdioma(String nomIdioma)throws SQLException,ClassNotFoundException{
         Idioma idiomaObj = new Idioma();
@@ -183,11 +213,11 @@ public class FXMLTraspasController implements Initializable {
         Editorial editorialObj = new Editorial();
         EditorialDAO editorialDAOObj=new EditorialDAO();
         HashMap <String,Object> consulta;
-        List<Editorial>editorials;
+        List<Editorial>editorials=new ArrayList<>();
         if(!nomEditorial.matches("\\s*")){
             consulta=new HashMap<>();
             consulta.put(ContractEditorial.NOM, nomEditorial);
-            editorials=editorialDAOObj.select(consulta);
+            editorials=editorialDAOObj.select(consulta,null,null,null,null);
             if(editorials.size() >0){
                 editorialObj=editorials.get(0);
             }

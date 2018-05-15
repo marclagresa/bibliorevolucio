@@ -84,7 +84,7 @@ public class FXMLFormatController extends GenericPopUp implements Initializable 
     }   
     
     @Override
-    public void emplenarDades(Object obj) {
+    public void emplenarDades(Object obj, TipusAccio tipus) {
         
         Format format;
         FormatDAO objFormatDAO = new FormatDAO();
@@ -92,7 +92,19 @@ public class FXMLFormatController extends GenericPopUp implements Initializable 
         
         if (format!=null){            
             tfNomFormat.setText(format.getNom());
-            btnCrearFormat.setText("Modificar");            
+            
+            switch(tipus){
+                case Modificar:
+                    btnCrearFormat.setText("Modificar");     
+                    break;
+                case Deshabilitar:
+                    btnCrearFormat.setText("Deshabilitar");     
+                    break;
+                case Buscar:
+                    btnCrearFormat.setText("Buscar");
+                    btnCrearFormat.setDisable(true);
+                    break;
+            }          
         }    
     }
 }

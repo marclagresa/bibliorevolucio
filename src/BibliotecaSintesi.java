@@ -34,6 +34,7 @@ public class BibliotecaSintesi extends Application {
         scene.getStylesheets().add
                 (BibliotecaSintesi.class.getResource("/media/css/estils.css").toExternalForm());
         
+        stage.setTitle("Bibliorevolució");
         stage.setScene(scene);
         stage.show();        
     }

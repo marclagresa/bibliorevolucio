@@ -52,6 +52,77 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         return list;
     }
     @Override
+    public List<Exemplar> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
+        List<Exemplar> exemplars =new ArrayList<>();
+        ArrayList<Object>valors;
+        String query;
+        int i;
+        try {
+            conn=ConnectionFactory.getInstance().getConnection();
+            valors=new ArrayList<>();
+            query = "SELECT * FROM "+ContractExemplar.NOM_TAULA;
+            i=0;
+            for(String camp:dades.keySet()){
+                if(i ==0){
+                    query += " WHERE ";
+                }
+                else{
+                    query += " AND ";
+                }
+                if(dades.get(camp).getClass().equals(String.class)){
+                    query += camp+" LIKE ?";
+                    valors.add("%"+dades.get(camp)+"%");
+                }
+                else{
+                    query += camp+ " = ?";
+                    valors.add(dades.get(camp));
+                }
+
+            }
+            if(campOrdre!=null){
+                query+=" ORDER BY ? ";
+                valors.add(campOrdre);
+            }
+            if(ascendent){
+                query+=" ASC ";
+            }
+            else{
+                query+= " DESC ";
+            }
+            if(registreInicial!=null || totalRegistres!=null){
+                query += " LIMIT ";
+                if(registreInicial!=null){
+                    query += " ?, ";
+                    valors.add(registreInicial);
+                }
+                if(totalRegistres==null){
+                    query +=" 18446744073709551615";
+                }
+                else{
+                    query +=" ?";
+                    valors.add(totalRegistres);
+                }
+
+            }
+            ps=conn.prepareStatement(query);
+            for(Object valor:valors){
+                ps.setObject(valors.indexOf(valor)+1, valor);
+            }
+            rs=ps.executeQuery();
+            while(rs.next()){
+                exemplars.add(this.read());
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally{
+            this.close();
+        }
+
+        return exemplars;
+    }
+
     public List<Exemplar> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
         List<Exemplar> list = new ArrayList<>();
         String sql;
@@ -118,6 +189,51 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         }
         return list;
     }
+
+    public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
+        int count=0;
+        ArrayList<Object> valors;
+        int i;
+        String query;
+        try {
+            conn=ConnectionFactory.getInstance().getConnection();
+            valors=new ArrayList<>();
+            query = "SELECT COUNT(*) FROM "+ContractExemplar.NOM_TAULA;
+            i=0;
+            for(String camp:dades.keySet()){
+                if(i ==0){
+                    query += " WHERE ";
+                }
+                else{
+                    query += " AND ";
+                }
+                if(dades.get(camp).getClass().equals(String.class)){
+                    query += camp+" LIKE ?";
+                    valors.add("%"+dades.get(camp)+"%");
+                }
+                else{
+                    query += camp+ " = ?";
+                    valors.add(dades.get(camp));
+                }
+
+            }
+            ps=conn.prepareStatement(query);
+            for(Object valor:valors){
+                ps.setObject(valors.indexOf(valor)+1, valor);
+            }
+            rs=ps.executeQuery();
+            if(rs.next()){
+                count=rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally{
+            this.close();
+        }
+        return count;
+    }
     @Override
     public Exemplar select(int id) throws ClassNotFoundException, SQLException{
         Exemplar exemplar = new Exemplar();
@@ -171,7 +287,6 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         }
         return inserit;
     }
-
     @Override
     public boolean update(Exemplar exemplar) throws ClassNotFoundException, SQLException{
         String update;
@@ -249,6 +364,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
             }
         }
     }
+
     private Exemplar read() throws SQLException,ClassNotFoundException{
         Exemplar objExemplar = new Exemplar();
         objExemplar.setId(rs.getInt(ContractExemplar.ID));
@@ -262,4 +378,5 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
 
     }
+
 }
