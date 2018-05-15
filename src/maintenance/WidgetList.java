@@ -1,7 +1,13 @@
 package maintenance;
 
+import com.sun.javafx.property.PropertyReference;
 import excepcions.MaintenanceException;
+import java.util.HashMap;
 import java.util.List;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -10,9 +16,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
+import maintenance.AttributeBrick.allowedFormats;
 
 /**
  * This class represents a widget that contains a custom table view for specific object and chooseable columns to display
@@ -24,6 +33,7 @@ public class WidgetList {
     private final TableView<?> _TABLE;
     private final ScrollPane _SCROLLCHECKERS;
     private final VBox _CHECKERS;
+    private final HashMap< TableColumn, String > _columnsAttribName = new HashMap<>();
 
     /**
      * Set the obtained param configs, generate the tableview
@@ -86,16 +96,41 @@ public class WidgetList {
         attributes.forEach( attrBrick -> {
             
             // Create a new column
-            TableColumn<Object, ?> column;
+            TableColumn< ?, ? > column;
             CheckBox ckBox;
 
             column = new TableColumn( attrBrick.getNAMECOLUMN() );
-            column.setCellValueFactory(new PropertyValueFactory<>( attrBrick.getNAME() ));
+            // Custom view for booleans
+            if( attrBrick.getFORMAT().equals( allowedFormats.Boolean ) ) {
+                
+                column.setCellValueFactory( (param) -> {
+          
+                    PropertyReference propertyRef = new PropertyReference<>( param.getValue().getClass(), attrBrick.getNAME() );
 
+                    ObservableValue property;
+                    if (propertyRef.hasProperty()) {
+                        property = propertyRef.getProperty( param.getValue() );
+                    } else {
+                        Object value = propertyRef.get( param.getValue() );
+                        property = new ReadOnlyObjectWrapper<>( value );
+                    }
+                    
+                    return property;
+                    
+                });
+                
+                column.setCellFactory( tc -> new CheckBoxTableCell<>() );
+                
+            } else {
+                
+                column.setCellValueFactory( new PropertyValueFactory<>( attrBrick.getNAME() ) );
+                
+            }
+                        
             // His checkbox
             ckBox = new CheckBox( attrBrick.getNAMECOLUMN() );
             column.setVisible( attrBrick.isDEFAULT() );
-            
+
             ckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
                 column.setVisible( newValue );
             });
@@ -107,6 +142,9 @@ public class WidgetList {
             
             // Add this new column to upper column
             upperColumn.getColumns().addAll( column );
+            
+            // Add column in list
+            _columnsAttribName.put( column, attrBrick.getCONTRACTNAME() );
             
         });
         
@@ -136,6 +174,15 @@ public class WidgetList {
     }
     
     /**
+     * Remove all items in the table
+     */
+    public void clearTable() {
+        
+        _TABLE.getItems().clear();
+
+    }
+    
+    /**
      * @return Object The selected item of table view, if are multiple selection return last object
      * @throws excepcions.MaintenanceException When any item are selected
      */
@@ -159,6 +206,10 @@ public class WidgetList {
 
     public VBox getCHECKERS() {
         return _CHECKERS;
+    }
+    
+    public HashMap<TableColumn, String> getColumnsAttribName() {
+        return _columnsAttribName;
     }
     
     // </editor-fold>

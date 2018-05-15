@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
@@ -11,14 +15,14 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="VBoxLogin" alignment="CENTER" prefHeight="518.0" prefWidth="702.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLLoginController">
+<VBox id="VBoxLogin" alignment="CENTER" prefHeight="518.0" prefWidth="702.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLLoginController">
    <children>
       <GridPane id="girdLogin" alignment="CENTER" hgap="10.0" prefHeight="256.0" prefWidth="702.0" styleClass="gridpane" vgap="10.0">
          <children>
             <Label id="lbUserLogin" alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="1013.0" text="Email:" textAlignment="RIGHT" />
             <Label id="lbContraLogin" alignment="CENTER_RIGHT" prefHeight="37.0" prefWidth="1011.0" text="Contrasenya:" GridPane.rowIndex="1" />
-            <TextField fx:id="txfEmail" prefWidth="359.0" GridPane.columnIndex="1" />
-            <PasswordField fx:id="pwfContrasenya" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <TextField fx:id="txfEmail" prefWidth="359.0" text="admin@admin.com" GridPane.columnIndex="1" />
+            <PasswordField fx:id="pwfContrasenya" text="hola" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets top="5.0" />
                </GridPane.margin></PasswordField>

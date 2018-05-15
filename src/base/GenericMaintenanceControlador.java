@@ -8,8 +8,11 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -19,8 +22,12 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.SortType;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import maintenance.AttributeBrick;
 import maintenance.AttributeWall;
@@ -50,8 +57,16 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     
     private static final String FILEFXML = "/fxml/FXMLMaintenance.fxml";
 
+    private final String _TITLELIST;
+    private final int _LIMITXPAGE;
+    
     private WidgetList _WIDGETLIST;
     private WidgetSearch _WIDGETSEARCH;
+    
+    private HashMap< String, Object > _lastSearch;
+    
+    private int _currentPage;
+    private int _maxPage;
     
     @FXML
     private TextField _searchField;
@@ -77,6 +92,8 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     private Button _btnDuplicate;
     @FXML
     private CheckBox _searchCb;
+    @FXML
+    private HBox _hbPages;
     
     public static < C extends GenericMaintenanceControlador> C crearFinestre( C c, String nomCapcalera ) throws IOException {
         
@@ -88,6 +105,16 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         return c;
         
     }
+
+    /**
+     * Confgis
+     * @param _TITLELIST
+     * @param _LIMITXPAGE 
+     */
+    public GenericMaintenanceControlador(String _TITLELIST, int _LIMITXPAGE) {
+        this._TITLELIST = _TITLELIST;
+        this._LIMITXPAGE = _LIMITXPAGE;
+    }
     
     /**
      * Initializes the controller class.
@@ -95,7 +122,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        this._WIDGETLIST = new WidgetList( this, titleList(), _tvTable, _vbCheckers, _spCheckers );
+        this._WIDGETLIST = new WidgetList( this, _TITLELIST, _tvTable, _vbCheckers, _spCheckers );
         this._WIDGETSEARCH = new WidgetSearch( this, _searchField, _searchCb, _cbAttributes );
         
     }
@@ -130,9 +157,8 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
      * @throws ClassNotFoundException 
      */
     @FXML   
-    private void searchAction(ActionEvent event) throws SQLException, ClassNotFoundException, MaintenanceException {
+    private void searchAction( ActionEvent event ) throws SQLException, ClassNotFoundException, MaintenanceException {
 
-        List list = null;
         SearchData sd = _WIDGETSEARCH.getSearchData();
         
         try {
@@ -147,23 +173,90 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
                 case Object:
                     data.put( contractName, parseObject( contractName, sd.getObject() ) );
                     break;
-                case Date:
                 case Integer:
                     data.put( contractName, Integer.valueOf( sd.getFieldText() ) );
+                    break;
+                case Date:
                 case String:
                     data.put( contractName, sd.getFieldText() );
                     break;
             }
             
-            list = searchOcurrences( data );
-            
+            _WIDGETLIST.clearTable();
+            List list = searchOcurrences( data, 0, _LIMITXPAGE, null, null);
+            _WIDGETLIST.fillTable( FXCollections.observableList( list ) );
+
+            generatePagination( getTotalItems( data ) );
+            _lastSearch = data;
+            _currentPage = 1;
+
         } catch ( IllegalArgumentException e ) {
             // Do alert
             //throw new MaintenanceException( getClass().getName() + ": Wrong data - searchAction()" );
             
         }
         
+    }
+    
+    /**
+     * Create pagination for search
+     * 
+     * @param totalItems 
+     */
+    private void generatePagination( Integer totalItems ) {
+        
+        EventHandler< MouseEvent > labelClickEvent = (MouseEvent event) -> {
+            try {
+                
+                openPage( Integer.valueOf( ( (Label) event.getSource()).getText()) );
+                
+            } catch ( Exception ex) {
+                // Dont know what can do
+            }
+        };
+        
+        int pages = (int) Math.ceil( totalItems/_LIMITXPAGE );
+        for( int i = 1; i <= pages; i++ ) {
+
+            Label label = new Label( String.valueOf( i ) );
+            label.setOnMouseClicked( labelClickEvent );
+            _hbPages.getChildren().add( label );
+
+        }
+        
+        _maxPage = pages;
+        
+    }
+    
+    /**
+     * Open page in table view respecting the sort order
+     * 
+     * @param page
+     * @throws SQLException
+     * @throws ClassNotFoundException 
+     */
+    private void openPage( int page ) throws SQLException, ClassNotFoundException {
+        
+        TableColumn sc = null;
+        SortType st = null;
+
+        if ( !_tvTable.getSortOrder().isEmpty() ) {
+            sc = (TableColumn) _tvTable.getSortOrder().get( 0 );
+            st = sc.getSortType();
+        }
+
+        List list = searchOcurrences( _lastSearch, 
+                page*_LIMITXPAGE,
+                _LIMITXPAGE,
+                _WIDGETLIST.getColumnsAttribName().get( sc ),
+                st );
+        _WIDGETLIST.clearTable();
         _WIDGETLIST.fillTable( FXCollections.observableList( list ) );
+        _currentPage = page;
+
+        if ( sc != null ) {
+            sc.setSortType( st );
+        }
         
     }
     
@@ -266,4 +359,23 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         }
         
     }
+    
+    @FXML
+    private void previousPage(MouseEvent event) throws SQLException, ClassNotFoundException {
+        
+        if( _currentPage > 1) {
+            openPage( _currentPage-- );
+        }
+        
+    }
+
+    @FXML
+    private void nextPage(MouseEvent event) throws SQLException, ClassNotFoundException {
+        
+        if( _currentPage < _maxPage ) {
+            openPage( _currentPage++ );
+        }
+        
+    }
+    
 }
