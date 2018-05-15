@@ -77,7 +77,7 @@ public class IdiomaDAO implements IObjectDAO<Idioma> {
                 query+=" ORDER BY ? ";
                 valors.add(campOrdre);
                 if(ascendent){
-                query+=" ASC ";
+                    query+=" ASC ";
                 }
                 else{
                     query+= " DESC ";
