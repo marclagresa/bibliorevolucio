@@ -462,15 +462,8 @@ public class ProducteDAO implements IObjectDAO<Producte> {
        // objProducte.setNivell(new NivellDAO().select(rs.getInt(ContractProducte.NIVELL_ID))); es una relacio n m s' ha de canviar
         objProducte.setColeccio(new ColeccioDAO().select(rs.getInt(ContractProducte.COLECCIO_ID)));
         objProducte.setCDU(new CduDAO().select(rs.getInt(ContractProducte.CDU_ID)));
-<<<<<<< HEAD
         objProducte.setExemplars(new HashSet<>(0));
         objProducte.setLloc(rs.getString(ContractProducte.LLOC));
-=======
-        hashConsulta=new HashMap<>();
-        hashConsulta.put(ContractExemplar.ID_PRODUCTE, objProducte.getId());
-        objProducte.setExemplars(new HashSet<>(new ExemplarDAO().select(hashConsulta,ContractExemplar.ID,0,1,true)));
-        
->>>>>>> 9f668b3fdc1362a50a224555b8de2043374ed307
         return objProducte;
     }
     
