@@ -53,7 +53,7 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
     }    
 
     @Override
-    public void emplenarDades(Object obj) {
+    public void emplenarDades(Object obj, TipusAccio tipus) {
         
         Materia materia;
         MateriaDAO objMateriaDAO = new MateriaDAO();
@@ -61,7 +61,19 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
         
         if (materia!=null){            
             tfMateria.setText(materia.getNom());
-            btnCrearMateria.setText("Modificar");            
+            
+            switch(tipus){
+                case Modificar:
+                    btnCrearMateria.setText("Modificar");     
+                    break;
+                case Deshabilitar:
+                    btnCrearMateria.setText("Deshabilitar");     
+                    break;
+                case Buscar:
+                    btnCrearMateria.setText("Buscar");
+                    btnCrearMateria.setDisable(true);
+                    break;
+            }                    
         }  
     }
 
@@ -96,5 +108,4 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
             ((Stage) (btnCrearMateria.getScene().getWindow())).close();
         });
     }
-    
 }

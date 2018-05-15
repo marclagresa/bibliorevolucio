@@ -81,7 +81,7 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
     }     
 
     @Override
-    public void emplenarDades(Object obj) {
+    public void emplenarDades(Object obj, TipusAccio tipus) {
         
         Idioma idioma;
         IdiomaDAO objIdiomaDAO = new IdiomaDAO();
@@ -89,7 +89,19 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
         
         if (idioma!=null){            
             tfNomIdioma.setText(idioma.getNom());
-            btnCrearIdioma.setText("Modificar");            
+            
+            switch(tipus){
+                case Modificar:
+                    btnCrearIdioma.setText("Modificar");     
+                    break;
+                case Deshabilitar:
+                    btnCrearIdioma.setText("Deshabilitar");     
+                    break;
+                case Buscar:
+                    btnCrearIdioma.setText("Buscar");
+                    btnCrearIdioma.setDisable(true);
+                    break;
+            }         
         }   
     }
 }

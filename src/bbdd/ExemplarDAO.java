@@ -189,6 +189,51 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         }
         return list;
     }
+
+    public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
+        int count=0;
+        ArrayList<Object> valors;
+        int i;
+        String query;
+        try {
+            conn=ConnectionFactory.getInstance().getConnection();
+            valors=new ArrayList<>();
+            query = "SELECT COUNT(*) FROM "+ContractExemplar.NOM_TAULA;
+            i=0;
+            for(String camp:dades.keySet()){
+                if(i ==0){
+                    query += " WHERE ";
+                }
+                else{
+                    query += " AND ";
+                }
+                if(dades.get(camp).getClass().equals(String.class)){
+                    query += camp+" LIKE ?";
+                    valors.add("%"+dades.get(camp)+"%");
+                }
+                else{
+                    query += camp+ " = ?";
+                    valors.add(dades.get(camp));
+                }
+
+            }
+            ps=conn.prepareStatement(query);
+            for(Object valor:valors){
+                ps.setObject(valors.indexOf(valor)+1, valor);
+            }
+            rs=ps.executeQuery();
+            if(rs.next()){
+                count=rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }finally{
+            this.close();
+        }
+        return count;
+    }
     @Override
     public Exemplar select(int id) throws ClassNotFoundException, SQLException{
         Exemplar exemplar = new Exemplar();
