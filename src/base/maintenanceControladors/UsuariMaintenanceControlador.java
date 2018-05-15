@@ -15,6 +15,8 @@ import objecte.Nivell;
 import maintenance.AttributeBrick;
 import base.GenericMaintenanceControlador;
 import excepcions.MaintenanceException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.TableColumn.SortType;
 import maintenance.AttributeWall;
 
@@ -66,30 +68,16 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     }
 
     @Override
-    public List searchOcurrences( HashMap<String, Object> data, Integer startItem, Integer limitXPage, String attribToOrder, SortType sortType ) throws SQLException, ClassNotFoundException, IllegalArgumentException {
-        
-        Boolean ascending = null; // = custom sort 
-        try {
-            
-            if( sortType.equals( SortType.ASCENDING ) ) {
-                ascending = true;
-            } else if ( sortType.equals( SortType.DESCENDING ) ) {
-                ascending = false;
-            }
-            
-        } catch (NullPointerException e) {
-            // is null ignore this
-        }
+    public List searchOcurrences( HashMap<String, Object> data, Integer startItem, Integer limitXPage, String attribToOrder, Boolean sortType ) throws SQLException, ClassNotFoundException, IllegalArgumentException {
 
-        return new UsuariDAO().select( data );    
+        return new UsuariDAO().select( data, attribToOrder, limitXPage, startItem, sortType );    
     
     }
 
     @Override
-    public Integer getTotalItems( HashMap<String, Object> data ) {
+    public Integer getTotalItems( HashMap<String, Object> data ) throws ClassNotFoundException, SQLException {
         
-        //return new UsuariDAO().selectCount( data );
-        return 0;
+            return new UsuariDAO().selectCount( data );
         
     }
     

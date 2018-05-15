@@ -4,7 +4,6 @@ import excepcions.MaintenanceException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.SortType;
 
 /**
@@ -22,7 +21,7 @@ public interface AttributeWall {
      * @param data
      * @return 
      */
-    public Integer getTotalItems( HashMap< String, Object > data );
+    public Integer getTotalItems( HashMap< String, Object > data ) throws ClassNotFoundException, SQLException;
     
     /**
      * This methode be need implemented with clases of his representing class
@@ -32,12 +31,12 @@ public interface AttributeWall {
      * @param startItem
      * @param limitXPage
      * @param attribToOrder
-     * @param ascendent
+     * @param sortType
      * @return The list of found elements
      * @throws java.sql.SQLException
      * @throws java.lang.ClassNotFoundException
      */
-    public List searchOcurrences( HashMap< String, Object> data, Integer startItem, Integer limitXPage, String attribToOrder, SortType sortType ) throws SQLException, ClassNotFoundException, IllegalArgumentException ;
+    public List searchOcurrences( HashMap< String, Object> data, Integer startItem, Integer limitXPage, String attribToOrder, Boolean sortType ) throws SQLException, ClassNotFoundException, IllegalArgumentException ;
     
     /**
      * This method need read the contractName and return id of the object

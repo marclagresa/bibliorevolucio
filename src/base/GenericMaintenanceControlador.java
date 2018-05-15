@@ -239,17 +239,30 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         
         TableColumn sc = null;
         SortType st = null;
+        Boolean ascending = null; // null = custom sort 
 
         if ( !_tvTable.getSortOrder().isEmpty() ) {
             sc = (TableColumn) _tvTable.getSortOrder().get( 0 );
             st = sc.getSortType();
         }
 
+        try {
+            
+            if( st.equals( SortType.ASCENDING ) ) {
+                ascending = true;
+            } else if ( st.equals( SortType.DESCENDING ) ) {
+                ascending = false;
+            }
+            
+        } catch (NullPointerException e) {
+            // is null ignore this
+        }
+        
         List list = searchOcurrences( _lastSearch, 
                 page*_LIMITXPAGE,
                 _LIMITXPAGE,
                 _WIDGETLIST.getColumnsAttribName().get( sc ),
-                st );
+                ascending );
         _WIDGETLIST.clearTable();
         _WIDGETLIST.fillTable( FXCollections.observableList( list ) );
         _currentPage = page;
