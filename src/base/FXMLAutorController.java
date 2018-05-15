@@ -103,7 +103,7 @@ public class FXMLAutorController extends GenericPopUp implements Initializable {
     }
 
     @Override
-    public void emplenarDades(Object obj, TipusAccio tipus) {
+    public void emplenarDades(Object obj) {
         
         Persona autor;
         PersonaDAO objPersonaDAO = new PersonaDAO();
@@ -113,7 +113,7 @@ public class FXMLAutorController extends GenericPopUp implements Initializable {
             personaRebuda = autor;
             tfAutor.setText(autor.getNom());
             
-            switch(tipus){
+            switch(tipusA){
                 case Modificar:
                     btnCrearAutor.setText("Modificar");     
                     break;
