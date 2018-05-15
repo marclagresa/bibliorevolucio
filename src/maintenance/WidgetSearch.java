@@ -100,7 +100,7 @@ public class WidgetSearch {
      */
     public SearchData getSearchData() {
         
-        return new SearchData( _SEARCHFIELD.getText(), _SEARCHCB.isPressed(), _CBATTRIBUTES.getSelectionModel().getSelectedItem(), _OBJECTE);
+        return new SearchData( _SEARCHFIELD.getText(), _SEARCHCB.isSelected(), _CBATTRIBUTES.getSelectionModel().getSelectedItem(), _OBJECTE);
 
     }
     
