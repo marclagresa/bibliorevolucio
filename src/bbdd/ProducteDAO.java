@@ -444,7 +444,6 @@ public class ProducteDAO implements IObjectDAO<Producte> {
 
     private Producte read()throws SQLException,ClassNotFoundException{
         Producte objProducte = new Producte();
-        
         objProducte.setId(rs.getInt(ContractProducte.ID));
         objProducte.setISBN(rs.getString(ContractProducte.ISBN));
         objProducte.setNumPag(rs.getInt(ContractProducte.NUM_PAG));
@@ -459,18 +458,11 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         objProducte.setIdioma(new IdiomaDAO().select(rs.getInt(ContractProducte.IDIOMA_ID)));
         objProducte.setFormat(new FormatDAO().select(rs.getInt(ContractProducte.FORMAT_ID)));
         objProducte.setProcedencia(new ProcedenciaDAO().select(rs.getInt(ContractProducte.PROCEDENCIA_ID)));
-       // objProducte.setNivell(new NivellDAO().select(rs.getInt(ContractProducte.NIVELL_ID))); es una relacio n m s' ha de canviar
+        //objProducte.setNivell(new NivellDAO().select(rs.getInt(ContractProducte.NIVELL_ID))); es una relacio n m s' ha de canviar
         objProducte.setColeccio(new ColeccioDAO().select(rs.getInt(ContractProducte.COLECCIO_ID)));
         objProducte.setCDU(new CduDAO().select(rs.getInt(ContractProducte.CDU_ID)));
-<<<<<<< HEAD
-        objProducte.setExemplars(new HashSet<>(0));
+        objProducte.setExemplars(new HashSet<Exemplar>(0));
         objProducte.setLloc(rs.getString(ContractProducte.LLOC));
-=======
-        hashConsulta=new HashMap<>();
-        hashConsulta.put(ContractExemplar.ID_PRODUCTE, objProducte.getId());
-        objProducte.setExemplars(new HashSet<>(new ExemplarDAO().select(hashConsulta,ContractExemplar.ID,0,1,true)));
-        
->>>>>>> 9f668b3fdc1362a50a224555b8de2043374ed307
         return objProducte;
     }
     

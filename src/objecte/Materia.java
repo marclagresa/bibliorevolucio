@@ -10,7 +10,7 @@ public class Materia {
     //Constructor Buit
 
     public Materia(){
-        this.id = new SimpleIntegerProperty();
+        this.id = new SimpleIntegerProperty(-1);
         this.nom = new SimpleStringProperty("");
     }
 

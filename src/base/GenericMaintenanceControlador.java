@@ -205,7 +205,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
                 
             Object object = _WIDGETLIST.getSelected();
             GenericPopUp window = createPopUpObject( TipusAccio.Modificar );
-            window.emplenarDades( object );
+           // window.emplenarDades( object );
             window.show();
             
         } catch ( IOException ex ) {
@@ -228,7 +228,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
                 
             Object object = _WIDGETLIST.getSelected();
             GenericPopUp window = createPopUpObject( TipusAccio.Deshabilitar );
-            window.emplenarDades( object );
+           // window.emplenarDades( object );
             window.show();
             
         } catch ( IOException ex ) {
@@ -251,7 +251,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
                 
             Object object = _WIDGETLIST.getSelected();
             GenericPopUp window = createPopUpObject( TipusAccio.Crear );
-            window.emplenarDades( object );
+          //  window.emplenarDades( object );
             window.show();
             
         } catch ( IOException ex ) {
