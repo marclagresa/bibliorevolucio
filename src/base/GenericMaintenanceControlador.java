@@ -8,8 +8,6 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -95,6 +93,14 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     @FXML
     private HBox _hbPages;
     
+    /**
+     * Same implementatio at superclass but diferents parameters
+     * @param <C extends GenericMaintenanceControlador>
+     * @param c
+     * @param nomCapcalera
+     * @return
+     * @throws IOException 
+     */
     public static < C extends GenericMaintenanceControlador> C crearFinestre( C c, String nomCapcalera ) throws IOException {
         
         FXMLLoader loader = new FXMLLoader( GenericMaintenanceControlador.class.getResource( FILEFXML ) );
@@ -108,17 +114,18 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
 
     /**
      * Confgis
+     * Exemple in UsuariMaintenanceControlador.java
+     * 
      * @param _TITLELIST
      * @param _LIMITXPAGE 
      */
     public GenericMaintenanceControlador(String _TITLELIST, int _LIMITXPAGE) {
+        
         this._TITLELIST = _TITLELIST;
         this._LIMITXPAGE = _LIMITXPAGE;
+        
     }
     
-    /**
-     * Initializes the controller class.
-     */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
@@ -128,36 +135,114 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     }
     
     /**
-     *  Example:
-     *  @Override
-     *  public GenericPopUp createPopUpObject() throws IOException {
-     *      return FXMLUserController.crear( this.getScene().getWindow(), true );
-     *  }
-     * 
+     * @param tipusAccio
      * @return GenericPopUp Object
      * @throws IOException 
      */
     public abstract GenericPopUp createPopUpObject( TipusAccio tipusAccio ) throws IOException;
     
     /**
-     *  Example:
-     *  @Override
-     *  public GenericPopUp createPopUpAdvSearch() throws IOException {
-     *      return FXMLUserController.crear( this.getScene().getWindow(), true );
-     *  }  
+     * @param tipusAccio
      * @return GenericPopUp Object
      * @throws IOException 
      */
     public abstract GenericPopUp createPopUpAdvSearch( TipusAccio tipusAccio) throws IOException; 
-        
+    
     /**
-     * Do the search and fill the table
-     * @param event
+     * Create pagination for search
+     * 
+     * @param totalItems 
+     */
+    private void generatePagination( Integer totalItems ) {
+        
+        _hbPages.getChildren().clear();
+        
+        EventHandler< MouseEvent > labelClickEvent = (MouseEvent event) -> {
+            
+            try {
+                
+                openPage( Integer.valueOf( ( (Label) event.getSource()).getText()) );
+
+            } catch (SQLException | ClassNotFoundException ex) {
+                // Set in logger
+                // Open a generic alert
+            } 
+            
+        };
+        
+        int pages =  (int) Math.ceil( totalItems/(_LIMITXPAGE*1.0 ));
+        
+        for( int i = 1; i <= pages; i++ ) {
+
+            Label label = new Label( String.valueOf( i ) );
+            label.setOnMouseClicked( labelClickEvent );
+            _hbPages.getChildren().add( label );
+
+        }
+        
+        _maxPage = pages;
+        
+    }
+    
+    /**
+     * Open page in table view respecting the sort order
+     * 
+     * @param page
      * @throws SQLException
      * @throws ClassNotFoundException 
      */
-    @FXML   
-    private void searchAction( ActionEvent event ) throws SQLException, ClassNotFoundException, MaintenanceException {
+    private void openPage( int page ) throws SQLException, ClassNotFoundException {
+        
+        TableColumn sc = null;
+        SortType st = null;
+        Boolean ascending = true;
+
+        if ( !_tvTable.getSortOrder().isEmpty() ) {
+            sc = (TableColumn) _tvTable.getSortOrder().get( 0 );
+            st = sc.getSortType();
+        }
+       
+        if( sc!=null ){
+           ascending = st.equals(SortType.ASCENDING);
+        }
+            
+        List list = searchOcurrences( _lastSearch, 
+                _LIMITXPAGE*(page-1),
+                _LIMITXPAGE,
+                _WIDGETLIST.getColumnsAttribName().get( sc ),
+                ascending );
+        _WIDGETLIST.clearTable();
+        _WIDGETLIST.fillTable( FXCollections.observableList( list ) );
+        _currentPage = page;
+
+        if ( sc != null ) {
+            sc.setSortType( st );
+        }
+        
+    }
+    
+    /**
+     * Make and fill the search
+     * 
+     * @param data
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     * @throws IllegalArgumentException 
+     */
+    private void doSearch( HashMap< String, Object > data ) throws SQLException, ClassNotFoundException, IllegalArgumentException {
+        
+        _WIDGETLIST.clearTable();
+        List list = searchOcurrences( data, 0, _LIMITXPAGE, null, null);
+        _WIDGETLIST.fillTable( FXCollections.observableList( list ) );
+
+        generatePagination( getTotalItems( data ) );
+        _lastSearch = data;
+        _currentPage = 1;
+        
+    }
+    
+    @FXML   // Its called when button is pressed, that gets the data to parse into HashMap to do the search
+    private void searchAction( ActionEvent event ) {
 
         SearchData sd = _WIDGETSEARCH.getSearchData();
         
@@ -182,93 +267,14 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
                     break;
             }
             
-            _WIDGETLIST.clearTable();
-            List list = searchOcurrences( data, 0, _LIMITXPAGE, null, null);
-            _WIDGETLIST.fillTable( FXCollections.observableList( list ) );
-
-            generatePagination( getTotalItems( data ) );
-            _lastSearch = data;
-            _currentPage = 1;
+            doSearch( data );
 
         } catch ( IllegalArgumentException e ) {
-            // Do alert
-            //throw new MaintenanceException( getClass().getName() + ": Wrong data - searchAction()" );
-            
-        }
-        
-    }
-    
-    /**
-     * Create pagination for search
-     * 
-     * @param totalItems 
-     */
-    private void generatePagination( Integer totalItems ) {
-        
-        EventHandler< MouseEvent > labelClickEvent = (MouseEvent event) -> {
-            try {
-                
-                openPage( Integer.valueOf( ( (Label) event.getSource()).getText()) );
-                
-            } catch ( Exception ex) {
-                // Dont know what can do
-            }
-        };
-        
-        int pages = (int) Math.ceil( totalItems/_LIMITXPAGE );
-        for( int i = 1; i <= pages; i++ ) {
-
-            Label label = new Label( String.valueOf( i ) );
-            label.setOnMouseClicked( labelClickEvent );
-            _hbPages.getChildren().add( label );
-
-        }
-        
-        _maxPage = pages;
-        
-    }
-    
-    /**
-     * Open page in table view respecting the sort order
-     * 
-     * @param page
-     * @throws SQLException
-     * @throws ClassNotFoundException 
-     */
-    private void openPage( int page ) throws SQLException, ClassNotFoundException {
-        
-        TableColumn sc = null;
-        SortType st = null;
-        Boolean ascending = null; // null = custom sort 
-
-        if ( !_tvTable.getSortOrder().isEmpty() ) {
-            sc = (TableColumn) _tvTable.getSortOrder().get( 0 );
-            st = sc.getSortType();
-        }
-
-        try {
-            
-            if( st.equals( SortType.ASCENDING ) ) {
-                ascending = true;
-            } else if ( st.equals( SortType.DESCENDING ) ) {
-                ascending = false;
-            }
-            
-        } catch (NullPointerException e) {
-            // is null ignore this
-        }
-        
-        List list = searchOcurrences( _lastSearch, 
-                page*_LIMITXPAGE,
-                _LIMITXPAGE,
-                _WIDGETLIST.getColumnsAttribName().get( sc ),
-                ascending );
-        _WIDGETLIST.clearTable();
-        _WIDGETLIST.fillTable( FXCollections.observableList( list ) );
-        _currentPage = page;
-
-        if ( sc != null ) {
-            sc.setSortType( st );
+            // Only open an alert
+            // If not tested can maybe an error in code            
+        } catch ( SQLException | ClassNotFoundException | MaintenanceException ex ) {
+            // Set in logger
+            // Open a generic alert
         }
         
     }
@@ -279,11 +285,24 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         try {
                
             GenericPopUp w = createPopUpAdvSearch( TipusAccio.Buscar );
+            
+            w.onAccept( ( map ) -> {
+                try {
+                    doSearch( (map instanceof HashMap) ? (HashMap) map : null );
+                } catch ( SQLException | ClassNotFoundException ex ) {
+                    // Set in logger
+                    // Open a generic alert
+                } catch ( IllegalArgumentException ex ) {
+                    // Only open an alert
+                    // If not tested can maybe an error in code
+                }
+            });
+            
+            w.show();
 
         } catch ( IOException ex ) {
-
-            System.out.println( getClass().getName() + ": Error when try to create AdvancedSearchPopUp window in loadFunctionalies()" );
-
+            // Set in logger : getClass().getName() + ": Error when try to create AdvancedSearchPopUp window in loadFunctionalies()"
+            // Open a generic alert
         }
         
     }
@@ -297,9 +316,8 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             window.show();
 
         } catch ( IOException ex ) {
-
-            System.out.println( getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Add" );
-
+            // Set in logger: getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Add"
+            // Open a generic alert
         }
         
     }
@@ -315,14 +333,11 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             window.show();
             
         } catch ( IOException ex ) {
-
-            System.out.println( getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Modify" );
-
+            // Set in logger : getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Modify"
+            // Open a generic alert
         } catch ( MaintenanceException ex ) {
             // When any item selected
-            // Implement label
-            System.out.println( ex.getMessage() );
-
+                // Open an alert
         } 
         
     }
@@ -338,15 +353,12 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             window.show();
             
         } catch ( IOException ex ) {
-
-            System.out.println( getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Delete" );
-
+            // Set in logger : getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - delete"
+            // Open a generic alert
         } catch ( MaintenanceException ex ) {
             // When any item selected
-            // Implement label
-            System.out.println( ex.getMessage() );
-
-        }
+                // Open an alert
+        } 
         
     }
 
@@ -361,32 +373,43 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             window.show();
             
         } catch ( IOException ex ) {
-
-            System.out.println( getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Duplicate" );
-
+            // Set in logger : getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Duplicate"
+            // Open a generic alert
         } catch ( MaintenanceException ex ) {
             // When any item selected
-            // Implement label
-            System.out.println( ex.getMessage() );
-
-        }
+                // Open an alert
+        } 
         
     }
     
     @FXML
-    private void previousPage(MouseEvent event) throws SQLException, ClassNotFoundException {
+    private void previousPage(MouseEvent event) {
         
-        if( _currentPage > 1) {
-            openPage( _currentPage-- );
+        try {
+            
+            if( _currentPage > 1) {
+                openPage( _currentPage-- );
+            }
+            
+        } catch ( SQLException | ClassNotFoundException ex) {
+            // Set in logger
+            // Open a generic alert
         }
         
     }
 
     @FXML
-    private void nextPage(MouseEvent event) throws SQLException, ClassNotFoundException {
+    private void nextPage(MouseEvent event) {
         
-        if( _currentPage < _maxPage ) {
-            openPage( _currentPage++ );
+        try {
+            
+            if( _currentPage < _maxPage ) {
+                openPage( _currentPage++ );
+            }
+            
+        } catch ( SQLException | ClassNotFoundException ex) {
+            // Set in logger
+            // Open a generic alert
         }
         
     }

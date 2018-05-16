@@ -4,7 +4,6 @@ import excepcions.MaintenanceException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
-import javafx.scene.control.TableColumn.SortType;
 
 /**
  * Super class to work with widgets maintenance
@@ -20,6 +19,8 @@ public interface AttributeWall {
      * 
      * @param data
      * @return 
+     * @throws java.lang.ClassNotFoundException 
+     * @throws java.sql.SQLException 
      */
     public Integer getTotalItems( HashMap< String, Object > data ) throws ClassNotFoundException, SQLException;
     

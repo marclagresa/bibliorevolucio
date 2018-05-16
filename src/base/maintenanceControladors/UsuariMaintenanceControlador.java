@@ -15,9 +15,6 @@ import objecte.Nivell;
 import maintenance.AttributeBrick;
 import base.GenericMaintenanceControlador;
 import excepcions.MaintenanceException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.scene.control.TableColumn.SortType;
 import maintenance.AttributeWall;
 
 /**
@@ -27,7 +24,7 @@ import maintenance.AttributeWall;
 public class UsuariMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
     public UsuariMaintenanceControlador() {
-        super( "Usuaris", 15);
+        super( "Usuaris", 3);
     }
     
     // AttributeWall
