@@ -202,6 +202,7 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
                     query += camp+ " = ?";
                     valors.add(dades.get(camp));
                 }
+                i++;
 
             }
             if(campOrdre!=null){
@@ -230,8 +231,8 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
 
             }
             ps=c.prepareStatement(query);
-            for(Object valor:valors){
-                ps.setObject(valors.indexOf(valor)+1, valor);
+            for(i=0;i<valors.size();i++){
+                ps.setObject(i+1, valors.get(i));
             }
             rs=ps.executeQuery();
             while(rs.next()){
@@ -273,11 +274,11 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
                     query += camp+ " = ?";
                     valors.add(dades.get(camp));
                 }
-
+                i++;
             }
             ps=c.prepareStatement(query);
-            for(Object valor:valors){
-                ps.setObject(valors.indexOf(valor)+1, valor);
+            for(i=0;i<valors.size();i++){
+                ps.setObject(i+1, valors.get(i));
             }
             rs=ps.executeQuery();
             if(rs.next()){
@@ -563,55 +564,5 @@ public class UsuariDAO implements IObjectDAO<Usuari> {
          
             System.err.println(e.getMessage()); 
         }
-        
-        //Exemple de com crear un nou usuari a la taula.
-        /**
-         * 
-         
-        UsuariDAO usrDAo = new UsuariDAO();
-        String salt;
-        String password;
-        String hashPassword;
-        Usuari nouUser = new Usuari();
-        try {
-            ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
-            salt = SaltBuilder.generateSalt();
-            password = "hola";
-            hashPassword = HashGenerator.generateHash(password + salt);
-            nouUser.setId(usrDAo.nextId());
-            nouUser.setNom("Johan");
-            nouUser.setPcognom("Cruyff");
-            nouUser.setScognom("Putu Amo");
-            nouUser.setEmail("johan@johan.com");   //Email ha de ser unic en aquest cas ens donara una SQLException per que ja existeix aquest email.
-            nouUser.setContrasenya(hashPassword);
-            nouUser.setSalt(salt);
-            usrDAo.insert(nouUser);
-            System.out.println(usrDAo.select(usrDAo.nextId() - 1).toString());
-        } catch (SQLException | ClassNotFoundException | NoSuchAlgorithmException | IOException e) {
-            System.err.println(e.getMessage());
-        }
-         */
-
-        //Exemple de com borrar un registre (posar estat a no actiu...)
-        /**
-        UsuariDAO usrDAO = new UsuariDAO();
-        try{
-            ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
-            Usuari usr = usrDAO.select(3); //Seleccionem l' usuari amb id = 3;
-            System.out.println  (usr.isActiu()); //Mostrem el valor que te a la bbdd.
-            usr.setActiu(false);  //Possem a fals la propietat actiu.
-            usrDAO.update(usr);  //Fem l' update.
-            usr=usrDAO.select(3); //Tornem a seleccionar l' usuari amb id = 3;
-            System.out.println(usr.isActiu()); //Mostrem el valor que te a la bbdd. 
-            
-        } catch(SQLException | ClassNotFoundException | IOException e){
-            System.err.println(e.getMessage());
-        }
-        */
-            
-            
-        
-                
     }
-
 }
