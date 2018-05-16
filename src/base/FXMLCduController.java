@@ -106,11 +106,10 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
     public void emplenarDades(Object obj) {
         
         Cdu cdu;
-        CduDAO objCduDAO = new CduDAO();
         cdu = (Cdu) obj;
         
         if (cdu!=null){
-            //personaRebuda = autor;
+            cduRebut = cdu;
             tfCDU.setText(cdu.getNom());
             
             switch(tipusA){

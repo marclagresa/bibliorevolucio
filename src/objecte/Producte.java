@@ -86,6 +86,7 @@ public class Producte {
     }
 
     //Getters
+
     public Set getMateries(){return this.materias.get();};
     public String getLloc(){return this.lloc.get();}
     public int getId() { return id.get(); }
@@ -107,7 +108,9 @@ public class Producte {
     public Coleccio getColeccio() { return coleccio.get(); }
     public Cdu getCDU() { return cdu.get(); }
     public Set<Exemplar> getExemplars(){return this.exemplars.get();}
+
     //Setters
+
     public void setMateries(Set<Materia> materies){this.materias.set(materies);}
     public void setLloc(String lloc){this.lloc.set(lloc);}
     public void setId(int id) { this.id.set(id); }
@@ -129,7 +132,9 @@ public class Producte {
     public void setColeccio(Coleccio coleccio) { this.coleccio.set(coleccio); }
     public void setCDU(Cdu cdu) { this.cdu.set(cdu); }
     public void setExemplars(Set <Exemplar> exemplars){this.exemplars.set(exemplars);}
+
     //Properties
+
     public SimpleObjectProperty<Set<Materia>> materiesProperty(){return this.materias;}
     public SimpleStringProperty llocProperty(){return this.lloc;}
     public SimpleIntegerProperty idProperty() { return id; }
@@ -151,5 +156,12 @@ public class Producte {
     public SimpleObjectProperty<Coleccio> coleccioProperty() { return coleccio; }
     public SimpleObjectProperty<Cdu> cduProperty() { return cdu; }
     public SimpleObjectProperty<Set<Exemplar>>exemplarsProperty(){return this.exemplars;}
+
+    //To String
+
+    @Override
+    public String toString(){
+        return this.getNom();
+    }
 
 }

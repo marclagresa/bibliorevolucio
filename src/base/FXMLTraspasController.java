@@ -9,6 +9,7 @@ import bbdd.ColeccioDAO;
 import bbdd.EditorialDAO;
 import bbdd.FormatDAO;
 import bbdd.IdiomaDAO;
+import bbdd.MateriaDAO;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
 import contract.ContractColeccio;
@@ -145,8 +146,20 @@ public class FXMLTraspasController implements Initializable {
     private Set<Materia> getMateries(String materiesReg) throws SQLException,ClassNotFoundException{
         Set<Materia> materiesSet = new HashSet<>();
         String [] materiesLst;
+        MateriaDAO materiaDAOObj;
+        Materia materiaObj;
         if(!materiesReg.isEmpty()){
-            materiesLst=materiesReg.split("---");
+            materiaDAOObj=new MateriaDAO();
+            materiesLst=materiesReg.split("-");
+            for(String nomMateria:materiesLst){
+                materiaObj=materiaDAOObj.select(nomMateria);
+                if(materiaObj.getId()==-1){
+                    materiaObj.setId(materiaDAOObj.nextId());
+                    materiaObj.setNom(nomMateria);
+                    materiaDAOObj.insert(materiaObj);
+                }
+                materiesSet.add(materiaObj);
+            }
         }
         return materiesSet;
     }

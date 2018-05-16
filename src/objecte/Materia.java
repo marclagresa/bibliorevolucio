@@ -10,7 +10,7 @@ public class Materia {
     //Constructor Buit
 
     public Materia(){
-        this.id = new SimpleIntegerProperty();
+        this.id = new SimpleIntegerProperty(-1);
         this.nom = new SimpleStringProperty("");
     }
 
@@ -35,4 +35,11 @@ public class Materia {
 
     public SimpleIntegerProperty idProperty() { return id; }
     public SimpleStringProperty nomProperty() { return nom; }
+
+    //To String
+
+    @Override
+    public String toString(){
+        return this.getNom();
+    }
 }

@@ -83,12 +83,12 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
             if(campOrdre!=null){
                 query+=" ORDER BY ? ";
                 valors.add(campOrdre);
-            }
-            if(ascendent){
-                query+=" ASC ";
-            }
-            else{
-                query+= " DESC ";
+                if(ascendent){
+                    query+=" ASC ";
+                }
+                else{
+                    query+= " DESC ";
+                }
             }
             if(registreInicial!=null || totalRegistres!=null){
                 query += " LIMIT ";

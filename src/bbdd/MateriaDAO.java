@@ -81,12 +81,12 @@ public class MateriaDAO implements IObjectDAO<Materia> {
             if(campOrdre!=null){
                 query+=" ORDER BY ? ";
                 valors.add(campOrdre);
-            }
-            if(ascendent){
-                query+=" ASC ";
-            }
-            else{
-                query+= " DESC ";
+                if(ascendent){
+                    query+=" ASC ";
+                }
+                else{
+                    query+= " DESC ";
+                }
             }
             if(registreInicial!=null || totalRegistres!=null){
                 query += " LIMIT ";
@@ -188,7 +188,28 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         }
         return list;
     }
-
+    public Materia select(String nom) throws SQLException,ClassNotFoundException{
+        Materia materiaObj = new Materia();
+        String query;
+        try {
+            conn=ConnectionFactory.getInstance().getConnection();
+            query="SELECT * FROM "+ContractMateria.NOM_TAULA +" "
+                + "WHERE " +ContractMateria.NOM + " LIKE ? ";
+            ps=conn.prepareStatement(query);
+            ps.setString(1, nom);
+            rs=ps.executeQuery();
+            if(rs.next()){
+                materiaObj=read();
+            }
+        } catch (SQLException e) {
+            throw new SQLException(e.getMessage(),e.getSQLState(),e.getErrorCode(),e.getCause());
+        } catch (ClassNotFoundException e){
+            throw new ClassNotFoundException(e.getMessage(), e.getCause());
+        } finally{
+            this.close();
+        }
+        return materiaObj;
+    }
     public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
         int count=0;
         ArrayList<Object> valors;

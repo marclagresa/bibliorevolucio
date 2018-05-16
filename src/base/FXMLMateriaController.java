@@ -51,13 +51,12 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
+    }
 
     @Override
     public void emplenarDades(Object obj) {
         
         Materia materia;
-        MateriaDAO objMateriaDAO = new MateriaDAO();
         materia = (Materia) obj;
         
         if (materia!=null){            
@@ -74,8 +73,8 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
                     btnCrearMateria.setText("Buscar");
                     btnCrearMateria.setDisable(true);
                     break;
-            }                    
-        }  
+            }                  
+        } 
     }
 
     @FXML

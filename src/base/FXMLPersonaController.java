@@ -19,7 +19,7 @@ import objecte.Persona;
  *
  * @author AdriaLlop
  */
-public class FXMLAutorController extends GenericPopUp implements Initializable {
+public class FXMLPersonaController extends GenericPopUp implements Initializable {
 
     static TipusAccio tipusA;
     static Persona personaRebuda;
@@ -41,11 +41,11 @@ public class FXMLAutorController extends GenericPopUp implements Initializable {
         
     }    
     
-    public static FXMLAutorController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{     
+    public static FXMLPersonaController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{     
         
         tipusA = tipus;
         
-        return crearPopUp("FXMLAutor.fxml", FXMLAutorController.class, owner, isModal, tipus);
+        return crearPopUp("FXMLPersona.fxml", FXMLPersonaController.class, owner, isModal, tipus);
     }
 
     @FXML
@@ -106,7 +106,6 @@ public class FXMLAutorController extends GenericPopUp implements Initializable {
     public void emplenarDades(Object obj) {
         
         Persona autor;
-        PersonaDAO objPersonaDAO = new PersonaDAO();
         autor = (Persona) obj;        
         
         if (autor!=null){

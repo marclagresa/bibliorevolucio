@@ -35,4 +35,11 @@ public class Idioma {
 
     public SimpleIntegerProperty idProperty() { return id; }
     public SimpleStringProperty nomProperty() { return nom; }
+
+    //To String
+
+    @Override
+    public String toString(){
+        return this.getNom();
+    }
 }

@@ -55,4 +55,11 @@ public class Exemplar {
     public SimpleStringProperty dataCompraProperty() { return dataCompra; }
     public SimpleObjectProperty<Producte> producteProperty() { return producte; }
     public SimpleObjectProperty<Biblioteca> bibliotecaProperty() { return biblioteca; }
+
+    //To String
+
+    @Override
+    public String toString(){
+        return this.getDataCompra();
+    }
 }
