@@ -3,7 +3,6 @@ package base;
 import bbdd.FormatDAO;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.FileSystems;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -22,6 +21,7 @@ import objecte.Format;
 public class FXMLFormatController extends GenericPopUp implements Initializable {
 
     static TipusAccio tipusA;
+    static Format formatRebut;
     
     @FXML
     private TextField tfNomFormat;
@@ -48,34 +48,54 @@ public class FXMLFormatController extends GenericPopUp implements Initializable 
     @FXML
     private void crearFormat(ActionEvent event) {
         
-        int id = -1;
         Format format = null;
+        int id = -1;
+        String nomFormat = tfNomFormat.getText();
+        FormatDAO formatDAO = new FormatDAO();
         
-        try {
-            String nomFormat = tfNomFormat.getText();
-            
-            FormatDAO formatDAO = new FormatDAO();
-            
-            id = formatDAO.nextId();
-            
-            format = new Format(id,nomFormat);              
-            
-            if(formatDAO.insert(format)){
-                System.out.println("true");
-            }else{
-                System.out.println("false");
-            }
-         
-            formatDAO.close();
-            
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ClassNotFoundException: "+ex.getMessage());
-        } catch (SQLException ex) {
-            System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            if(onAcceptCallBack!= null){
-                onAcceptCallBack.accept(format);
-            }
+        switch(tipusA){
+            case Crear:
+                try {
+                    id = formatDAO.nextId();
+                    format = new Format(id, nomFormat);
+                    formatDAO.insert(format);
+                    formatDAO.close();
+
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(format);
+                    }     
+                }
+                break;
+            case Modificar:
+                id = formatRebut.getId();
+                format = new Format(id, nomFormat);
+        
+                try {
+                    formatDAO.update(format);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(format);
+                    }
+                    formatDAO.close();
+                }      
+                break;
+            case Deshabilitar:
+                id = formatRebut.getId();
+                format = new Format();
+                format.setId(id);
+                
+                //formatDAO.delete(format);
+                formatDAO.close();     
+                break;
         }
         
         btnCrearFormat.setOnAction((ActionEvent event1) -> {
@@ -84,7 +104,7 @@ public class FXMLFormatController extends GenericPopUp implements Initializable 
     }   
     
     @Override
-    public void emplenarDades(Object obj, TipusAccio tipus) {
+    public void emplenarDades(Object obj) {
         
         Format format;
         FormatDAO objFormatDAO = new FormatDAO();
@@ -93,7 +113,7 @@ public class FXMLFormatController extends GenericPopUp implements Initializable 
         if (format!=null){            
             tfNomFormat.setText(format.getNom());
             
-            switch(tipus){
+            switch(tipusA){
                 case Modificar:
                     btnCrearFormat.setText("Modificar");     
                     break;

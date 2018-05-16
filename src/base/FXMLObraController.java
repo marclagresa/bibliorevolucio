@@ -791,6 +791,6 @@ public class FXMLObraController extends GenericPopUp implements Initializable  {
     }
 
     @Override
-    public void emplenarDades(Object obj, TipusAccio tipus) {        
+    public void emplenarDades(Object obj) {        
     }
 }

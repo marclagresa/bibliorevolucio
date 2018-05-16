@@ -15,6 +15,9 @@ import objecte.Nivell;
 import maintenance.AttributeBrick;
 import base.GenericMaintenanceControlador;
 import excepcions.MaintenanceException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.scene.control.TableColumn.SortType;
 import maintenance.AttributeWall;
 
 /**
@@ -22,27 +25,25 @@ import maintenance.AttributeWall;
  * @author Rafel
  */
 public class UsuariMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
-   
-    @Override
-    public String titleList() {
-        return "Usuaris";
+
+    public UsuariMaintenanceControlador() {
+        super( "Usuaris", 15);
     }
     
-    
-
+    // AttributeWall
     @Override
     public List<AttributeBrick> getAttributeWall() {
 
         List<AttributeBrick> attributeWall = Arrays.asList(
             new AttributeBrick( "id", "ID", true, ContractUsuari.ID, AttributeBrick.allowedFormats.Integer ),
             new AttributeBrick( "nom", "Nom", true, ContractUsuari.NOM, AttributeBrick.allowedFormats.String ),
-            new AttributeBrick( "pcognom", "Primer Cognom", false, ContractUsuari.PRIMER_COGNOM, AttributeBrick.allowedFormats.String ),
-            new AttributeBrick( "scognom", "Segon Cognom", false, ContractUsuari.SEGON_COGNOM, AttributeBrick.allowedFormats.String),
+            new AttributeBrick( "pCognom", "Primer Cognom", false, ContractUsuari.PRIMER_COGNOM, AttributeBrick.allowedFormats.String ),
+            new AttributeBrick( "sCognom", "Segon Cognom", false, ContractUsuari.SEGON_COGNOM, AttributeBrick.allowedFormats.String),
             new AttributeBrick( "telefonMobil", "T.Mòbil", false, ContractUsuari.TELEFON_MOBIL, AttributeBrick.allowedFormats.String ),
             new AttributeBrick( "telefonFixe", "T.Fixe", false, ContractUsuari.TELEFON_FIX, AttributeBrick.allowedFormats.String ),
             new AttributeBrick( "email", "Correu", false, ContractUsuari.EMAIL, AttributeBrick.allowedFormats.String ),
-            new AttributeBrick( "estat", "Estat", false, ContractUsuari.ACTIU, AttributeBrick.allowedFormats.Boolean ),
-            new AttributeBrick( "esAdmin", "Administrador", false, ContractUsuari.ADMIN, AttributeBrick.allowedFormats.Boolean ),
+            new AttributeBrick( "actiu", "Actiu", false, ContractUsuari.ACTIU, AttributeBrick.allowedFormats.Boolean ),
+            new AttributeBrick( "admin", "Administrador", false, ContractUsuari.ADMIN, AttributeBrick.allowedFormats.Boolean ),
             new AttributeBrick( "nivell", "Nivell", false, ContractUsuari.ID_NIVELL, AttributeBrick.allowedFormats.Object )
         );
         
@@ -59,7 +60,7 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
                 id = ((Nivell) object).getId();
                 break;
             default:
-                throw new MaintenanceException( "This object: " + contractName + " not parsed ina parseObject" );
+                throw new MaintenanceException( "This object: " + contractName + " not parsed in a parseObject" );
         }
         
         return id;
@@ -67,12 +68,20 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     }
 
     @Override
-    public List searchOcurrences(HashMap<String, Object> data) throws SQLException, ClassNotFoundException, IllegalArgumentException {
-       
-        return new UsuariDAO().select( data );    
+    public List searchOcurrences( HashMap<String, Object> data, Integer startItem, Integer limitXPage, String attribToOrder, Boolean sortType ) throws SQLException, ClassNotFoundException, IllegalArgumentException {
+
+        return new UsuariDAO().select( data, attribToOrder, limitXPage, startItem, sortType );    
     
     }
 
+    @Override
+    public Integer getTotalItems( HashMap<String, Object> data ) throws ClassNotFoundException, SQLException {
+        
+            return new UsuariDAO().selectCount( data );
+        
+    }
+    
+    // GenericMaintenanceControlador
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         

@@ -24,7 +24,7 @@
                                     <CheckBox fx:id="_searchCb" mnemonicParsing="false" visible="false" />
                                  </children>
                               </StackPane>
-                              <ChoiceBox fx:id="_cbAttributes" maxWidth="1.7976931348623157E308" nodeOrientation="LEFT_TO_RIGHT" HBox.hgrow="ALWAYS" />
+                              <ChoiceBox fx:id="_cbAttributes" maxWidth="150.0" nodeOrientation="LEFT_TO_RIGHT" HBox.hgrow="ALWAYS" />
                            </children>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -39,7 +39,7 @@
                                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                  </columnResizePolicy>
                               </TableView>
-                              <ScrollPane id="spManteniment" fx:id="_spCheckers" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="100.0" prefWidth="100.0" stylesheets="@../media/css/estils.css" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
+                              <ScrollPane id="spManteniment" fx:id="_spCheckers" fitToHeight="true" fitToWidth="true" hbarPolicy="NEVER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="100.0" prefWidth="100.0" stylesheets="@../media/css/estils.css" visible="false" AnchorPane.bottomAnchor="5.0" AnchorPane.rightAnchor="5.0">
                                  <content>
                                     <VBox fx:id="_vbCheckers" focusTraversable="true" maxWidth="1.7976931348623157E308" spacing="5.0" />
                                  </content>
@@ -53,14 +53,14 @@
                      <bottom>
                         <BorderPane BorderPane.alignment="CENTER">
                            <left>
-                              <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_RIGHT">
+                              <ImageView fitHeight="25.0" fitWidth="25.0" onMouseClicked="#previousPage" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_RIGHT">
                                  <image>
                                     <Image url="@../media/img/flexa3.png" />
                                  </image>
                               </ImageView>
                            </left>
                            <right>
-                              <ImageView fitHeight="25.0" fitWidth="25.0" nodeOrientation="RIGHT_TO_LEFT" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_LEFT">
+                              <ImageView fitHeight="25.0" fitWidth="25.0" nodeOrientation="RIGHT_TO_LEFT" onMouseClicked="#nextPage" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER_LEFT">
                                  <image>
                                     <Image url="@../media/img/flexa3.png" />
                                  </image>
@@ -74,7 +74,7 @@
                                 <content>
                                   <AnchorPane>
                                        <children>
-                                          <HBox alignment="CENTER" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <HBox fx:id="_hbPages" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                 </content>
@@ -92,7 +92,7 @@
                         <VBox alignment="TOP_RIGHT" spacing="5.0">
                            <children>
                               <Button fx:id="_btnSearch" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#searchAction" text="Cerca" />
-                              <Label fx:id="_lblAdvancedSearch" onDragDetected="#advSearchAction" text="Cerca avançada" textFill="#0a66ff" />
+                              <Label fx:id="_lblAdvancedSearch" onMouseClicked="#advSearchAction" text="Cerca avançada" textFill="#0a66ff" />
                            </children>
                         </VBox>
                         <Button fx:id="_btnAdd" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addAction" text="Afegir" />

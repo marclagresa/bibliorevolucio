@@ -1,6 +1,5 @@
 package base;
 
-import static base.FXMLAutorController.tipusA;
 import bbdd.CduDAO;
 import java.io.IOException;
 import java.net.URL;
@@ -23,6 +22,7 @@ import objecte.Cdu;
 public class FXMLCduController extends GenericPopUp implements Initializable {
     
     static TipusAccio tipusA;
+    static Cdu cduRebut;
     
     @FXML
     private Label lblCDU;
@@ -42,7 +42,6 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
     }    
     
     public static FXMLCduController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{        
-        
         tipusA = tipus;
         
         return crearPopUp("/fxml/FXMLCdu.fxml", FXMLCduController.class, owner, isModal, tipus);
@@ -52,43 +51,69 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
     private void crearCDU(ActionEvent event) {
         
         Cdu cdu = null;
+        int id = -1;
+        int idPare = -1;
+        String nomCDU = tfCDU.getText();
+        CduDAO cduDAO = new CduDAO();
         
-        try {
-            String nomCDU = tfCDU.getText();
-            
-            CduDAO cduDAO = new CduDAO();
-            
-            int id = cduDAO.nextId();
-            
-            cdu = new Cdu(id,1, nomCDU);                    
-            cduDAO.insert(cdu);
-            
-            cduDAO.close();
-            
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ClassNotFoundException: "+ex.getMessage());
-        } catch (SQLException ex) {
-            System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            //obraPare.actualitzarCDU();
-            if(onAcceptCallBack!= null){
-                onAcceptCallBack.accept(cdu);
-            }
-        }       
+        switch(tipusA){
+            case Crear:
+                try {
+                    id = cduDAO.nextId();
+                    cdu = new Cdu(id, idPare, nomCDU);
+                    cduDAO.insert(cdu);
+                    cduDAO.close();
+
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(cdu);
+                    }     
+                }
+                break;
+            case Modificar:
+                id = cduRebut.getId();
+                cdu = new Cdu(id, idPare, nomCDU);
+        
+                try {
+                    cduDAO.update(cdu);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(cdu);
+                    }
+                    cduDAO.close();
+                }      
+                break;
+            case Deshabilitar:
+                id = cduRebut.getId();
+                cdu = new Cdu();
+                cdu.setId(id);
+                
+                //cduDAO.delete(cdu);
+                cduDAO.close();     
+                break;
+        }
     }
 
     @Override
-    public void emplenarDades(Object obj, TipusAccio tipus) {
+    public void emplenarDades(Object obj) {
         
         Cdu cdu;
         CduDAO objCduDAO = new CduDAO();
-        cdu = (Cdu) obj;        
+        cdu = (Cdu) obj;
         
         if (cdu!=null){
             //personaRebuda = autor;
             tfCDU.setText(cdu.getNom());
             
-            switch(tipus){
+            switch(tipusA){
                 case Modificar:
                     btnCrearCDU.setText("Modificar");     
                     break;

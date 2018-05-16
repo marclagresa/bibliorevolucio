@@ -22,6 +22,7 @@ import objecte.Coleccio;
 public class FXMLColeccioController extends GenericPopUp implements Initializable {
     
     static TipusAccio tipusA;
+    static Coleccio coleccioRebuda;
    
     @FXML
     private TextField tfColeccio;
@@ -51,32 +52,58 @@ public class FXMLColeccioController extends GenericPopUp implements Initializabl
     private void crearColeccio(ActionEvent event) {
         
         Coleccio coleccio = null;
+        int id = -1;
+        String nomColeccio = tfColeccio.getText();            
+        ColeccioDAO coleccioDAO = new ColeccioDAO();
         
-        try {
-            String nomCDU = tfColeccio.getText();
-            
-            ColeccioDAO coleccioDAO = new ColeccioDAO();
-            
-            int id = coleccioDAO.nextId();
-            
-            coleccio = new Coleccio(id, nomCDU);                    
-            coleccioDAO.insert(coleccio);
-            
-            coleccioDAO.close();
-            
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ClassNotFoundException: "+ex.getMessage());
-        } catch (SQLException ex) {
-            System.out.println("SQLException: "+ex.getMessage());
-        }finally{           
-            if(onAcceptCallBack!= null){
-                onAcceptCallBack.accept(coleccio);
-            }
+        switch(tipusA){
+            case Crear:
+                try {
+                    id = coleccioDAO.nextId();
+                    coleccio = new Coleccio(id, nomColeccio);
+                    coleccioDAO.insert(coleccio);
+                    coleccioDAO.close();
+
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(coleccio);
+                    }     
+                }
+                break;
+            case Modificar:
+                id = coleccioRebuda.getId();
+                coleccio = new Coleccio(id, nomColeccio);
+        
+                try {
+                    coleccioDAO.update(coleccio);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(coleccio);
+                    }
+                    coleccioDAO.close();
+                }      
+                break;
+            case Deshabilitar:
+                id = coleccioRebuda.getId();
+                coleccio = new Coleccio();
+                coleccio.setId(id);
+                
+                //coleccioDAO.delete(coleccio);
+                coleccioDAO.close();     
+                break;
         }
     }
 
     @Override
-    public void emplenarDades(Object obj, TipusAccio tipus) {
+    public void emplenarDades(Object obj) {
         
         Coleccio coleccio;
         ColeccioDAO objColeccioDAO = new ColeccioDAO();
@@ -85,7 +112,7 @@ public class FXMLColeccioController extends GenericPopUp implements Initializabl
         if (coleccio!=null){
             tfColeccio.setText(coleccio.getNom());
             
-            switch(tipus){
+            switch(tipusA){
                 case Modificar:
                     btnCrearColeccio.setText("Modificar");     
                     break;

@@ -55,9 +55,8 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     +ContractProducte.URL_PORTADA+","+ContractProducte.ADRECA_WEB+","+ContractProducte.ESTAT+","
                     +ContractProducte.IDIOMA_ID+","+ContractProducte.EDITORIAL_ID+","
                     +ContractProducte.FORMAT_ID+","+ContractProducte.PROCEDENCIA_ID+","
-                    +ContractProducte.NIVELL_ID+","+ContractProducte.COLECCIO_ID+","+ContractProducte.CDU_ID+" , "
-                    +ContractProducte.LLOC + " "
-                    + "FROM "+ ContractProducte.NOM_TAULA;
+                    +ContractProducte.NIVELL_ID+","+ContractProducte.COLECCIO_ID+","+ContractProducte.CDU_ID+
+                    "from "+ ContractProducte.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             list.clear();
@@ -104,12 +103,12 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             if(campOrdre!=null){
                 query+=" ORDER BY ? ";
                 valors.add(campOrdre);
-            }
-            if(ascendent){
-                query+=" ASC ";
-            }
-            else{
-                query+= " DESC ";
+                if(ascendent){
+                    query+=" ASC ";
+                }
+                else{
+                    query+= " DESC ";
+                }
             }
             if(registreInicial!=null || totalRegistres!=null){
                 query += " LIMIT ";
@@ -316,11 +315,10 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     + ContractProducte.EDITORIAL_ID + ", "
                     + ContractProducte.FORMAT_ID + ", "
                     + ContractProducte.PROCEDENCIA_ID + ", "
-                //    + ContractProducte.NIVELL_ID + ", " RELACION NM
+                    + ContractProducte.NIVELL_ID + ", "
                     + ContractProducte.COLECCIO_ID + ", "
                     + ContractProducte.CDU_ID + ", "
-                    + ContractProducte.LLOC + " )"
-                    + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,producte.getId());
             ps.setString(2,producte.getISBN());
@@ -340,9 +338,8 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setInt(16,producte.getNivell().getId());
             ps.setInt(17,producte.getColeccio().getId());
             ps.setInt(18,producte.getCDU().getId());
-            ps.setString(19, producte.getLloc());
-            inserit= ps.executeUpdate() == 1;
-            
+            ps.executeUpdate();
+            inserit = true;
         } catch (SQLException ex) {
             throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
         } catch( ClassNotFoundException ex){
@@ -364,7 +361,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     +ContractProducte.URL_PORTADA+" = ?,"+ContractProducte.ADRECA_WEB+" = ?,"+ContractProducte.IDIOMA_ID+" = ?,"
                     +ContractProducte.EDITORIAL_ID+" = ?,"+ContractProducte.FORMAT_ID+" = ?,"+ContractProducte.PROCEDENCIA_ID+" = ?,"
                     +ContractProducte.NIVELL_ID+" = ?,"+ContractProducte.COLECCIO_ID+" = ?,"+ContractProducte.CDU_ID+" = ?,"
-                    +ContractProducte.ESTAT + "= ?,"+ContractProducte.LLOC+"=?  where "+ContractProducte.ID+" = ?";
+                    +ContractProducte.ESTAT + "= ?  where "+ContractProducte.ID+" = ?";
             ps = conn.prepareStatement(update);
             ps.setString(1,producte.getISBN());
             ps.setString(2,producte.getNom());
@@ -384,7 +381,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setInt(16,producte.getCDU().getId());
             ps.setBoolean(17, producte.getEstat());
             ps.setInt(18,producte.getId());
-            ps.setString(19, producte.getLloc());
+            
             actualitzat=ps.executeUpdate()==1;
         } catch (SQLException ex){
             throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
