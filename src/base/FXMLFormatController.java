@@ -107,7 +107,6 @@ public class FXMLFormatController extends GenericPopUp implements Initializable 
     public void emplenarDades(Object obj) {
         
         Format format;
-        FormatDAO objFormatDAO = new FormatDAO();
         format = (Format) obj;
         
         if (format!=null){            

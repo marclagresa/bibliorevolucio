@@ -106,7 +106,6 @@ public class FXMLAutorController extends GenericPopUp implements Initializable {
     public void emplenarDades(Object obj) {
         
         Persona autor;
-        PersonaDAO objPersonaDAO = new PersonaDAO();
         autor = (Persona) obj;        
         
         if (autor!=null){

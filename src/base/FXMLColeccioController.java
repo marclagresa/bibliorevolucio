@@ -106,7 +106,6 @@ public class FXMLColeccioController extends GenericPopUp implements Initializabl
     public void emplenarDades(Object obj) {
         
         Coleccio coleccio;
-        ColeccioDAO objColeccioDAO = new ColeccioDAO();
         coleccio = (Coleccio) obj;        
 
         if (coleccio!=null){
