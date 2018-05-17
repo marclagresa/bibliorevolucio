@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox prefHeight="550.0" prefWidth="1387.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.MenuPrincipalControlador">
+<HBox id="MenuPrincipal" prefHeight="550.0" prefWidth="1387.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.MenuPrincipalControlador">
    <children>
       <VBox alignment="CENTER" prefHeight="550.0" prefWidth="434.0">
          <children>

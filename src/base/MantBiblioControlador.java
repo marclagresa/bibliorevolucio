@@ -7,7 +7,6 @@ package base;
 
 import base.GenericControlador;
 import base.MenuPrincipalControlador;
-import base.maintenanceControladors.UsuariMaintenanceControlador;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -39,11 +38,22 @@ public class MantBiblioControlador extends GenericControlador implements Initial
     }    
 
     @FXML
-    private void obrirMantenimentUsuaris(MouseEvent event) throws IOException {
+    private void SubmenuMantenimentMes(MouseEvent event) {
+          try {
+         MantBiblioControlador2   menuPrincipal = MantBiblioControlador2.Crear();
+            pare.setFinestraCentre(menuPrincipal);
+        } 
+      catch (IOException ex) {
+            Logger.getLogger(PantallaPrincipalControlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
-        GenericMaintenanceControlador finestra = GenericMaintenanceControlador.crearFinestre( new UsuariMaintenanceControlador(), "Manteniment Usuaris" );
-        pare.setFinestraCentre( finestra );
         
+    }
+
+    @FXML
+    private void obrirMantenimentUsuaris(MouseEvent event) {
+        /* GenericMaintenanceControlador finestra = GenericMaintenanceControlador.crearFinestre( new UsuariMaintenanceControlador(), "Manteniment Usuaris" );
+         pare.setFinestraCentre( finestra );*/
     }
     
 }

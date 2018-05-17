@@ -1,11 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
@@ -14,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<BorderPane id="BordPn" fx:id="BordPn" prefHeight="720.0" prefWidth="1335.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.PantallaPrincipalControlador">
+<BorderPane id="BordPn" fx:id="BordPn" prefHeight="720.0" prefWidth="1335.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.PantallaPrincipalControlador">
    <top>
       <VBox id="VBoxTop" prefHeight="105.0" prefWidth="1335.0" BorderPane.alignment="CENTER">
          <children>
@@ -33,10 +27,10 @@
       </VBox>
    </top>
    <bottom>
-      <Button id="btEnrere" fx:id="btnEnrera" alignment="BOTTOM_LEFT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#anarEnrere" prefHeight="40.0" prefWidth="41.0" textOverrun="WORD_ELLIPSIS" BorderPane.alignment="CENTER_RIGHT">
-         <BorderPane.margin>
-            <Insets bottom="5.0" right="5.0" />
-         </BorderPane.margin>
-      </Button>
+      <HBox id="botPantallaPrincipal" alignment="BOTTOM_RIGHT" prefHeight="43.0" prefWidth="1335.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button id="btEnrere" fx:id="btnEnrera" alignment="BOTTOM_LEFT" contentDisplay="RIGHT" mnemonicParsing="false" onAction="#anarEnrere" prefHeight="40.0" prefWidth="41.0" textOverrun="WORD_ELLIPSIS" />
+         </children>
+      </HBox>
    </bottom>
 </BorderPane>
