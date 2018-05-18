@@ -4,6 +4,7 @@ import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Tooltip;
 
@@ -17,39 +18,56 @@ import javafx.scene.control.Tooltip;
 public class WidgetSearch {
         
     private final TextField _SEARCHFIELD;
-    private final CheckBox _SEARCHCB;
+    private final CheckBox _SEARCHCHECKB;
+    private final ComboBox _SEARCHCOMBOB;
     private final ChoiceBox< AttributeBrick > _CBATTRIBUTES;
     private final Object _OBJECTE = null;
 
-    public WidgetSearch( AttributeWall _wallClass, TextField _SEARCHFIELD, CheckBox _SEARCHCB, ChoiceBox<AttributeBrick> _CBATTRIBUTES ) {
-        
+    public WidgetSearch( AttributeWall _wallClass, TextField _SEARCHFIELD, CheckBox _SEARCHCHECKB, ComboBox _SEARCHCOMBOB, ChoiceBox<AttributeBrick> _CBATTRIBUTES, OnChange changeCombo ) {
+
         this._SEARCHFIELD = _SEARCHFIELD;
-        this._SEARCHCB = _SEARCHCB;
+        this._SEARCHCHECKB = _SEARCHCHECKB;
+        this._SEARCHCOMBOB = _SEARCHCOMBOB;
         this._CBATTRIBUTES = _CBATTRIBUTES;
                
-        generate( _wallClass.getAttributeWall() );
+        generate( _wallClass.getAttributeWall() , changeCombo );
 
+    }
+    
+    @FunctionalInterface
+    public interface OnChange {
+        public void change( String contractName, ComboBox combo);
     }
     
     /**
      * Load the items of choicebox and others customizations
      */
-    private void generate( List<AttributeBrick> attributes ) {
+    private void generate( List<AttributeBrick> attributes, OnChange changeCombo ) {
         
         _CBATTRIBUTES.setItems( FXCollections.observableList( attributes ) );
         _CBATTRIBUTES.setTooltip( new Tooltip( "Selecciona el camp que buscar" ));
         
-        // Change the visibilty of fields depends of selected item
-        _CBATTRIBUTES.getSelectionModel().selectedItemProperty().addListener( (observable, oldValue, newValue) -> {
-            
-            if( newValue.getFORMAT().equals( AttributeBrick.allowedFormats.Boolean )) {
-                _SEARCHCB.setVisible( true );
-                _SEARCHFIELD.setVisible( false );
-            } else {
-                _SEARCHCB.setVisible( false );
-                _SEARCHFIELD.setVisible( true );
+        // Change the visibilty of fields depends of selected item and modify combobox
+        _CBATTRIBUTES.getSelectionModel().selectedItemProperty().addListener((observable, oldBrick, newBrick) -> {
+        
+            _SEARCHFIELD.setVisible( false );
+            _SEARCHCHECKB.setVisible( false );
+            _SEARCHCOMBOB.setVisible( false );
+
+            switch ( newBrick.getFORMAT() ){
+                
+                case Boolean:
+                    _SEARCHCHECKB.setVisible( true );
+                    break;
+                case Object:
+                    changeCombo.change( newBrick.getCONTRACTNAME(), _SEARCHCOMBOB );
+                    _SEARCHCOMBOB.setVisible( true );
+                    break;
+                default:
+                    _SEARCHFIELD.setVisible( true );
+
             }
-            
+
         });
         
         _CBATTRIBUTES.getSelectionModel().selectFirst();
@@ -100,7 +118,7 @@ public class WidgetSearch {
      */
     public SearchData getSearchData() {
         
-        return new SearchData( _SEARCHFIELD.getText(), _SEARCHCB.isSelected(), _CBATTRIBUTES.getSelectionModel().getSelectedItem(), _OBJECTE);
+        return new SearchData( _SEARCHFIELD.getText(), _SEARCHCHECKB.isSelected(), _CBATTRIBUTES.getSelectionModel().getSelectedItem(), _OBJECTE);
 
     }
     
@@ -111,7 +129,7 @@ public class WidgetSearch {
     }
 
     public CheckBox getSEARCHCB() {
-        return _SEARCHCB;
+        return _SEARCHCHECKB;
     }
     
     public ChoiceBox<AttributeBrick> getCBATTRIBUTES() {

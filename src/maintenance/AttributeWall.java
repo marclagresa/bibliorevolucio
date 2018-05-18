@@ -4,6 +4,7 @@ import excepcions.MaintenanceException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
+import javafx.scene.control.ComboBox;
 
 /**
  * Super class to work with widgets maintenance
@@ -47,7 +48,16 @@ public interface AttributeWall {
      * @return 
      * @throws excepcions.MaintenanceException 
      */
-    public Integer parseObject( String contractName, Object object ) throws MaintenanceException ;
+    public Object parseObject( String contractName, Object object ) throws MaintenanceException;
+    
+    /**
+     * This method change combobox to work with selected object
+     * 
+     * @param contractName
+     * @param combo
+     * @throws excepcions.MaintenanceException
+     */
+    public void parseCombo( String contractName, ComboBox combo ) throws MaintenanceException;
     
     /**
      * This methode be need implemented with attributs of his representing class

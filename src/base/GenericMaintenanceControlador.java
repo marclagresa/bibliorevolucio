@@ -18,6 +18,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
@@ -69,6 +70,10 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     @FXML
     private TextField _searchField;
     @FXML
+    private CheckBox _searchCheckB;
+    @FXML
+    private ComboBox _searchComboB;
+    @FXML
     private ChoiceBox< AttributeBrick > _cbAttributes;
     @FXML
     private ScrollPane _spCheckers;
@@ -88,8 +93,6 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     private Button _btnDel;
     @FXML
     private Button _btnDuplicate;
-    @FXML
-    private CheckBox _searchCb;
     @FXML
     private HBox _hbPages;
     
@@ -130,7 +133,16 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     public void initialize(URL url, ResourceBundle rb) {
         
         this._WIDGETLIST = new WidgetList( this, _TITLELIST, _tvTable, _vbCheckers, _spCheckers );
-        this._WIDGETSEARCH = new WidgetSearch( this, _searchField, _searchCb, _cbAttributes );
+        this._WIDGETSEARCH = new WidgetSearch( this, _searchField, _searchCheckB, _searchComboB, _cbAttributes, ( contractName, combo ) -> {
+            
+            try {
+                parseCombo( contractName, combo );
+            } catch (MaintenanceException ex) {
+                // Set in logger: getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Add"
+                // Open a generic alert
+            }
+            
+        });
         
     }
     

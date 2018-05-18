@@ -21,7 +21,8 @@
                               <StackPane maxWidth="1.7976931348623157E308" HBox.hgrow="ALWAYS">
                                  <children>
                                     <TextField fx:id="_searchField" maxWidth="1.7976931348623157E308" />
-                                    <CheckBox fx:id="_searchCb" mnemonicParsing="false" visible="false" />
+                                    <CheckBox fx:id="_searchCheckB" mnemonicParsing="false" visible="false" />
+                                    <ComboBox fx:id="_searchComboB" prefWidth="150.0" />
                                  </children>
                               </StackPane>
                               <ChoiceBox fx:id="_cbAttributes" maxWidth="150.0" nodeOrientation="LEFT_TO_RIGHT" HBox.hgrow="ALWAYS" />

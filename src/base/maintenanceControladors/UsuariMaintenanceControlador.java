@@ -15,6 +15,7 @@ import objecte.Nivell;
 import maintenance.AttributeBrick;
 import base.GenericMaintenanceControlador;
 import excepcions.MaintenanceException;
+import javafx.scene.control.ComboBox;
 import maintenance.AttributeWall;
 
 /**
@@ -49,9 +50,9 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     }
 
     @Override
-    public Integer parseObject( String contractName, Object object ) throws MaintenanceException {
-        
-        int id = 0;
+    public Object parseObject( String contractName, Object object ) throws MaintenanceException {
+    
+        Object id = null;
         switch( contractName ) {
             case "nivell":
                 id = ((Nivell) object).getId();
@@ -65,6 +66,18 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     }
 
     @Override
+    public void parseCombo(String contractName, ComboBox combo) throws MaintenanceException {
+        
+        switch( contractName ) {
+            case "nivell":
+//                Object obj = new ClCdu( combo );                        
+                break;
+            default:
+                throw new MaintenanceException( "This object: " + contractName + " not parsed in a parseCombo" );
+        }
+    }
+    
+    @Override
     public List searchOcurrences( HashMap<String, Object> data, Integer startItem, Integer limitXPage, String attribToOrder, Boolean sortType ) throws SQLException, ClassNotFoundException, IllegalArgumentException {
 
         return new UsuariDAO().select( data, attribToOrder, limitXPage, startItem, sortType );    
@@ -74,7 +87,7 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     @Override
     public Integer getTotalItems( HashMap<String, Object> data ) throws ClassNotFoundException, SQLException {
         
-            return new UsuariDAO().selectCount( data );
+        return new UsuariDAO().selectCount( data );
         
     }
     
