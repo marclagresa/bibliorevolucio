@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+
+<HBox id="contingut1" prefHeight="554.0" prefWidth="1392.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.MantBiblioControlador2">
+   <children>
+      <GridPane prefHeight="518.0" prefWidth="1388.0">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="459.0" minWidth="10.0" prefWidth="345.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="545.0" minWidth="10.0" prefWidth="338.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="676.0" minWidth="10.0" prefWidth="359.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="350.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints maxHeight="313.0" minHeight="10.0" prefHeight="313.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="26.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="215.0" minHeight="10.0" prefHeight="215.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3">
+               <children>
+                  <ImageView id="opcioSubMenuIdioma" fitHeight="218.0" fitWidth="339.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../media/img/submenuIdioma.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="52.0" prefWidth="217.0" text="IDIOMA" />
+               </children>
+            </VBox>
+            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <ImageView id="opcioSubMenuNivells" fitHeight="221.0" fitWidth="246.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../media/img/submenuNivells.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="44.0" prefWidth="184.0" text="NIVELLS" textAlignment="CENTER" />
+               </children>
+            </VBox>
+            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+               <children>
+                  <ImageView id="opcioSubMenuProcedencia" fitHeight="225.0" fitWidth="383.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../media/img/submenuProcedencia.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="235.0" text="PROCEDÉNCIA" />
+               </children>
+            </VBox>
+            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
+               <children>
+                  <ImageView id="opcioSubMenuMaterias" fitHeight="215.0" fitWidth="370.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../media/img/submenuMaterias.png" />
+                     </image>
+                  </ImageView>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="56.0" prefWidth="223.0" text="MATERIAS" />
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+         </children>
+      </GridPane>
+   </children>
+</HBox>
