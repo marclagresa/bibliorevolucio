@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.scene.control.ComboBox;
 
 /**
  * @author Albert Corominas
@@ -70,6 +71,11 @@ public class EditorialMaintenanceControlador extends GenericMaintenanceControlad
     @Override
     public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
         return FXMLEditorialController.crear( this.getScene().getWindow(), true, tipusAccio );
+    }
+
+    @Override
+    public void parseCombo(String contractName, ComboBox combo) throws MaintenanceException {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

@@ -1,5 +1,14 @@
 package base;
 
+import base.EmplanarComboBox.ClCdu;
+import base.EmplanarComboBox.ClColeccio;
+import base.EmplanarComboBox.ClEditorial;
+import base.EmplanarComboBox.ClFormat;
+import base.EmplanarComboBox.ClIdioma;
+import base.EmplanarComboBox.ClMateria;
+import base.EmplanarComboBox.ClNivell;
+import base.EmplanarComboBox.ClPersona;
+import base.EmplanarComboBox.ClProcedencia;
 import static base.GenericPopUp.TipusAccio.Crear;
 import bbdd.CduDAO;
 import bbdd.ColeccioDAO;

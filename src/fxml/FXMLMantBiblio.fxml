@@ -27,7 +27,7 @@
          <children>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="topSubMenu">
                <children>
-                  <ImageView id="opcioSubMenuAutor" fitHeight="240.0" fitWidth="209.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuAutor" fitHeight="240.0" fitWidth="209.0" onMouseClicked="#obrirMantenimentAutor" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/MantAutor.png" />
                      </image>
@@ -37,7 +37,7 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="topSubMenu" GridPane.columnIndex="1">
                <children>
-                  <ImageView id="opcioSubMenuEditorial" fitHeight="255.0" fitWidth="254.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuEditorial" fitHeight="255.0" fitWidth="254.0" onMouseClicked="#obrirMantenimentEditorial" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/MantEditorial.png" />
                      </image>
@@ -57,7 +57,7 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="254.0" prefWidth="350.0" styleClass="topSubMenu" GridPane.columnIndex="3">
                <children>
-                  <ImageView id="opcioSubMenuProducteMant" fitHeight="238.0" fitWidth="278.0" pickOnBounds="true" smooth="false">
+                  <ImageView id="opcioSubMenuProducteMant" fitHeight="238.0" fitWidth="278.0" onMouseClicked="#obrirMantenimentProducte" pickOnBounds="true" smooth="false">
                      <image>
                         <Image url="@../media/img/MantObres.png" />
                      </image>
@@ -67,7 +67,7 @@
             </VBox>
             <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
                <children>
-                  <ImageView id="opcioSubMenuColecions" fitHeight="199.0" fitWidth="284.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuColecions" fitHeight="199.0" fitWidth="284.0" onMouseClicked="#obrirMantenimentColecions" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/submenColecions.png" />
                      </image>
@@ -77,7 +77,7 @@
             </VBox>
             <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
-                  <ImageView id="opcioMenuCdu" fitHeight="215.0" fitWidth="170.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioMenuCdu" fitHeight="215.0" fitWidth="170.0" onMouseClicked="#obrirMantenimentCdu" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/MantCDU.png" />
                      </image>
@@ -87,7 +87,7 @@
             </VBox>
             <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <children>
-                  <ImageView id="opcioSubMenuFormat" fitHeight="209.0" fitWidth="230.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuFormat" fitHeight="209.0" fitWidth="230.0" onMouseClicked="#obrirMantenimentFormat" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/submenuFormat.png" />
                      </image>

@@ -1,5 +1,6 @@
 package base;
 
+import base.EmplanarComboBox.ClNivell;
 import bbdd.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

@@ -26,7 +26,7 @@
          <children>
             <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3">
                <children>
-                  <ImageView id="opcioSubMenuIdioma" fitHeight="218.0" fitWidth="339.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuIdioma" fitHeight="218.0" fitWidth="339.0" onMouseClicked="#obrirMantenimentIdioma" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/submenuIdioma.png" />
                      </image>
@@ -36,7 +36,7 @@
             </VBox>
             <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <ImageView id="opcioSubMenuNivells" fitHeight="221.0" fitWidth="246.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuNivells" fitHeight="221.0" fitWidth="246.0" onMouseClicked="#obrirMantenimentNivells" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/submenuNivells.png" />
                      </image>
@@ -46,7 +46,7 @@
             </VBox>
             <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
                <children>
-                  <ImageView id="opcioSubMenuProcedencia" fitHeight="225.0" fitWidth="383.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuProcedencia" fitHeight="225.0" fitWidth="383.0" onMouseClicked="#obrirMantenimentProcedencia" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/submenuProcedencia.png" />
                      </image>
@@ -56,7 +56,7 @@
             </VBox>
             <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
                <children>
-                  <ImageView id="opcioSubMenuMaterias" fitHeight="215.0" fitWidth="370.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuMaterias" fitHeight="215.0" fitWidth="370.0" onMouseClicked="#obrirMantenimentMaterias" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/submenuMaterias.png" />
                      </image>
