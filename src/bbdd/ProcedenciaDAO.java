@@ -26,7 +26,28 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
         rs=null;
         ps=null;
     }
-
+    public Procedencia select(String nom) throws ClassNotFoundException,SQLException{
+        Procedencia procedenciaObj = new Procedencia();
+        String query;
+        try{
+            conn=ConnectionFactory.getInstance().getConnection();
+            query="SELECT * FROM " + ContractProcedencia.NOM_TAULA + " "
+                + "WHERE "+ContractProcedencia.NOM + " LIKE ?";
+            ps=conn.prepareStatement(query);
+            ps.setString(1, nom);
+            rs=ps.executeQuery();
+            if(rs.next()){
+                procedenciaObj=read();
+            }
+        } catch(ClassNotFoundException e){
+            throw new ClassNotFoundException(e.getMessage(),e.getCause());
+        } catch(SQLException e){
+            throw new SQLException(e.getMessage(), e.getSQLState(), e.getErrorCode(), e.getCause());
+        } finally{
+            this.close();
+        }
+        return procedenciaObj;
+    }
     @Override
     public List<Procedencia> selectAll() throws ClassNotFoundException, SQLException {
         List<Procedencia> list = new ArrayList<>();
@@ -309,7 +330,8 @@ public class ProcedenciaDAO implements IObjectDAO<Procedencia> {
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "SELECT max("+ContractProcedencia.ID+") FROM "+ContractProcedencia.NOM_TAULA;
+            sql = "SELECT max("+ContractProcedencia.ID+") FROM "+ContractProcedencia.NOM_TAULA+" "
+                + "WHERE "+ContractProcedencia.ID+" > 0";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             if(rs.next()){

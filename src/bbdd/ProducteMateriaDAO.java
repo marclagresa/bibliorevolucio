@@ -36,7 +36,7 @@ public class ProducteMateriaDAO {
             c=ConnectionFactory.getInstance().getConnection();
             query="INSERT INTO " + ContractMateriaProducte.NOM_TAULA + "( "
                 + ContractMateriaProducte.ID_PRODUCTE + " , "
-                + ContractMateriaProducte.ID_MATERIA +" ) VALUES (?.?)";
+                + ContractMateriaProducte.ID_MATERIA +" ) VALUES (?,?)";
             ps=c.prepareStatement(query);
             ps.setInt(1, idProducte);
             ps.setInt(2, idMateria);
@@ -49,6 +49,48 @@ public class ProducteMateriaDAO {
             this.close();
         }
         return inserit;
+    }
+    public void update(Producte producte){
+        
+        
+        deleteMateries(producte.getId());
+        producte.getMateries().forEach(action->{
+            try{
+                this.insert(producte.getId(), action.getId());
+            }catch(ClassNotFoundException | SQLException e){
+                System.err.println(e.getMessage());
+            }
+        });
+            
+        
+    }
+    public void deleteMateries(int idProducte){
+        String query;
+        try{
+            c=ConnectionFactory.getInstance().getConnection();
+            query="DELETE FROM "+ ContractMateriaProducte.NOM_TAULA+ " "
+                + "WHERE "+ContractMateriaProducte.ID_PRODUCTE+" = ?";
+            ps=c.prepareStatement(query);
+            ps.setInt(1, idProducte);
+            ps.executeUpdate();
+        }catch(ClassNotFoundException | SQLException e){
+            System.err.println(e.getMessage());
+        }
+    }
+    public void deleteMateria(int idProducte,int idMateria){
+        String query;
+        try{
+            c=ConnectionFactory.getInstance().getConnection();
+            query="DELETE FROM "+ ContractMateriaProducte.NOM_TAULA+ " "
+                + "WHERE "+ContractMateriaProducte.ID_PRODUCTE+" = ? "
+                + "AND "+ContractMateriaProducte.ID_MATERIA+" = ?";
+            ps=c.prepareStatement(query);
+            ps.setInt(1, idProducte);
+            ps.setInt(2, idMateria);
+            ps.executeUpdate();
+        }catch(ClassNotFoundException | SQLException e){
+            System.err.println(e.getMessage());
+        }
     }
     public Set<Materia> selectMateries(int idProducte) throws ClassNotFoundException,SQLException{
         Set<Materia> materias = new HashSet<>();

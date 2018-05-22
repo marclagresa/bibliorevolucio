@@ -1,3 +1,4 @@
+
 package base;
 
 import bbdd.CduDAO;
@@ -59,8 +60,8 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
         switch(tipusA){
             case Crear:
                 try {
-                    id = cduDAO.nextId();
-                    cdu = new Cdu(id, idPare, nomCDU);
+                  //   id = cduDAO.nextId();
+                  //  cdu = new Cdu(id, idPare, nomCDU);
                     cduDAO.insert(cdu);
                     cduDAO.close();
 
@@ -75,8 +76,8 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
                 }
                 break;
             case Modificar:
-                id = cduRebut.getId();
-                cdu = new Cdu(id, idPare, nomCDU);
+            //    id = cduRebut.getId();
+            //    cdu = new Cdu(id, idPare, nomCDU);
         
                 try {
                     cduDAO.update(cdu);
@@ -92,9 +93,9 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
                 }      
                 break;
             case Deshabilitar:
-                id = cduRebut.getId();
+           //     id = cduRebut.getId();
                 cdu = new Cdu();
-                cdu.setId(id);
+    //            cdu.setId(id);
                 
                 //cduDAO.delete(cdu);
                 cduDAO.close();     

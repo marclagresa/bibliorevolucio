@@ -8,8 +8,8 @@ import java.util.HashMap;
  */
 public abstract class ContractProcedencia {
     public static final String NOM_TAULA = "procedencia";
-    public static final String ID = "id";
-    public static final String NOM = "nom";
+    public static final String ID = NOM_TAULA+".id";
+    public static final String NOM = NOM_TAULA+".nom";
     public static HashMap<String,Integer> DEFINICIO = new HashMap<String,Integer>(){{
         put(ID, Types.INTEGER);
         put(NOM, Types.VARCHAR);

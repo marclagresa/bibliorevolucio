@@ -2,7 +2,6 @@ package bbdd;
 
 import base.ConnectionFactory;
 import contract.ContractExemplar;
-import objecte.Biblioteca;
 import objecte.Exemplar;
 
 import java.sql.*;
@@ -33,7 +32,6 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
                     +ContractExemplar.ID_PRODUCTE+","
                     +ContractExemplar.ID_BIBLIOTECA+","
                     +ContractExemplar.ESTAT+","
-                    +ContractExemplar.DATA_COMPRA
                     +" from "
                     +ContractExemplar.NOM_TAULA;
             ps = conn.prepareStatement(sql);
@@ -245,7 +243,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
                     +ContractExemplar.ID_PRODUCTE+","
                     +ContractExemplar.ID_BIBLIOTECA+","
                     +ContractExemplar.ESTAT+","
-                    +ContractExemplar.DATA_COMPRA +" from "
+                    +" from "
                     +ContractExemplar.NOM_TAULA + " where "
                     + ContractExemplar.ID + " = ? ";
             ps = conn.prepareStatement(sql);
@@ -270,13 +268,12 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         boolean inserit;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            insert = "Insert into "+ContractExemplar.NOM_TAULA+" values (?,?,?,?,?)";
+            insert = "Insert into "+ContractExemplar.NOM_TAULA+" values (?,?,?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,exemplar.getId());
             ps.setInt(2,exemplar.getProducte().getId());
             ps.setInt(3,exemplar.getBiblioteca().getId());
             ps.setBoolean(4,exemplar.getEstat());
-            ps.setString(5,exemplar.getDataCompra());
             inserit=ps.executeUpdate()==1;
         } catch (SQLException ex) {
             throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
@@ -296,8 +293,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
             update = "UPDATE "+ContractExemplar.NOM_TAULA+" SET "
                     +ContractExemplar.ID_PRODUCTE+" = ?,"
                     +ContractExemplar.ID_BIBLIOTECA+" = ?,"
-                    +ContractExemplar.ESTAT+" = ?,"
-                    +ContractExemplar.DATA_COMPRA+" = ?,"
+                    +ContractExemplar.ESTAT+" = ?"
                     +" where "
                     +ContractExemplar.ID+" = ? ";
             ps = conn.prepareStatement(update);
@@ -305,7 +301,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
             ps.setInt(2,exemplar.getProducte().getId());
             ps.setInt(3,exemplar.getBiblioteca().getId());
             ps.setBoolean(4,exemplar.getEstat());
-            ps.setString(5,exemplar.getDataCompra());
+
             actualitzat=ps.executeUpdate()==1;
         } catch (SQLException ex){
             throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
@@ -371,7 +367,6 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
         objExemplar.setIdProducte(new ProducteDAO().select(rs.getInt(ContractExemplar.ID_PRODUCTE)));
         objExemplar.setIdBiblioteca(new BibliotecaDAO().select(rs.getInt(ContractExemplar.ID_BIBLIOTECA)));
         objExemplar.setEstat(rs.getBoolean(ContractExemplar.ESTAT));
-        objExemplar.setDataCompra(rs.getString(ContractExemplar.DATA_COMPRA));
         return objExemplar;
     }
 

@@ -10,7 +10,7 @@ public class Coleccio {
     //Constructor Buit
 
     public Coleccio(){
-        this.id = new SimpleIntegerProperty();
+        this.id = new SimpleIntegerProperty(-1);
         this.nom = new SimpleStringProperty("");
     }
 

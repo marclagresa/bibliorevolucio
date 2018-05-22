@@ -10,7 +10,7 @@ public class Persona {
     //Constructor Buit
 
     public Persona(){
-        this.id = new SimpleIntegerProperty();
+        this.id = new SimpleIntegerProperty(-1);
         this.nom = new SimpleStringProperty("");
     }
 

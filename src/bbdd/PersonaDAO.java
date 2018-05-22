@@ -3,15 +3,12 @@ package bbdd;
 import base.ConnectionFactory;
 import contract.ContractPersona;
 import objecte.Persona;
-
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +23,28 @@ public class PersonaDAO implements IObjectDAO<Persona> {
         rs=null;
         ps=null;
     }
-
+    public Persona select(String nom)throws ClassNotFoundException,SQLException{
+        Persona personaObj=new Persona();
+        String sql;
+        try{
+            conn=ConnectionFactory.getInstance().getConnection();
+            sql = "SELECT * FROM " +ContractPersona.NOM_TAULA + " "
+                + "WHERE " +ContractPersona.NOM+ " LIKE ?";
+            ps=conn.prepareStatement(sql);
+            ps.setString(1, nom);
+            rs=ps.executeQuery();
+            if(rs.next()){
+                personaObj=this.read();
+            }
+        } catch (ClassNotFoundException e){
+            throw new ClassNotFoundException(e.getMessage(),e.getCause());
+        } catch(SQLException e){
+            throw new SQLException(e.getMessage(),e.getSQLState(),e.getErrorCode(),e.getCause());
+        } finally{
+            this.close();
+        }
+        return personaObj;
+    }
     @Override
     public List<Persona> selectAll() throws ClassNotFoundException, SQLException {
         List<Persona> list = new ArrayList<>();

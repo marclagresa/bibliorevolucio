@@ -10,7 +10,7 @@ public class Procedencia {
     //Constructor Buit
 
     public Procedencia(){
-        this.id = new SimpleIntegerProperty();
+        this.id = new SimpleIntegerProperty(-1);
         this.nom = new SimpleStringProperty("");
     }
 

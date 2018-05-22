@@ -19,7 +19,31 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
         rs = null;
         ps = null;
     }
-
+    public Coleccio select(String nom) throws ClassNotFoundException,SQLException{
+        Coleccio colObj=new Coleccio();
+        String sql;
+        try {
+            conn = ConnectionFactory.getInstance().getConnection();
+            sql = "Select * from "
+                    +ContractColeccio.NOM_TAULA+ " "
+                + "WHERE "+ContractColeccio.NOM+ " LIKE ?";
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, nom);
+            rs = ps.executeQuery();
+            
+            if(rs.next()){
+                colObj.setId(rs.getInt(ContractColeccio.ID));
+                colObj.setNom(rs.getString(ContractColeccio.NOM));
+            }
+        } catch (SQLException ex){
+            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
+        } finally {
+            this.close();
+        }
+        return colObj;
+    }
     @Override
     public List<Coleccio> selectAll() throws ClassNotFoundException, SQLException {
         List<Coleccio> list = new ArrayList<>();
@@ -304,7 +328,8 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "SELECT max("+ContractColeccio.ID+") FROM "+ContractColeccio.NOM_TAULA;
+            sql = "SELECT max("+ContractColeccio.ID+") FROM "+ContractColeccio.NOM_TAULA+" "
+                + "WHERE " + ContractColeccio.ID + " > 0";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             if(rs.next()){
