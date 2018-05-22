@@ -245,7 +245,7 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
                     +ContractExemplar.ESTAT+","
                     +" from "
                     +ContractExemplar.NOM_TAULA + " where "
-                    + ContractExemplar.ID + " = ? ";
+                    +ContractExemplar.ID + " = ? ";
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs = ps.executeQuery();

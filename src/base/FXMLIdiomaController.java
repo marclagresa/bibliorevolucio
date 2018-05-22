@@ -36,7 +36,7 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
         
         tipusA = tipus;
         
-        return crearPopUp("FXMLIdioma.fxml", FXMLIdiomaController.class, owner, isModal, tipus);
+        return crearPopUp("/fxml/FXMLIdioma.fxml", FXMLIdiomaController.class, owner, isModal, tipus);
     }
 
     @FXML

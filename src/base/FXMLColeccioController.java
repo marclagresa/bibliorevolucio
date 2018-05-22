@@ -45,7 +45,7 @@ public class FXMLColeccioController extends GenericPopUp implements Initializabl
         
         tipusA = tipus;
         
-        return crearPopUp("FXMLColeccio.fxml", FXMLColeccioController.class, owner, isModal, tipus);
+        return crearPopUp("/fxml/FXMLColeccio.fxml", FXMLColeccioController.class, owner, isModal, tipus);
     }
 
     @FXML

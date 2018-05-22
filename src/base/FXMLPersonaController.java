@@ -45,7 +45,7 @@ public class FXMLPersonaController extends GenericPopUp implements Initializable
         
         tipusA = tipus;
         
-        return crearPopUp("FXMLPersona.fxml", FXMLPersonaController.class, owner, isModal, tipus);
+        return crearPopUp("/fxml/FXMLPersona.fxml", FXMLPersonaController.class, owner, isModal, tipus);
     }
 
     @FXML

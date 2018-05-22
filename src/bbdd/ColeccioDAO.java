@@ -199,7 +199,6 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
             i=0;
             valors=new Object[dades.size()];
             for(String camp:dades.keySet()){
-                valors=new Object[dades.size()];
                 switch(ContractColeccio.DEFINICIO.get(camp)){
                     case Types.INTEGER:
                         dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
