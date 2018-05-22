@@ -36,9 +36,9 @@ public class CduMaintenanceControlador extends GenericMaintenanceControlador imp
     public List<AttributeBrick> getAttributeWall() {
 
         List<AttributeBrick> attributeWall = Arrays.asList(
-            new AttributeBrick( "id", "ID", true, ContractCdu.ID, AttributeBrick.allowedFormats.Integer ),
+            new AttributeBrick( "id", "ID", true, ContractCdu.ID, AttributeBrick.allowedFormats.String ),
             new AttributeBrick( "nom", "Nom", true, ContractCdu.NOM, AttributeBrick.allowedFormats.String ),
-            new AttributeBrick( "idPare", "IDPare", true, ContractCdu.IDPARE, AttributeBrick.allowedFormats.Integer )
+            new AttributeBrick( "idPare", "IDPare", true, ContractCdu.IDPARE, AttributeBrick.allowedFormats.String )
         );
         
         return attributeWall;

@@ -20,6 +20,7 @@ public class AttributeBrick {
         String,
         Integer,
         Date,
+        List,
         Object;
 
     }
