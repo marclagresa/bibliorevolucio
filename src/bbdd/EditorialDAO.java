@@ -316,7 +316,7 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
         try{
             c=ConnectionFactory.getInstance().getConnection();
             query= "SELECT * FROM "+ContractEditorial.NOM_TAULA 
-                 + "WHERE " + ContractEditorial.ID + " = ?";
+                 + " WHERE " + ContractEditorial.ID + " = ?";
             pst=c.prepareStatement(query);
             pst.setInt(1, id);
             rs=pst.executeQuery();
