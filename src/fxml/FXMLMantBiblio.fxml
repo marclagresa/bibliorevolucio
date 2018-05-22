@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -13,9 +9,9 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox id="contingut1" prefHeight="554.0" prefWidth="1392.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.MantBiblioControlador">
+<HBox id="contingut1" prefHeight="554.0" prefWidth="1392.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.MantBiblioControlador">
    <children>
-      <GridPane prefHeight="554.0" prefWidth="1400.0">
+      <GridPane prefHeight="554.0" prefWidth="1400.0" styleClass="gridPaneMant">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="459.0" minWidth="10.0" prefWidth="345.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="545.0" minWidth="10.0" prefWidth="338.0" />
@@ -23,14 +19,15 @@
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="350.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="243.0" minHeight="10.0" prefHeight="243.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="180.0" minHeight="10.0" prefHeight="155.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="164.0" minHeight="10.0" prefHeight="156.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="322.0" minHeight="10.0" prefHeight="290.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="285.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="291.0" minHeight="10.0" prefHeight="269.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="264.0" minHeight="10.0" prefHeight="44.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="topSubMenu">
                <children>
-                  <ImageView id="opcioSubMenuAutor" fitHeight="212.0" fitWidth="165.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuAutor" fitHeight="240.0" fitWidth="209.0" onMouseClicked="#obrirMantenimentAutor" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/MantAutor.png" />
                      </image>
@@ -38,9 +35,9 @@
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="49.0" prefWidth="226.0" text="AUTOR" textAlignment="CENTER" />
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="topSubMenu" GridPane.columnIndex="1">
                <children>
-                  <ImageView id="opcioSubMenuEditorial" fitHeight="214.0" fitWidth="217.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuEditorial" fitHeight="255.0" fitWidth="254.0" onMouseClicked="#obrirMantenimentEditorial" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/MantEditorial.png" />
                      </image>
@@ -48,9 +45,9 @@
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="25.0" prefWidth="149.0" text="EDITORIAL" textAlignment="CENTER" />
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="topSubMenu" GridPane.columnIndex="2">
                <children>
-                  <ImageView id="opcioSubMenuUsuari" fitHeight="214.0" fitWidth="240.0" onMouseClicked="#obrirMantenimentUsuaris" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuUsuari" fitHeight="252.0" fitWidth="305.0" onMouseClicked="#obrirMantenimentUsuaris" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/BiblioUsuari.png" />
                      </image>
@@ -58,9 +55,9 @@
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="184.0" text="USUARIS" textAlignment="CENTER" />
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="254.0" prefWidth="350.0" GridPane.columnIndex="3">
+            <VBox alignment="CENTER" prefHeight="254.0" prefWidth="350.0" styleClass="topSubMenu" GridPane.columnIndex="3">
                <children>
-                  <ImageView id="opcioSubMenuProducteMant" fitHeight="215.0" fitWidth="207.0" pickOnBounds="true" smooth="false">
+                  <ImageView id="opcioSubMenuProducteMant" fitHeight="238.0" fitWidth="278.0" onMouseClicked="#obrirMantenimentProducte" pickOnBounds="true" smooth="false">
                      <image>
                         <Image url="@../media/img/MantObres.png" />
                      </image>
@@ -68,19 +65,19 @@
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="31.0" prefWidth="157.0" text="PRODUCTE" textAlignment="CENTER" />
                </children>
             </VBox>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
                <children>
-                  <ImageView id="opcioSubMenuColecions" fitHeight="120.0" fitWidth="176.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuColecions" fitHeight="199.0" fitWidth="284.0" onMouseClicked="#obrirMantenimentColecions" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/submenColecions.png" />
                      </image>
                   </ImageView>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="26.0" prefWidth="190.0" text="COL·LECIONS" textAlignment="CENTER" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="26.0" prefWidth="190.0" text="COL·LECCIONS" textAlignment="CENTER" />
                </children>
             </VBox>
-            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
                <children>
-                  <ImageView id="opcioMenuCdu" fitHeight="132.0" fitWidth="175.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioMenuCdu" fitHeight="215.0" fitWidth="170.0" onMouseClicked="#obrirMantenimentCdu" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/MantCDU.png" />
                      </image>
@@ -88,9 +85,9 @@
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="23.0" prefWidth="113.0" text="CDU" textAlignment="CENTER" />
                </children>
             </VBox>
-            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="1">
+            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
                <children>
-                  <ImageView id="opcioSubMenuFormat" fitHeight="122.0" fitWidth="184.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuFormat" fitHeight="209.0" fitWidth="230.0" onMouseClicked="#obrirMantenimentFormat" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../media/img/submenuFormat.png" />
                      </image>
@@ -98,47 +95,14 @@
                   <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="23.0" prefWidth="126.0" text="FORMAT" textAlignment="CENTER" />
                </children>
             </VBox>
-            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="2">
                <children>
-                  <ImageView id="opcioSubMenuIdioma" fitHeight="128.0" fitWidth="138.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView id="opcioSubMenuMes" fitHeight="98.0" fitWidth="104.0" onMouseClicked="#SubmenuMantenimentMes" pickOnBounds="true" preserveRatio="true">
                      <image>
-                        <Image url="@../media/img/submenuIdioma.png" />
+                        <Image url="@../media/img/MantMes.png" />
                      </image>
                   </ImageView>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="23.0" prefWidth="125.0" text="IDIOMA" />
-               </children>
-            </VBox>
-            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="2">
-               <children>
-                  <ImageView id="opcioSubMenuNivells" fitHeight="128.0" fitWidth="137.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../media/img/submenuNivells.png" />
-                     </image>
-                  </ImageView>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="21.0" prefWidth="105.0" text="NIVELLS" textAlignment="CENTER" />
-               </children>
-            </VBox>
-            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-               <children>
-                  <ImageView id="opcioSubMenuProcedencia" fitHeight="137.0" fitWidth="170.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../media/img/submenuProcedencia.png" />
-                     </image>
-                  </ImageView>
-                  <Label prefHeight="23.0" prefWidth="99.0" text="PROCEDENCIA" />
-               </children>
-            </VBox>
-            <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2" GridPane.rowIndex="2">
-               <children>
-                  <ImageView id="opcioSubMenuMaterias" fitHeight="128.0" fitWidth="127.0" pickOnBounds="true" preserveRatio="true">
-                     <image>
-                        <Image url="@../media/img/submenuMaterias.png" />
-                     </image>
-                  </ImageView>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="28.0" prefWidth="127.0" text="MATERIAS" />
-               </children>
-            </VBox>
-            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+               </children></VBox>
          </children>
       </GridPane>
    </children>

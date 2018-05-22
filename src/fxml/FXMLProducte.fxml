@@ -142,7 +142,7 @@
                            </HBox.margin>
                         </Label>
                         <ComboBox id="cbAutor" fx:id="cbPersona" editable="true" prefWidth="150.0" />
-                        <Button fx:id="btnNouAutor" mnemonicParsing="false" onAction="#crearAutor" prefHeight="12.0" prefWidth="21.0" text="+">
+                        <Button fx:id="btnNouAutor" mnemonicParsing="false" onAction="#crearPersona" prefHeight="12.0" prefWidth="21.0" text="+">
                            <font>
                               <Font size="10.0" />
                            </font>

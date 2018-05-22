@@ -111,7 +111,6 @@ public class FXMLNivellController extends GenericPopUp implements Initializable 
     public void emplenarDades(Object obj) {
         
         Nivell nivell;
-        NivellDAO objNivellDAO = new NivellDAO();
         nivell = (Nivell) obj;
         
         if (nivell!=null){            

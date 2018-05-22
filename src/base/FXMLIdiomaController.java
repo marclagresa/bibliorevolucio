@@ -111,7 +111,6 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
     public void emplenarDades(Object obj) {
         
         Idioma idioma;
-        IdiomaDAO objIdiomaDAO = new IdiomaDAO();
         idioma = (Idioma) obj;
         
         if (idioma!=null){            

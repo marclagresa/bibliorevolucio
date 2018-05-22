@@ -2,22 +2,37 @@
 /*-fx-background-image: url("img2.png");*/
 -fx-font-family: /*"Lucida Fax"*/'Lucida Fax';
 }
+#BordPn{/*BorderPanePrincipal!!*/
+     -fx-ba1ckground-color: #eeeeee; 
+}
+#MenuPrincipal{
+     -fx-background-image: url('../img/FondoSubmenu1.png');
+     -fx-background-repeat: no-repeat;
+     -fx-background-size: cover, auto;
+}
 .label {
  -fx-font-size: 25px;
- -fx-text-fill: #FF4619;
+ -fx-text-fill: #000000;
 }
 #contingut1{
     -fx-alignment: CENTER;
+    -fx-background-image: url('../img/FondoSubmenu.png');
+   
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: cover, auto;   
 }
+
 #contingut2{
     -fx-alignment: CENTER;
 }
-#separador{
- /* -fx-background-color: #464646;  */
-}
+/*#botPantallaPrincipal{
+  -fx-background-color: #e3e3e3; 
+  
+}*/
 #lbCapcelera{
      -fx-font-size: 720%;
      -fx-alignment: CENTER;
+     -fx-text-fill: #FF4619;
      -fx-font-family: /*"sans-serif"*/'Lucida Fax';
 }
 #btEnrere{
@@ -35,6 +50,7 @@
     
 
 }
+
 #btEnrere:hover{
      -fx-border-radius: 5px;
     
@@ -61,11 +77,11 @@
 
 #bt1Login{-fx-font-size:15px;  -fx-font-weight:bold;  -fx-border-radius:5px;  -fx-border-color:#FF4619;}
 #bt2Login{-fx-font-size:15px;  -fx-font-weight:bold;  -fx-border-radius:5px;  -fx-border-color:#FF4619;}
-#bt1Login:hover{-fx-font-weight:bold;  -fx-background-image:  url('../img/fondoProva2.png');}
-#bt2Login:hover{-fx-font-weight:bold;  -fx-background-image:  url('../img/fondoProva2.png');}
+#bt1Login:hover{-fx-font-weight:bold;  -fx-text-fill:#f3f3f3; -fx-background-color: #464646;}
+#bt2Login:hover{-fx-font-weight:bold;   -fx-text-fill:#f3f3f3; -fx-background-color: #464646;}
 #VBoxLogin{
    -fx-font-size: 25px;
- -fx-text-fill: #464646; 
+    -fx-text-fill: #464646; 
 }
 /*Acava el login*/
 
@@ -77,6 +93,13 @@
 #opcioMenuPrestecs{      -fx-image: url('../img/BiblioPrestecs.png');  }
 #opcioMenuPrestecs:hover{-fx-image: url('../img/BiblioPrestecs2.png');  }
 /*-----------------------------------Submenu---------------------------------------*/
+
+.topSubMenu{
+   /* -fx-background-color: #D0D3D4;*/
+}
+.gridPaneMant{
+    -fx-text-fill: #000000;
+}
 
 #opcioSubMenuAutor{               -fx-image: url('../img/MantAutor.png'); }
 #opcioSubMenuAutor:hover{         -fx-image: url('../img/MantAutor2.png'); }
@@ -100,6 +123,8 @@
 #opcioSubMenuProcedencia:hover{    -fx-image: url('../img/submenuProcedencia2.png');}
 #opcioSubMenuMaterias{             -fx-image: url('../img/submenuMaterias.png');}
 #opcioSubMenuMaterias:hover{       -fx-image: url('../img/submenuMaterias2.png');}
+#opcioSubMenuMes{                  -fx-image: url('../img/MantMes.png');}
+#opcioSubMenuMes:hover{             -fx-image: url('../img/MantMes2.png');}
 
 
 /*-------------------------Menu Principal Usuari-------------------------------------*/
@@ -135,12 +160,4 @@
      -fx-font-weight: bold;
      -fx-text-fill: #D3E1FF;
      /*-fx-background-color: #AFC8FF;*/
-}
-
-
-#spManteniment{
-    	-fx-background-radius: 5;
-    	-fx-border-color: #2e8b57;
-    	-fx-border-width: 2px;
-	-fx-border-radius: 5;
 }

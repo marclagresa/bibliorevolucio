@@ -103,8 +103,8 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
 
             }
             ps=conn.prepareStatement(query);
-            for(Object valor:valors){
-                ps.setObject(valors.indexOf(valor)+1, valor);
+            for(i=0;i<valors.size();i++){
+                ps.setObject(i+1, valors.get(i));
             }
             rs=ps.executeQuery();
             while(rs.next()){
@@ -216,8 +216,8 @@ public class ExemplarDAO implements IObjectDAO<Exemplar> {
 
             }
             ps=conn.prepareStatement(query);
-            for(Object valor:valors){
-                ps.setObject(valors.indexOf(valor)+1, valor);
+            for(i=0;i<valors.size();i++){
+                ps.setObject(i+1, valors.get(i));
             }
             rs=ps.executeQuery();
             if(rs.next()){

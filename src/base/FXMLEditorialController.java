@@ -107,7 +107,6 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
     public void emplenarDades(Object obj) {
         
         Editorial editorial;
-        EditorialDAO objEditorialDAO = new EditorialDAO();
         editorial = (Editorial) obj;
         
         if (editorial!=null){            

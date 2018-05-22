@@ -181,8 +181,8 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
                 
             }
             pst=c.prepareStatement(query);
-            for(Object valor:valors){
-                pst.setObject(valors.indexOf(valor)+1, valor);
+            for(i=0;i<valors.size();i++){
+                pst.setObject(i+1, valors.get(i));
             }
             rs=pst.executeQuery();
             if(rs.next()){
@@ -253,8 +253,8 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
                 
             }
             pst=c.prepareStatement(query);
-            for(Object valor:valors){
-                pst.setObject(valors.indexOf(valor)+1, valor);
+            for(i=0;i<valors.size();i++){
+                pst.setObject(i+1, valors.get(i));
             }
             rs=pst.executeQuery();
             while(rs.next()){

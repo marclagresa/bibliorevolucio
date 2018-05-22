@@ -5,13 +5,20 @@
  */
 package base;
 
+import base.GenericControlador;
+import base.MantBiblioControlador;
+import base.PantallaPrincipalControlador;
+import base.maintenanceControladors.ProducteMaintenanceControlador;
+import base.maintenanceControladors.UsuariMaintenanceControlador;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.input.MouseEvent;
 
 /** * FXML Controller class
@@ -46,15 +53,29 @@ public class MenuPrincipalControlador extends GenericControlador implements Init
     }
 
     @FXML
-    private void ClicMantBiblioteca(MouseEvent event) {
+    private void ClicMantBiblioteca(MouseEvent event) throws IOException {
+    
+        
     }
 
-    @FXML
-    private void SubmenuUsuaris(MouseEvent event) {
-    }
 
     @FXML
     private void SubmenuPrestecs(MouseEvent event) {
+         
+        
+           
+    }
+
+    @FXML
+    private void SubmenuProductes(MouseEvent event) {
+         GenericMaintenanceControlador finestra;
+        try {
+            finestra = GenericMaintenanceControlador.crearFinestre( new ProducteMaintenanceControlador(), "Productes!" );
+             pare.setFinestraCentre( finestra );
+        } catch (IOException ex) {
+            Logger.getLogger(MenuPrincipalControlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
     }
     
 }

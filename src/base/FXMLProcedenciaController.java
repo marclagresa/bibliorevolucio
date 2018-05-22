@@ -89,7 +89,6 @@ public class FXMLProcedenciaController extends GenericPopUp implements Initializ
     public void emplenarDades(Object obj) {
         
         Procedencia procedencia;
-        ProcedenciaDAO objProcedenciaDAO = new ProcedenciaDAO();
         procedencia = (Procedencia) obj;
         
         if (procedencia!=null){            

@@ -49,6 +49,11 @@ public class Autoria {
     public SimpleObjectProperty<Persona> personaProperty() { return persona; }
     public SimpleStringProperty descripcioProperty() { return descripcio; }
 
+    //To String
 
+    @Override
+    public String toString(){
+        return this.getDescripcio();
+    }
 }
 

@@ -1,5 +1,14 @@
 package base;
 
+import base.EmplanarComboBox.ClCdu;
+import base.EmplanarComboBox.ClColeccio;
+import base.EmplanarComboBox.ClEditorial;
+import base.EmplanarComboBox.ClFormat;
+import base.EmplanarComboBox.ClIdioma;
+import base.EmplanarComboBox.ClMateria;
+import base.EmplanarComboBox.ClNivell;
+import base.EmplanarComboBox.ClPersona;
+import base.EmplanarComboBox.ClProcedencia;
 import static base.GenericPopUp.TipusAccio.Crear;
 import bbdd.CduDAO;
 import bbdd.ColeccioDAO;
@@ -47,7 +56,7 @@ import objecte.Procedencia;
  *
  * @author AdriaLlop
  */
-public class FXMLObraController extends GenericPopUp implements Initializable  {   
+public class FXMLProducteController extends GenericPopUp implements Initializable  {   
     
     EditorialDAO objEditorialDAO;
     FormatDAO objFormatDAO;
@@ -124,11 +133,11 @@ public class FXMLObraController extends GenericPopUp implements Initializable  {
     @FXML
     private TextArea taCaract;
     
-    public static FXMLObraController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{
+    public static FXMLProducteController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{
 
         tipusA = tipus;
         
-        return crearPopUp("FXMLObra.fxml", FXMLObraController.class, owner, isModal, tipus);
+        return crearPopUp("FXMLProducte.fxml", FXMLProducteController.class, owner, isModal, tipus);
     }    
     
     @FXML
@@ -579,18 +588,18 @@ public class FXMLObraController extends GenericPopUp implements Initializable  {
     }
 
     @FXML
-    private void crearAutor() throws IOException {
+    private void crearPersona() throws IOException {
         
-        FXMLAutorController c = FXMLAutorController.crear(this, true, Crear);
+        FXMLPersonaController c = FXMLPersonaController.crear(this, true, Crear);
         
         c.onAccept( (Object o)->{
-            actualitzarAutor();
+            actualitzarPersona();
         });
         
         c.show();
     }
     
-    public void actualitzarAutor(){        
+    public void actualitzarPersona(){        
         
         try {
             objPersonaDAO = new PersonaDAO();   

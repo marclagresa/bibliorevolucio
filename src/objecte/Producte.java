@@ -90,6 +90,7 @@ public class Producte {
     //Getters
     public Set <Persona> getAutors(){return this.autors.get();}
     public Set <Materia> getMateries(){return this.materias.get();}
+
     public String getLloc(){return this.lloc.get();}
     public int getId() { return id.get(); }
     public String getISBN() { return ISBN.get(); }
@@ -110,6 +111,7 @@ public class Producte {
     public Coleccio getColeccio() { return coleccio.get(); }
     public String getCdu() { return cdu.get(); }
     public Set<Exemplar> getExemplars(){return this.exemplars.get();}
+
     
     //Setters
     public void setAutors(Set<Persona>autors){this.autors.set(autors);}
@@ -134,6 +136,7 @@ public class Producte {
     public void setColeccio(Coleccio coleccio) { this.coleccio.set(coleccio); }
     public void setCdu(String cdu) { this.cdu.set(cdu); }
     public void setExemplars(Set <Exemplar> exemplars){this.exemplars.set(exemplars);}
+
     
     //Properties
     public SimpleObjectProperty<Set<Persona>>autorsProperty(){return this.autors;}
@@ -158,4 +161,12 @@ public class Producte {
     public SimpleObjectProperty<Coleccio> coleccioProperty() { return coleccio; }
     public SimpleStringProperty cduProperty() { return cdu; }
     public SimpleObjectProperty<Set<Exemplar>>exemplarsProperty(){return this.exemplars;}
+
+    //To String
+
+    @Override
+    public String toString(){
+        return this.getNom();
+    }
+
 }

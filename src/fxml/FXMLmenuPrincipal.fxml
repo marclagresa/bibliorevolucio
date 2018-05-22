@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox prefHeight="550.0" prefWidth="1387.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.MenuPrincipalControlador">
+<HBox id="MenuPrincipal" prefHeight="550.0" prefWidth="1387.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.MenuPrincipalControlador">
    <children>
       <VBox alignment="CENTER" prefHeight="550.0" prefWidth="434.0">
          <children>
@@ -29,7 +29,7 @@
       </Separator>
       <VBox alignment="CENTER" prefHeight="550.0" prefWidth="417.0">
          <children>
-            <ImageView id="opcioMenuProducte" fitHeight="441.0" fitWidth="312.0" onMouseClicked="#SubmenuUsuaris" pickOnBounds="true" preserveRatio="true" />
+            <ImageView id="opcioMenuProducte" fitHeight="441.0" fitWidth="312.0" onMouseClicked="#SubmenuProductes" pickOnBounds="true" preserveRatio="true" />
             <Label alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="37.0" prefWidth="458.0" text="PRODUCTES" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" />
          </children>
       </VBox>

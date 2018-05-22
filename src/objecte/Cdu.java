@@ -40,4 +40,11 @@ public class Cdu {
     public SimpleStringProperty idProperty() { return id; }
     public SimpleStringProperty idPareProperty() { return idPare; }
     public SimpleStringProperty nomProperty() { return nom; }
+
+    //To String
+
+    @Override
+    public String toString(){
+        return this.getNom();
+    }
 }
