@@ -42,7 +42,7 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
         
         tipusA = tipus;
         
-        return crearPopUp("FXMLEditorial.fxml", FXMLEditorialController.class, owner, isModal, tipus);
+        return crearPopUp("/fxml/FXMLEditorial.fxml", FXMLEditorialController.class, owner, isModal, tipus);
     }
 
     @FXML

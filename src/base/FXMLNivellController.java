@@ -36,7 +36,7 @@ public class FXMLNivellController extends GenericPopUp implements Initializable 
         
         tipusA = tipus;
         
-        return crearPopUp("FXMLNivell.fxml", FXMLNivellController.class, owner, isModal, tipus);
+        return crearPopUp("/fxml/FXMLNivell.fxml", FXMLNivellController.class, owner, isModal, tipus);
     }
     
     @FXML

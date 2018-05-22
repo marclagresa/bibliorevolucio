@@ -42,7 +42,7 @@ public class FXMLFormatController extends GenericPopUp implements Initializable 
         
         tipusA = tipus;
         
-        return crearPopUp("FXMLFormat.fxml", FXMLFormatController.class, owner, isModal, tipus);
+        return crearPopUp("/fxml/FXMLFormat.fxml", FXMLFormatController.class, owner, isModal, tipus);
     }
 
     @FXML

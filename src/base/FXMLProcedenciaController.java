@@ -45,7 +45,7 @@ public class FXMLProcedenciaController extends GenericPopUp implements Initializ
         
         tipusA = tipus;
         
-        return crearPopUp("FXMLProcedencia.fxml", FXMLProcedenciaController.class, owner, isModal, tipus);
+        return crearPopUp("/fxml/FXMLProcedencia.fxml", FXMLProcedenciaController.class, owner, isModal, tipus);
     } 
     
     @Override
