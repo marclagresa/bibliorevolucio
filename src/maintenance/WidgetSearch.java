@@ -36,7 +36,7 @@ public class WidgetSearch {
     
     @FunctionalInterface
     public interface OnChange {
-        public void change( String contractName, ComboBox combo);
+        public void change( String name, ComboBox combo);
     }
     
     /**
@@ -60,7 +60,7 @@ public class WidgetSearch {
                     _SEARCHCHECKB.setVisible( true );
                     break;
                 case Object:
-                    changeCombo.change( newBrick.getCONTRACTNAME(), _SEARCHCOMBOB );
+                    changeCombo.change( newBrick.getNAME(), _SEARCHCOMBOB );
                     _SEARCHCOMBOB.setVisible( true );
                     break;
                 default:
@@ -84,7 +84,7 @@ public class WidgetSearch {
         Object object;
         AttributeBrick brick;
 
-        public SearchData( String fieldText, Boolean cbOption, AttributeBrick brick, Object object) {
+        public SearchData( String fieldText, Boolean cbOption, AttributeBrick brick, Object object ) {
             
             this.fieldText = fieldText;
             this.cbOption = cbOption;
@@ -118,7 +118,15 @@ public class WidgetSearch {
      */
     public SearchData getSearchData() {
         
-        return new SearchData( _SEARCHFIELD.getText(), _SEARCHCHECKB.isSelected(), _CBATTRIBUTES.getSelectionModel().getSelectedItem(), _OBJECTE);
+        Object obj = null;
+        if(_SEARCHCOMBOB.getSelectionModel().getSelectedIndex() != -1 ) {
+            obj = _SEARCHCOMBOB.getItems().get( _SEARCHCOMBOB.getSelectionModel().getSelectedIndex() );
+        }
+        
+        return new SearchData(  _SEARCHFIELD.getText(), 
+                                _SEARCHCHECKB.isSelected(),  
+                                _CBATTRIBUTES.getSelectionModel().getSelectedItem(),
+                                obj );
 
     }
     

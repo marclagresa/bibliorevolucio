@@ -133,10 +133,10 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     public void initialize(URL url, ResourceBundle rb) {
         
         this._WIDGETLIST = new WidgetList( this, _TITLELIST, _tvTable, _vbCheckers, _spCheckers );
-        this._WIDGETSEARCH = new WidgetSearch( this, _searchField, _searchCheckB, _searchComboB, _cbAttributes, ( contractName, combo ) -> {
+        this._WIDGETSEARCH = new WidgetSearch( this, _searchField, _searchCheckB, _searchComboB, _cbAttributes, ( name, combo ) -> {
             
             try {
-                parseCombo( contractName, combo );
+                parseCombo( name, combo );
             } catch (MaintenanceException ex) {
                 // Set in logger: getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Add"
                 // Open a generic alert
@@ -254,7 +254,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     }
     
     @FXML   // Its called when button is pressed, that gets the data to parse into HashMap to do the search
-    private void searchAction( ActionEvent event ) {
+    private void searchAction(ActionEvent event) {
 
         SearchData sd = _WIDGETSEARCH.getSearchData();
         
@@ -268,7 +268,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
                     data.put( contractName, sd.getCbOption() );
                     break;
                 case Object:
-                    data.put( contractName, parseObject( contractName, sd.getObject() ) );
+                    data.put( contractName, parseObject( sd.getBrick().getNAME(), sd.getObject() ) );
                     break;
                 case Integer:
                     data.put( contractName, Integer.valueOf( sd.getFieldText() ) );
@@ -292,7 +292,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     }
     
     @FXML   // Create new window and open it
-    private void advSearchAction(ActionEvent event) {
+    private void advSearchAction(MouseEvent event) {
         
         try {
                

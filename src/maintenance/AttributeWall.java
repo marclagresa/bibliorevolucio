@@ -43,21 +43,21 @@ public interface AttributeWall {
     /**
      * This method need read the contractName and return id of the object
      * 
-     * @param contractName
+     * @param name
      * @param object
      * @return 
      * @throws excepcions.MaintenanceException 
      */
-    public Object parseObject( String contractName, Object object ) throws MaintenanceException;
+    public Object parseObject( String name, Object object ) throws MaintenanceException,  IllegalArgumentException;
     
     /**
      * This method change combobox to work with selected object
      * 
-     * @param contractName
+     * @param name
      * @param combo
      * @throws excepcions.MaintenanceException
      */
-    public void parseCombo( String contractName, ComboBox combo ) throws MaintenanceException;
+    public void parseCombo( String name, ComboBox combo ) throws MaintenanceException;
     
     /**
      * This methode be need implemented with attributs of his representing class

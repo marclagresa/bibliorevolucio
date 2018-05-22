@@ -2,6 +2,7 @@ package base.maintenanceControladors;
 
 import base.FXMLCduController;
 import base.GenericPopUp;
+import base.EmplanarComboBox.ClNivell;
 import bbdd.UsuariDAO;
 import contract.ContractUsuari;
 import java.io.IOException;
@@ -50,15 +51,23 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     }
 
     @Override
-    public Object parseObject( String contractName, Object object ) throws MaintenanceException {
-    
+    public Object parseObject( String name, Object object ) throws MaintenanceException, IllegalArgumentException{
+        
         Object id = null;
-        switch( contractName ) {
-            case "nivell":
-                id = ((Nivell) object).getId();
-                break;
-            default:
-                throw new MaintenanceException( "This object: " + contractName + " not parsed in a parseObject" );
+        if ( object != null ) {
+            
+            switch( name ) {
+                case "nivell":
+                    id = ((Nivell) object).getId();
+                    break;
+                default:
+                    throw new MaintenanceException( "This object: " + name + " not parsed in a parseObject" );
+            }
+            
+        } else {
+            
+            throw new IllegalArgumentException( "Invalid data" );
+            
         }
         
         return id;
@@ -66,15 +75,16 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     }
 
     @Override
-    public void parseCombo(String contractName, ComboBox combo) throws MaintenanceException {
+    public void parseCombo( String name, ComboBox combo ) throws MaintenanceException {
         
-        switch( contractName ) {
+        switch( name ) {
             case "nivell":
-//                Object obj = new ClCdu( combo );                        
+                combo.getEditor().textProperty().addListener( new ClNivell( combo ) );                        
                 break;
             default:
-                throw new MaintenanceException( "This object: " + contractName + " not parsed in a parseCombo" );
+                throw new MaintenanceException( "This object: " + name + " not parsed in a parseCombo" );
         }
+        
     }
     
     @Override
