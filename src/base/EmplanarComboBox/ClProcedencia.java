@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import objecte.Procedencia;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
@@ -24,25 +25,49 @@ public class ClProcedencia implements ChangeListener<String> {
 
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        String campOrdre = ContractProcedencia.ID;
-        if(!newValue.equals("")){
-            HashMap<String,Object> cercaProcedencia=new HashMap<>();
-            cercaProcedencia.put(ContractProcedencia.NOM, newValue);
-            try {
-                ProcedenciaDAO objProcedenciaDAO= new ProcedenciaDAO();
-                ObservableList<Procedencia> opcionsProcedencia = FXCollections.observableArrayList(objProcedenciaDAO.select(cercaProcedencia,campOrdre,10,0,false));
+        try {
+            if (cb.getSelectionModel().isEmpty()) {
+                cb.getEditor().setStyle("-fx-background-color: white; -fx-opacity: 1.0;");
 
-                if (cb.getValue() == null) {
-                    cb.setItems(opcionsProcedencia);
+                String campOrdre = ContractProcedencia.ID;
+
+                HashMap<String, Object> cercaProcedencia = new HashMap<>();
+                cercaProcedencia.put(ContractProcedencia.NOM, newValue);
+
+                ProcedenciaDAO objProcedenciaDAO = new ProcedenciaDAO();
+                ObservableList<Procedencia> opcionsProcedencia = null;
+
+                opcionsProcedencia = FXCollections.observableArrayList(objProcedenciaDAO.select(cercaProcedencia, campOrdre, 10, 0, false));
+
+
+                cb.setItems(opcionsProcedencia);
+
+            } else {
+                cb.getEditor().setStyle("-fx-background-color: greenyellow; -fx-opacity: 0.5;");
+                boolean reset;
+
+                if (cb.getSelectionModel().getSelectedItem() instanceof String) {
+
+                    // When you do lose the focus
+                    reset = !cb.getSelectionModel().getSelectedItem().equals(newValue);
+
+                } else {
+
+                    // When you don't lose the focus
+                    reset = !((Procedencia) cb.getSelectionModel().getSelectedItem()).getNom().equals(newValue);
+
                 }
 
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
+                if (reset) {
+                    cb.getSelectionModel().clearSelection();
+                    cb.setValue(newValue);
+                }
+
             }
-        }else{
-            ObservableList<Procedencia> opcionsProcedencia = null;
-            cb.setItems(opcionsProcedencia);
-            cb.setValue(null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

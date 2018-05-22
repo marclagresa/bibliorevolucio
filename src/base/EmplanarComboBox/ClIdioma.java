@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import objecte.Idioma;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
@@ -24,24 +25,49 @@ public class ClIdioma implements ChangeListener<String> {
 
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        String campOrdre = ContractIdioma.ID;
-        if(!newValue.equals("")){
-            HashMap<String,Object> cercaIdioma=new HashMap<>();
-            cercaIdioma.put(ContractIdioma.NOM, newValue);
-            try {
-                IdiomaDAO objIdiomaDAO= new IdiomaDAO();
-                ObservableList<Idioma> opcionsIdioma = FXCollections.observableArrayList(objIdiomaDAO.select(cercaIdioma,campOrdre,10,0,false));
+        try {
+            if (cb.getSelectionModel().isEmpty()) {
+                cb.getEditor().setStyle("-fx-background-color: white; -fx-opacity: 1.0;");
 
-                if (cb.getValue() == null) {
-                    cb.setItems(opcionsIdioma);
+                String campOrdre = ContractIdioma.ID;
+
+                HashMap<String, Object> cercaIdioma = new HashMap<>();
+                cercaIdioma.put(ContractIdioma.NOM, newValue);
+
+                IdiomaDAO objIdiomaDAO = new IdiomaDAO();
+                ObservableList<Idioma> opcionsIdioma = null;
+
+                opcionsIdioma = FXCollections.observableArrayList(objIdiomaDAO.select(cercaIdioma, campOrdre, 10, 0, false));
+
+
+                cb.setItems(opcionsIdioma);
+
+            } else {
+                cb.getEditor().setStyle("-fx-background-color: greenyellow; -fx-opacity: 0.5;");
+                boolean reset;
+
+                if (cb.getSelectionModel().getSelectedItem() instanceof String) {
+
+                    // When you do lose the focus
+                    reset = !cb.getSelectionModel().getSelectedItem().equals(newValue);
+
+                } else {
+
+                    // When you don't lose the focus
+                    reset = !((Idioma) cb.getSelectionModel().getSelectedItem()).getNom().equals(newValue);
+
                 }
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
+
+                if (reset) {
+                    cb.getSelectionModel().clearSelection();
+                    cb.setValue(newValue);
+                }
+
             }
-        }else{
-            ObservableList<Idioma> opcionsIdioma = null;
-            cb.setItems(opcionsIdioma);
-            cb.setValue(null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

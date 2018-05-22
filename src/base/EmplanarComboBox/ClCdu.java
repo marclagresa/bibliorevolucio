@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import objecte.Cdu;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
@@ -24,25 +25,49 @@ public class ClCdu implements ChangeListener<String> {
 
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        String campOrdre = ContractCdu.ID;
-        if(!newValue.equals("")){
-            HashMap<String,Object> cercaCdu=new HashMap<>();
-            cercaCdu.put(ContractCdu.NOM, newValue);
-            try {
-                CduDAO objCduDAO= new CduDAO();
-                ObservableList<Cdu> opcionsCdu = FXCollections.observableArrayList(objCduDAO.select(cercaCdu,campOrdre,10,0,false));
+        try {
+            if (cb.getSelectionModel().isEmpty()) {
+                cb.getEditor().setStyle("-fx-background-color: white; -fx-opacity: 1.0;");
 
-                if (cb.getValue() == null) {
-                    cb.setItems(opcionsCdu);
+                String campOrdre = ContractCdu.ID;
+
+                HashMap<String, Object> cercaCdu = new HashMap<>();
+                cercaCdu.put(ContractCdu.NOM, newValue);
+
+                CduDAO objCduDAO = new CduDAO();
+                ObservableList<Cdu> opcionsCdu = null;
+
+                opcionsCdu = FXCollections.observableArrayList(objCduDAO.select(cercaCdu, campOrdre, 10, 0, false));
+
+
+                cb.setItems(opcionsCdu);
+
+            } else {
+                cb.getEditor().setStyle("-fx-background-color: greenyellow; -fx-opacity: 0.5;");
+                boolean reset;
+
+                if (cb.getSelectionModel().getSelectedItem() instanceof String) {
+
+                    // When you do lose the focus
+                    reset = !cb.getSelectionModel().getSelectedItem().equals(newValue);
+
+                } else {
+
+                    // When you don't lose the focus
+                    reset = !((Cdu) cb.getSelectionModel().getSelectedItem()).getNom().equals(newValue);
+
                 }
 
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
+                if (reset) {
+                    cb.getSelectionModel().clearSelection();
+                    cb.setValue(newValue);
+                }
+
             }
-        }else{
-            ObservableList<Cdu> opcionsCdu = null;
-            cb.setItems(opcionsCdu);
-            cb.setValue(null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

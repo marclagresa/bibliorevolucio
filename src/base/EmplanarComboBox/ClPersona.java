@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import objecte.Persona;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
@@ -24,25 +25,48 @@ public class ClPersona implements ChangeListener<String> {
 
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-        String campOrdre = ContractPersona.ID;
-        if(!newValue.equals("")){
-            HashMap<String,Object> cercaPersona=new HashMap<>();
-            cercaPersona.put(ContractPersona.NOM, newValue);
-            try {
-                PersonaDAO objPersonaDAO= new PersonaDAO();
-                ObservableList<Persona> opcionsPersona = FXCollections.observableArrayList(objPersonaDAO.select(cercaPersona,campOrdre,10,0,false));
+        try {
+            if (cb.getSelectionModel().isEmpty()) {
+                cb.getEditor().setStyle("-fx-background-color: white; -fx-opacity: 1.0;");
+                String campOrdre = ContractPersona.ID;
 
-                if (cb.getValue() == null) {
-                    cb.setItems(opcionsPersona);
+                HashMap<String, Object> cercaPersona = new HashMap<>();
+                cercaPersona.put(ContractPersona.NOM, newValue);
+
+                PersonaDAO objPersonaDAO = new PersonaDAO();
+                ObservableList<Persona> opcionsPersona = null;
+
+                opcionsPersona = FXCollections.observableArrayList(objPersonaDAO.select(cercaPersona, campOrdre, 10, 0, false));
+
+
+                cb.setItems(opcionsPersona);
+
+            } else {
+                cb.getEditor().setStyle("-fx-background-color: greenyellow; -fx-opacity: 0.5;");
+                boolean reset;
+
+                if (cb.getSelectionModel().getSelectedItem() instanceof String) {
+
+                    // When you do lose the focus
+                    reset = !cb.getSelectionModel().getSelectedItem().equals(newValue);
+
+                } else {
+
+                    // When you don't lose the focus
+                    reset = !((Persona) cb.getSelectionModel().getSelectedItem()).getNom().equals(newValue);
+
                 }
 
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
+                if (reset) {
+                    cb.getSelectionModel().clearSelection();
+                    cb.setValue(newValue);
+                }
+
             }
-        }else{
-            ObservableList<Persona> opcionsPersona = null;
-            cb.setItems(opcionsPersona);
-            cb.setValue(null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
     }
 }

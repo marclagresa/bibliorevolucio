@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import objecte.Editorial;
 
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
@@ -27,34 +28,50 @@ public class  ClEditorial implements ChangeListener<String> {
 
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+        try {
+            cb.getEditor().setStyle("-fx-background-color: white; -fx-opacity: 1.0;");
 
-        String campOrdre = ContractEditorial.ID;
-        System.out.println(newValue.toString());
-        System.out.println(oldValue.toString());
-        if(!newValue.equals("")){
-            HashMap<String,Object> cercaEditorial=new HashMap<>();
-            cercaEditorial.put(ContractEditorial.NOM, newValue);
-            try {
-                EditorialDAO objEditorialDAO= new EditorialDAO();
-                ObservableList<Editorial> opcionsEditorial = FXCollections.observableArrayList(objEditorialDAO.select(cercaEditorial,campOrdre,10,0,false));
+            if (cb.getSelectionModel().isEmpty()) {
 
-                if (cb.getValue() == null) {
-                    cb.setItems(opcionsEditorial);
+                String campOrdre = ContractEditorial.ID;
+
+                HashMap<String, Object> cercaEditorial = new HashMap<>();
+                cercaEditorial.put(ContractEditorial.NOM, newValue);
+
+                EditorialDAO objEditorialDAO = new EditorialDAO();
+                ObservableList<Editorial> opcionsEditorial = null;
+
+                opcionsEditorial = FXCollections.observableArrayList(objEditorialDAO.select(cercaEditorial, campOrdre, 10, 0, false));
+
+
+                cb.setItems(opcionsEditorial);
+
+            } else {
+                cb.getEditor().setStyle("-fx-background-color: greenyellow; -fx-opacity: 0.5;");
+                boolean reset;
+
+                if (cb.getSelectionModel().getSelectedItem() instanceof String) {
+
+                    // When you do lose the focus
+                    reset = !cb.getSelectionModel().getSelectedItem().equals(newValue);
+
+                } else {
+
+                    // When you don't lose the focus
+                    reset = !((Editorial) cb.getSelectionModel().getSelectedItem()).getNom().equals(newValue);
+
                 }
 
-                System.out.println(opcionsEditorial.size()+opcionsEditorial.toString());
-                cont ++;
-                System.out.println(cont);
+                if (reset) {
+                    cb.getSelectionModel().clearSelection();
+                    cb.setValue(newValue);
+                }
 
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
             }
-        }else{
-            ObservableList<Editorial> opcionsEditorial = null;
-            cb.setItems(opcionsEditorial);
-
-            cb.setValue(null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
         }
-        System.out.println("hola");
     }
 }
