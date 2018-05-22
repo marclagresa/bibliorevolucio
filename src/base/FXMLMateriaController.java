@@ -45,7 +45,7 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
         
         tipusA = tipus;
         
-        return crearPopUp("FXMLMateria.fxml", FXMLMateriaController.class, owner, isModal, tipus);
+        return crearPopUp("/fxml/FXMLMateria.fxml", FXMLMateriaController.class, owner, isModal, tipus);
     }   
 
     @Override
