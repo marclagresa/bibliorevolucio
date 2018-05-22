@@ -1,7 +1,7 @@
 package bbdd;
 
 import base.ConnectionFactory;
-import contract.ContractAutoria;
+import contract.ContractProductePersona;
 import objecte.Autoria;
 import java.sql.*;
 import java.util.*;
@@ -28,11 +28,11 @@ public class AutoriaDAO implements IObjectDAO<Autoria> {
         try {
             conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "
-                    +ContractAutoria.ID+","
-                    +ContractAutoria.ID_PRODUCTE+","
-                    +ContractAutoria.ID_PERSONA+","
-                    +ContractAutoria.DESCRIPCIO+" from "
-                    +ContractAutoria.NOM_TAULA;
+                    +ContractProductePersona.ID+","
+                    +ContractProductePersona.ID_PRODUCTE+","
+                    +ContractProductePersona.ID_PERSONA+","
+                    +ContractProductePersona.DESCRIPCIO+" from "
+                    +ContractProductePersona.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             list.clear();
@@ -57,7 +57,7 @@ public class AutoriaDAO implements IObjectDAO<Autoria> {
         try {
             conn=ConnectionFactory.getInstance().getConnection();
             valors=new ArrayList<>();
-            query = "SELECT * FROM "+ContractAutoria.NOM_TAULA;
+            query = "SELECT * FROM "+ContractProductePersona.NOM_TAULA;
             i=0;
             for(String camp:dades.keySet()){
                 if(i ==0){
@@ -128,12 +128,12 @@ public class AutoriaDAO implements IObjectDAO<Autoria> {
 
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "SELECT * FROM "+ContractAutoria.NOM_TAULA;
+            sql = "SELECT * FROM "+ContractProductePersona.NOM_TAULA;
             i=0;
             valors=new Object[dades.size()];
             for(String camp:dades.keySet()){
                 valors=new Object[dades.size()];
-                switch(ContractAutoria.DEFINICIO.get(camp)){
+                switch(ContractProductePersona.DEFINICIO.get(camp)){
                     case Types.INTEGER:
                         dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
                         break;
@@ -191,9 +191,9 @@ public class AutoriaDAO implements IObjectDAO<Autoria> {
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ContractAutoria.ID+","+ContractAutoria.ID_PRODUCTE+","+ContractAutoria.ID_PERSONA+","
-                    +ContractAutoria.DESCRIPCIO+ " from "+ ContractAutoria.NOM_TAULA + " where " +
-                    ContractAutoria.ID + " = ? ";
+            sql = "Select "+ContractProductePersona.ID+","+ContractProductePersona.ID_PRODUCTE+","+ContractProductePersona.ID_PERSONA+","
+                    +ContractProductePersona.DESCRIPCIO+ " from "+ ContractProductePersona.NOM_TAULA + " where " +
+                    ContractProductePersona.ID + " = ? ";
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs = ps.executeQuery();
@@ -216,7 +216,7 @@ public class AutoriaDAO implements IObjectDAO<Autoria> {
         boolean inserit;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            insert = "Insert into "+ContractAutoria.NOM_TAULA+" values (?,?,?,?)";
+            insert = "Insert into "+ContractProductePersona.NOM_TAULA+" values (?,?,?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,autoria.getId());
             ps.setInt(2,autoria.getProducte().getId());
@@ -238,11 +238,11 @@ public class AutoriaDAO implements IObjectDAO<Autoria> {
         boolean actualitzat;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            update = "UPDATE "+ContractAutoria.NOM_TAULA+" SET "
-                    +ContractAutoria.ID_PRODUCTE+" = ?,"
-                    +ContractAutoria.ID_PERSONA+" = ?,"
-                    +ContractAutoria.DESCRIPCIO+" = ?  where "
-                    +ContractAutoria.ID+" = ?";
+            update = "UPDATE "+ContractProductePersona.NOM_TAULA+" SET "
+                    +ContractProductePersona.ID_PRODUCTE+" = ?,"
+                    +ContractProductePersona.ID_PERSONA+" = ?,"
+                    +ContractProductePersona.DESCRIPCIO+" = ?  where "
+                    +ContractProductePersona.ID+" = ?";
             ps = conn.prepareStatement(update);
             ps.setInt(1,autoria.getPersona().getId());
             ps.setInt(2,autoria.getProducte().getId());
@@ -264,7 +264,7 @@ public class AutoriaDAO implements IObjectDAO<Autoria> {
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "SELECT max("+ContractAutoria.ID+") FROM "+ContractAutoria.NOM_TAULA;
+            sql = "SELECT max("+ContractProductePersona.ID+") FROM "+ContractProductePersona.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             if(rs.next()){
@@ -309,10 +309,10 @@ public class AutoriaDAO implements IObjectDAO<Autoria> {
 
     private Autoria read() throws SQLException,ClassNotFoundException{
         Autoria objAutoria = new Autoria();
-        objAutoria.setId(rs.getInt(ContractAutoria.ID));
-        objAutoria.setProducte(new ProducteDAO().select(rs.getInt(ContractAutoria.ID_PRODUCTE)));
-        objAutoria.setPersona(new PersonaDAO().select(rs.getInt(ContractAutoria.ID_PERSONA)));
-        objAutoria.setDescripcio(rs.getString(ContractAutoria.DESCRIPCIO));
+        objAutoria.setId(rs.getInt(ContractProductePersona.ID));
+        objAutoria.setProducte(new ProducteDAO().select(rs.getInt(ContractProductePersona.ID_PRODUCTE)));
+        objAutoria.setPersona(new PersonaDAO().select(rs.getInt(ContractProductePersona.ID_PERSONA)));
+        objAutoria.setDescripcio(rs.getString(ContractProductePersona.DESCRIPCIO));
         return objAutoria;
     }
 

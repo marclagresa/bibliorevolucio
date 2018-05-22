@@ -329,7 +329,8 @@ public class FormatDAO implements IObjectDAO<Format>{
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "SELECT max("+ContractFormat.ID+") FROM "+ContractFormat.NOM_TAULA;
+            sql = "SELECT max("+ContractFormat.ID+") FROM "+ContractFormat.NOM_TAULA+" "
+                + "WHERE "+ContractFormat.ID+" > 0";
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             if(rs.next()){

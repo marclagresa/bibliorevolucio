@@ -5,15 +5,21 @@
  */
 package base;
 
+import bbdd.CduDAO;
 import bbdd.ColeccioDAO;
 import bbdd.EditorialDAO;
+import bbdd.ExemplarDAO;
 import bbdd.FormatDAO;
 import bbdd.IdiomaDAO;
 import bbdd.MateriaDAO;
+import bbdd.NivellDAO;
+import bbdd.PersonaDAO;
+import bbdd.ProcedenciaDAO;
+import bbdd.ProducteDAO;
 import com.csvreader.CsvReader;
 import com.csvreader.CsvWriter;
-import contract.ContractColeccio;
 import contract.ContractEditorial;
+import contract.ContractProducte;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -34,12 +40,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import objecte.Biblioteca;
+import objecte.Cdu;
 import objecte.Coleccio;
 import objecte.Editorial;
 import objecte.Format;
 import objecte.Idioma;
 import objecte.Materia;
+import objecte.Nivell;
+import objecte.Persona;
+import objecte.Procedencia;
 import objecte.Producte;
+import objecte.Exemplar;
 
 
 /**
@@ -96,6 +108,8 @@ public class FXMLTraspasController implements Initializable {
             @Override
             protected Void call() throws Exception {
                 Producte p;
+                ProducteDAO pDAO = new ProducteDAO();
+                ExemplarDAO eDAO = new ExemplarDAO();
                 ConnectionFactory.getInstance().configure( FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
                 int registresLlegits=0;
                 int registreFallits=0;
@@ -108,22 +122,66 @@ public class FXMLTraspasController implements Initializable {
                         }
                         writer.writeRecord(reader.getHeaders());
                     }
+                    HashMap<String,Object> consultaExemplar=new HashMap<>();
+                    List<Producte> resultatConsulta;
                     while(reader.readRecord()){
+                        p=new Producte();
                         try {
-                           p=new Producte();
-                           registresLlegits++;
-                         //  p.setFormat(getFormat(reader.get("FORMAT")));
-                         //  p.setIdioma(getIdioma(reader.get("LLENGUA")));
-                         //  p.setEditorial(getEditorial(reader.get("EDITORIAL")));
-                         //  p.setLloc(reader.get("LLOC"));
-                         //  p.setNom(reader.get("TITOL"));
-                         //  p.setColeccio(getColeccio(reader.get("COL·LECCIÓ")));
-                           p.setMateries(getMateries(reader.get("MATERIA")));
-                           registresGuardats++;
+                            
+                            registresLlegits++;
+                            p.setISBN(reader.get("ISBN"));
+                            p.setNom(reader.get("TITOL"));
+                            p.setCdu(reader.get("CDU"));
+                            consultaExemplar.clear();
+                            consultaExemplar.put(ContractProducte.ISBN, p.getCdu());
+                            consultaExemplar.put(ContractProducte.NOM, p.getNom());
+                            consultaExemplar.put(ContractProducte.CDU,p.getCdu());
+                            resultatConsulta=new ProducteDAO().select(consultaExemplar);
+                            if(resultatConsulta.isEmpty()){
+                                p.setId(Integer.valueOf(reader.get("NUMERO")));
+                                p.setFormat(getFormat(reader.get("FORMAT")));
+                                p.setAutors(getAutors(reader.get("AUTOR")));
+                                p.setLloc(reader.get("LLOC"));
+                                p.setColeccio(getColeccio(reader.get("COL·LECCIÓ")));
+                                p.setAnyPublicacio(reader.get("DATA"));
+                                p.setIdiomes(getIdioma(reader.get("LLENGUA")));
+                                p.setMateries(getMateries(reader.get("MATERIA")));
+                                p.setNivells(getNivells(reader.get("NIVELL")));
+                                p.setResum(reader.get("RESUM"));
+                                p.setUrlPortada(reader.get("URL"));
+                                p.setAdreçaWeb(reader.get("ADREÇA"));
+                                p.setDimensions(reader.get("DIMENSIÓ"));
+                                try {
+                                    p.setNumPag(Integer.valueOf(reader.get("PÀGINES")));
+                                } catch (Exception e) {
+                                    p.setNumPag(0);
+                                }
+                                
+                                p.setProcedencia(getProcedencia(reader.get("PROC")));
+                                p.setCaracteristiques(reader.get("CARC"));
+                                p.setEditorial(getEditorial(reader.get("EDITORIAL")));
+                                p.setLloc(reader.get("LLOC")+","+reader.get("PAIS"));
+                                pDAO.insert(p);
+                                eDAO.insert(new Exemplar(new ExemplarDAO().nextId(),true,p,new Biblioteca(1,"inspladelestany")));
+                            }
+                            else{
+                                p=resultatConsulta.get(0);
+                                eDAO.insert(new Exemplar(new ExemplarDAO().nextId(),true,p,new Biblioteca(1,"inspladelestany")));
+                            }
+                            
+                            
+                            
+                            //inserirCdus(reader.get("ID"), reader.get("NOM"), reader.get("IDRETOL"));
+                            
+                            
+                            registresGuardats++;
                         } catch (Exception e) {
                             registreFallits++;
-                            System.err.println(e.getMessage());
+                            System.err.println(p.getId()+" " +e.getMessage());
+                            writer.write(e.getMessage());
+                            writer.writeRecord(reader.getValues());
                         }finally{
+                            
                            // txfFilesLlegides.setText(String.format("%d",registresLlegits));
                            // txfFilesNoTraspasades.setText(String.format("%d",registreFallits));
                            // txfFilesTraspasades.setText(String.format("%d", registresGuardats));
@@ -132,6 +190,7 @@ public class FXMLTraspasController implements Initializable {
                 } catch(IOException e){
                     System.err.println(e.getMessage());
                 } finally{
+                    System.out.println("Process FINALITZAT!!!!");
                     writer.flush();
                     writer.close();
                     reader.close();
@@ -142,6 +201,65 @@ public class FXMLTraspasController implements Initializable {
         t.setDaemon(true);
         t.start();
         
+    }
+    private Set<Persona> getAutors(String liniaAutors)throws SQLException,ClassNotFoundException{
+        Set <Persona> autors= new HashSet<>(0);
+        PersonaDAO personaDAOObj;
+        Persona personaObj;
+        String [] personesLinia;
+        if(!liniaAutors.isEmpty()){
+            personaDAOObj=new PersonaDAO();
+            personesLinia=liniaAutors.split(";");
+            for (String personaNom:personesLinia){
+                personaObj=personaDAOObj.select(personaNom);
+                if(personaObj.getId()==-1){
+                    personaObj.setId(personaDAOObj.nextId());
+                    personaObj.setNom(personaNom);
+                    personaDAOObj.insert(personaObj);
+                }
+                autors.add(personaObj);
+            }
+        }
+        return autors;
+    }
+    private void inserirCdus(String id,String nom,String idPare)throws SQLException,ClassNotFoundException{
+        CduDAO cduDAOObj = new CduDAO();
+        Cdu cduObj=new Cdu(id, idPare, nom);
+        cduDAOObj.insert(cduObj);
+    }
+    private Procedencia getProcedencia(String procedenciaNom) throws SQLException,ClassNotFoundException{
+        Procedencia procedenciaObj = new Procedencia();
+        ProcedenciaDAO procedenciaDAOObj;
+        if(!procedenciaNom.isEmpty()){
+            procedenciaDAOObj=new ProcedenciaDAO();
+            procedenciaObj=procedenciaDAOObj.select(procedenciaNom);
+            if(procedenciaObj.getId()==-1){
+                procedenciaObj.setId(procedenciaDAOObj.nextId());
+                procedenciaObj.setNom(procedenciaNom);
+                procedenciaDAOObj.insert(procedenciaObj);
+            }
+        }
+        return procedenciaObj;
+    }
+    private Set <Nivell> getNivells(String liniaNivells) throws SQLException,ClassNotFoundException{
+        Set<Nivell> nivellsSet=new HashSet<>();
+        String [] nivellsLst;
+        NivellDAO nivellDAOObj;
+        Nivell nivellObj;
+        if(!liniaNivells.isEmpty()){
+            nivellDAOObj=new NivellDAO();
+            nivellsLst=liniaNivells.split("-");
+            for(String nomNivell:nivellsLst){
+                nivellObj=nivellDAOObj.select(nomNivell);
+                if(nivellObj.getId()==-1){
+                    nivellObj.setNom(nomNivell);
+                    nivellObj.setId(nivellDAOObj.nextId());
+                    nivellDAOObj.insert(nivellObj);
+                }
+                nivellsSet.add(nivellObj);
+            }
+        }
+        return nivellsSet;
     }
     private Set<Materia> getMateries(String materiesReg) throws SQLException,ClassNotFoundException{
         Set<Materia> materiesSet = new HashSet<>();
@@ -166,72 +284,76 @@ public class FXMLTraspasController implements Initializable {
     private Coleccio getColeccio(String coleccioNom) throws SQLException,ClassNotFoundException{
         Coleccio coleccioObj = new Coleccio();
         ColeccioDAO coleccioDAOObj;
-        List<Coleccio> coleccions;
         if(!coleccioNom.isEmpty()){
-            coleccioDAOObj=new ColeccioDAO();
-            HashMap <String,Object> consulta = new HashMap<>();
-            consulta.put(ContractColeccio.NOM, coleccioNom);
-            coleccions=coleccioDAOObj.select(consulta);
-            if(coleccions.size()==1){
-                coleccioObj=coleccions.get(0);
-            }
-            else{
-                if(coleccions.isEmpty()){
+            try{
+                coleccioDAOObj=new ColeccioDAO();
+                coleccioObj=coleccioDAOObj.select(coleccioNom);
+                if(coleccioObj.getId()==-1){
                     coleccioObj.setId(coleccioDAOObj.nextId());
                     coleccioObj.setNom(coleccioNom);
                     coleccioDAOObj.insert(coleccioObj);
                 }
+            } catch(SQLException | ClassNotFoundException e){
+                System.err.println(coleccioObj.getNom() +" "+e.getMessage());
             }
         }
         return coleccioObj;
     }
-    private Idioma getIdioma(String nomIdioma)throws SQLException,ClassNotFoundException{
-        Idioma idiomaObj = new Idioma();
-        IdiomaDAO idiomaDAOObj = new IdiomaDAO();
-        String [] idiomes;   //En un sol registre i poden haver-hi diferents idiomes. es necessitara fer un split.
+    private Set<Idioma> getIdioma(String nomIdioma)throws SQLException,ClassNotFoundException{
+        Set<Idioma>idiomes=new HashSet<>();
+        Idioma idiomaObj;
+        IdiomaDAO idiomaDAOObj;
+        String [] idomesStrg;   //En un sol registre i poden haver-hi diferents idomesStrg. es necessitara fer un split.
         nomIdioma=nomIdioma.replace(" ", "");
         if(!nomIdioma.isEmpty()){
-            nomIdioma=nomIdioma.toLowerCase(); 
-            idiomes=nomIdioma.split(";");
-            if(idiomes.length==1){
-                idiomes=nomIdioma.split("-");
-            }
-            if(idiomes.length==1){
-                idiomes=nomIdioma.split("/");
-            }
-            for(String idioma:idiomes){
-                switch(idioma){
-                    case "català.":
-                        idioma="català";
-                        break;
-                    case "catala.":
-                        idioma="català";
-                        break;
-                    case "calalà":
-                        idioma="català";
-                        break;
-                    case "catalana":
-                        idioma="català";
-                        break;
-                    case "espanyol":
-                        idioma="castellà";
-                        break;
-                    case "castellana":
-                        idioma="castellà";
-                        break;
-                    case "castellano":
-                        idioma="castellà";
-                        break;
+            try {
+                idiomaDAOObj=new IdiomaDAO();
+                nomIdioma=nomIdioma.toLowerCase(); 
+                idomesStrg=nomIdioma.split(";");
+                if(idomesStrg.length==1){
+                    idomesStrg=nomIdioma.split("-");
                 }
-                idiomaObj=idiomaDAOObj.select(idioma);
-                if(idiomaObj.getId()==-1){
-                    idiomaObj.setId(idiomaDAOObj.nextId());
-                    idiomaObj.setNom(idioma);
-                    idiomaDAOObj.insert(idiomaObj);
+                if(idomesStrg.length==1){
+                    idomesStrg=nomIdioma.split("/");
                 }
+                for(String idioma:idomesStrg){
+                    switch(idioma){
+                        case "català.":
+                            idioma="català";
+                            break;
+                        case "catala.":
+                            idioma="català";
+                            break;
+                        case "calalà":
+                            idioma="català";
+                            break;
+                        case "catalana":
+                            idioma="català";
+                            break;
+                        case "espanyol":
+                            idioma="castellà";
+                            break;
+                        case "castellana":
+                            idioma="castellà";
+                            break;
+                        case "castellano":
+                            idioma="castellà";
+                            break;
+                    }
+                    idiomaObj=idiomaDAOObj.select(idioma);
+                    if(idiomaObj.getId()==-1){
+                        idiomaObj.setId(idiomaDAOObj.nextId());
+                        idiomaObj.setNom(idioma);
+                        idiomaDAOObj.insert(idiomaObj);
+                    }
+                    idiomes.add(idiomaObj);
+                }  
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
             }
+            
         }
-        return idiomaObj;
+        return idiomes;
     }
     private Editorial getEditorial(String nomEditorial)throws SQLException,ClassNotFoundException{
         Editorial editorialObj = new Editorial();
@@ -239,17 +361,22 @@ public class FXMLTraspasController implements Initializable {
         HashMap <String,Object> consulta;
         List<Editorial>editorials=new ArrayList<>();
         if(!nomEditorial.matches("\\s*")){
-            consulta=new HashMap<>();
-            consulta.put(ContractEditorial.NOM, nomEditorial);
-            editorials=editorialDAOObj.select(consulta,null,null,null,null);
-            if(editorials.size() >0){
-                editorialObj=editorials.get(0);
+            try{
+                consulta=new HashMap<>();
+                consulta.put(ContractEditorial.NOM, nomEditorial);
+                editorials=editorialDAOObj.select(consulta,null,null,null,null);
+                if(editorials.size() >0){
+                    editorialObj=editorials.get(0);
+                }
+                else{
+                    editorialObj.setNom(nomEditorial);
+                    editorialObj.setId(editorialDAOObj.nextId());
+                    editorialDAOObj.insert(editorialObj);
+                }
+            }catch(SQLException  e){
+                System.err.println(e.getMessage());
             }
-            else{
-                editorialObj.setNom(nomEditorial);
-                editorialObj.setId(editorialDAOObj.nextId());
-                editorialDAOObj.insert(editorialObj);
-            }
+            
         }
         return editorialObj;
     }
@@ -269,10 +396,14 @@ public class FXMLTraspasController implements Initializable {
         }
         nomFormat=nomFormat.toUpperCase();
         formatObj=formatDAOObj.select(nomFormat);
-        if(formatObj.getId()==-1){
-            formatObj.setNom(nomFormat);
-            formatObj.setId(formatDAOObj.nextId());
-            formatDAOObj.insert(formatObj);
+        try{
+            if(formatObj.getId()==-1){
+                formatObj.setNom(nomFormat);
+                formatObj.setId(formatDAOObj.nextId());
+                formatDAOObj.insert(formatObj);
+            }   
+        }catch(SQLException e){
+            System.err.println(e.getMessage());
         }
         return formatObj;
         

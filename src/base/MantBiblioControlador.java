@@ -7,6 +7,13 @@ package base;
 
 import base.GenericControlador;
 import base.MenuPrincipalControlador;
+import base.maintenanceControladors.CduMaintenanceControlador;
+import base.maintenanceControladors.ColeccioMaintenanceControlador;
+import base.maintenanceControladors.EditorialMaintenanceControlador;
+import base.maintenanceControladors.FormatMaintenanceControlador;
+import base.maintenanceControladors.PersonaMaintenanceControlador;
+import base.maintenanceControladors.ProducteMaintenanceControlador;
+import base.maintenanceControladors.UsuariMaintenanceControlador;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -51,9 +58,76 @@ public class MantBiblioControlador extends GenericControlador implements Initial
     }
 
     @FXML
-    private void obrirMantenimentUsuaris(MouseEvent event) {
-        /* GenericMaintenanceControlador finestra = GenericMaintenanceControlador.crearFinestre( new UsuariMaintenanceControlador(), "Manteniment Usuaris" );
-         pare.setFinestraCentre( finestra );*/
+    private void obrirMantenimentUsuaris(MouseEvent event) throws IOException {
+         GenericMaintenanceControlador finestra = GenericMaintenanceControlador.crearFinestre( new UsuariMaintenanceControlador(), "Manteniment Usuaris" );
+         pare.setFinestraCentre( finestra );
+    }
+
+    @FXML
+    private void obrirMantenimentAutor(MouseEvent event) {
+        GenericMaintenanceControlador finestra;
+        try {
+            finestra = GenericMaintenanceControlador.crearFinestre( new PersonaMaintenanceControlador(), " Autors" );
+             pare.setFinestraCentre( finestra );
+        } catch (IOException ex) {
+            Logger.getLogger(MenuPrincipalControlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    private void obrirMantenimentEditorial(MouseEvent event) {
+      GenericMaintenanceControlador finestra;
+        try {
+            finestra = GenericMaintenanceControlador.crearFinestre( new EditorialMaintenanceControlador(), " Editrorial" );
+             pare.setFinestraCentre( finestra );
+        } catch (IOException ex) {
+            Logger.getLogger(MenuPrincipalControlador.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        
+    }
+
+    @FXML
+    private void obrirMantenimentProducte(MouseEvent event) {
+        GenericMaintenanceControlador finestra;
+        try {
+            finestra = GenericMaintenanceControlador.crearFinestre( new ProducteMaintenanceControlador(), " Productes" );
+             pare.setFinestraCentre( finestra );
+        } catch (IOException ex) {
+            Logger.getLogger(MenuPrincipalControlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    private void obrirMantenimentColecions(MouseEvent event) {
+        GenericMaintenanceControlador finestra;
+        try {
+            finestra = GenericMaintenanceControlador.crearFinestre( new ColeccioMaintenanceControlador(), "Col·leccions" );
+             pare.setFinestraCentre( finestra );
+        } catch (IOException ex) {
+            Logger.getLogger(MenuPrincipalControlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    private void obrirMantenimentCdu(MouseEvent event) {
+        GenericMaintenanceControlador finestra;
+        try {
+            finestra = GenericMaintenanceControlador.crearFinestre( new CduMaintenanceControlador(), " CDU " );
+             pare.setFinestraCentre( finestra );
+        } catch (IOException ex) {
+            Logger.getLogger(MenuPrincipalControlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    @FXML
+    private void obrirMantenimentFormat(MouseEvent event) {
+        GenericMaintenanceControlador finestra;
+        try {
+            finestra = GenericMaintenanceControlador.crearFinestre( new FormatMaintenanceControlador(), " Formats " );
+             pare.setFinestraCentre( finestra );
+        } catch (IOException ex) {
+            Logger.getLogger(MenuPrincipalControlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

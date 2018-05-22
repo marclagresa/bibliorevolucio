@@ -5,8 +5,12 @@ import contract.ContractNivell;
 import objecte.Nivell;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Types;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,7 +81,7 @@ public class NivellDAO implements IObjectDAO<Nivell> {
                     query += camp+ " = ?";
                     valors.add(dades.get(camp));
                 }
-
+                i++;
             }
             if(campOrdre!=null){
                 query+=" ORDER BY ? ";
@@ -189,7 +193,28 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         }
         return list;
     }
-
+    public Nivell select(String nom) throws SQLException,ClassNotFoundException{
+        Nivell nivellObj=new Nivell();
+        String query;
+        try{
+            conn=ConnectionFactory.getInstance().getConnection();
+            query="SELECT * FROM " +ContractNivell.NOM_TAULA +" "
+                + "WHERE " +ContractNivell.NOM + " LIKE   ?";
+            ps=conn.prepareStatement(query);
+            ps.setString(1, nom);
+            rs=ps.executeQuery();
+            if(rs.next()){
+                nivellObj=read();
+            }
+        } catch(SQLException e){
+            throw new SQLException (e.getMessage(),e.getSQLState(),e.getErrorCode(),e.getCause());
+        } catch(ClassNotFoundException e){
+            throw new ClassNotFoundException(e.getMessage(), e.getCause());
+        } finally{
+            this.close();
+        }
+        return nivellObj;
+    }
     public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
         int count=0;
         ArrayList<Object> valors;
@@ -264,7 +289,7 @@ public class NivellDAO implements IObjectDAO<Nivell> {
         boolean inserit;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            insert = "Insert into "+ContractNivell.NOM_TAULA+" values (?,?)";
+            insert = "Insert into "+ContractNivell.NOM_TAULA+"("+ContractNivell.ID+","+ContractNivell.NOM+") values (?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,nivell.getId());
             ps.setString(2,nivell.getNom());

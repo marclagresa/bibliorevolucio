@@ -1,7 +1,6 @@
 package bbdd;
 
 import base.ConnectionFactory;
-import contract.ContractExemplar;
 import contract.ContractProducte;
 
 
@@ -34,7 +33,6 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         rs=null;
         ps=null;
     }
-
     @Override
     public List<Producte> selectAll() throws ClassNotFoundException, SQLException{
         List<Producte> list = new ArrayList<>();
@@ -55,7 +53,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     +ContractProducte.URL_PORTADA+","+ContractProducte.ADRECA_WEB+","+ContractProducte.ESTAT+","
                     +ContractProducte.IDIOMA_ID+","+ContractProducte.EDITORIAL_ID+","
                     +ContractProducte.FORMAT_ID+","+ContractProducte.PROCEDENCIA_ID+","
-                    +ContractProducte.NIVELL_ID+","+ContractProducte.COLECCIO_ID+","+ContractProducte.CDU_ID+
+                    +ContractProducte.COLECCIO_ID+","+ContractProducte.CDU+
                     "from "+ ContractProducte.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
@@ -128,6 +126,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps=conn.prepareStatement(query);
             for(i=0;i<valors.size();i++){
                 ps.setObject(i+1, valors.get(i));
+
             }
             rs=ps.executeQuery();
             while(rs.next()){
@@ -273,7 +272,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     +ContractProducte.URL_PORTADA+","+ContractProducte.ADRECA_WEB+","+ContractProducte.ESTAT+","
                     +ContractProducte.IDIOMA_ID+","+ContractProducte.EDITORIAL_ID+","
                     +ContractProducte.FORMAT_ID+","+ContractProducte.PROCEDENCIA_ID+","
-                    +ContractProducte.NIVELL_ID+","+ContractProducte.COLECCIO_ID+","+ContractProducte.CDU_ID+
+                    +ContractProducte.COLECCIO_ID+","+ContractProducte.CDU+
                     " from "+ ContractProducte.NOM_TAULA + " where " + ContractProducte.ID + " = ? ";
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
@@ -311,14 +310,12 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     + ContractProducte.URL_PORTADA + ", "
                     + ContractProducte.ADRECA_WEB + ", "
                     + ContractProducte.ESTAT + ", "
-                    + ContractProducte.IDIOMA_ID + ", "
                     + ContractProducte.EDITORIAL_ID + ", "
                     + ContractProducte.FORMAT_ID + ", "
                     + ContractProducte.PROCEDENCIA_ID + ", "
-                    + ContractProducte.NIVELL_ID + ", "
                     + ContractProducte.COLECCIO_ID + ", "
-                    + ContractProducte.CDU_ID + ", "
-                    + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    + ContractProducte.CDU + ") "
+                    + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,producte.getId());
             ps.setString(2,producte.getISBN());
@@ -331,14 +328,87 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setString(9,producte.getUrlPortada());
             ps.setString(10,producte.getAdreçaWeb());
             ps.setBoolean(11,producte.getEstat());
-            ps.setInt(12,producte.getIdioma().getId());
-            ps.setInt(13,producte.getEditorial().getId());
-            ps.setInt(14,producte.getFormat().getId());
-            ps.setInt(15,producte.getProcedencia().getId());
-            ps.setInt(16,producte.getNivell().getId());
-            ps.setInt(17,producte.getColeccio().getId());
-            ps.setInt(18,producte.getCDU().getId());
+            ps.setInt(12,producte.getEditorial().getId());
+            ps.setInt(13,producte.getFormat().getId());
+            ps.setInt(14,producte.getProcedencia().getId());
+            ps.setInt(15,producte.getColeccio().getId());
+            ps.setString(16,producte.getCdu());
             ps.executeUpdate();
+            producte.getMateries().forEach(action->{
+                try {
+                    ProducteMateriaDAO pmDAO=new ProducteMateriaDAO();
+                    pmDAO.insert(producte.getId(),action.getId());
+                } catch (ClassNotFoundException | SQLException e) {
+                    System.err.println(e.getMessage());
+                }
+            });
+            producte.getIdiomes().forEach(action->{
+                try{
+                    ProducteIdiomaDAO piDAO=new ProducteIdiomaDAO();
+                    piDAO.insert(producte.getId(), action.getId());
+                }catch(ClassNotFoundException | SQLException e){
+                    System.err.println(e.getMessage());
+                }
+            });
+            producte.getNivells().forEach(action->{
+                try{
+                    ProducteNivellDAO pnDAO = new ProducteNivellDAO();
+                    pnDAO.insert(producte.getId(), action.getId());
+                }catch(SQLException|ClassNotFoundException e){
+                    System.err.println(e.getMessage());
+                }
+            });
+            producte.getAutors().forEach(action->{
+                String descripcio="autor";
+                ProducteAutorDAO paDAO = new ProducteAutorDAO();
+                HashMap<String,String> descripcions = new HashMap<>();
+                descripcions.put("[tr]", "traductor/a");
+                descripcions.put("[trad.]", "traductor/a");
+                descripcions.put("[traduct.]", "traductor/a");
+                descripcions.put("[Traductor]", "traductor/a");
+                descripcions.put("[Tra]", "traductor/a");
+                descripcions.put("[adap. i il·lustr.]","adaptació i ilustració" );
+                descripcions.put("[adap.]","adaptació" );
+                descripcions.put("[adapt.]", "adaptació");
+                descripcions.put("[adapta.]", "adaptació");
+                descripcions.put("[adaptació]", "adaptació");
+                descripcions.put("[adap]", "adaptació");
+                descripcions.put("[apèndix]", "apèndix");
+                descripcions.put("[aut.]", "autor/a");
+                descripcions.put("[autor]", "autor/a");
+                descripcions.put("[aut]", "autor/a");
+                descripcions.put("[coord.]", "coordinador/a");
+                descripcions.put("[coordinadors]", "coordinador/a");
+                descripcions.put("[dib.]", "dibuixant/a");
+                descripcions.put("[ed.]", "edició");
+                descripcions.put("[epíleg]", "epíleg");
+                descripcions.put("[fot.]", "fotògraf/a");
+                descripcions.put("[fotògr.]", "fotògraf/a");
+                descripcions.put("[gràf.]", "gràfics");
+                descripcions.put("[guió]", "guióniste/a");
+                descripcions.put("[il.lustr.]", "il.lustrador/a");
+                descripcions.put("[il.lustrador]", "il.lustrador/a");
+                descripcions.put("[il.]", "il.lustrador/a");
+                descripcions.put("[il·lustr.]", "il.lustrador/a");
+                descripcions.put("[il·lustrador]", "il.lustrador/a");
+                descripcions.put("[il·lu]", "il.lustrador/a");
+                descripcions.put("[intr.]", "introducció");
+                descripcions.put("[introducció]", "introducció");
+                descripcions.put("[pròl.]", "pròleg");
+                descripcions.put("[pròleg]", "pròleg");
+                descripcions.put("[Text]", "Text");
+                descripcions.put("[versió]","versió");
+                descripcions.put("[[autora]]", "autor/a");
+                descripcions.put("[[autor]]", "autor/a");
+                
+                
+                for(String possibleDescripcio : descripcions.keySet()){
+                    if(action.getNom().contains(possibleDescripcio)){
+                        descripcio=descripcions.get(possibleDescripcio);
+                    }
+                }
+                paDAO.insert(producte.getId(), action.getId(), descripcio,1);
+            });
             inserit = true;
         } catch (SQLException ex) {
             throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
@@ -358,9 +428,9 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             update = "UPDATE "+ContractProducte.NOM_TAULA+" SET "+ContractProducte.ISBN+" = ?,"
                     +ContractProducte.NOM+" = ?,"+ContractProducte.NUM_PAG+" = ?,"+ContractProducte.DIMENSIONS+" = ?,"
                     +ContractProducte.ANY_PUBLICACIO+" = ?,"+ContractProducte.RESUM+" = ?,"+ContractProducte.CARACTERISTIQUES+" = ?,"
-                    +ContractProducte.URL_PORTADA+" = ?,"+ContractProducte.ADRECA_WEB+" = ?,"+ContractProducte.IDIOMA_ID+" = ?,"
+                    +ContractProducte.URL_PORTADA+" = ?,"+ContractProducte.ADRECA_WEB+" = ?,"
                     +ContractProducte.EDITORIAL_ID+" = ?,"+ContractProducte.FORMAT_ID+" = ?,"+ContractProducte.PROCEDENCIA_ID+" = ?,"
-                    +ContractProducte.NIVELL_ID+" = ?,"+ContractProducte.COLECCIO_ID+" = ?,"+ContractProducte.CDU_ID+" = ?,"
+                    +ContractProducte.COLECCIO_ID+" = ?,"+ContractProducte.CDU+" = ?,"
                     +ContractProducte.ESTAT + "= ?  where "+ContractProducte.ID+" = ?";
             ps = conn.prepareStatement(update);
             ps.setString(1,producte.getISBN());
@@ -372,17 +442,15 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setString(7,producte.getCaracteristiques());
             ps.setString(8,producte.getUrlPortada());
             ps.setString(9,producte.getAdreçaWeb());
-            ps.setInt(10,producte.getIdioma().getId());
-            ps.setInt(11,producte.getEditorial().getId());
-            ps.setInt(12,producte.getFormat().getId());
-            ps.setInt(13,producte.getProcedencia().getId());
-            ps.setInt(14,producte.getNivell().getId());
-            ps.setInt(15,producte.getColeccio().getId());
-            ps.setInt(16,producte.getCDU().getId());
-            ps.setBoolean(17, producte.getEstat());
-            ps.setInt(18,producte.getId());
-            
+            ps.setInt(10,producte.getEditorial().getId());
+            ps.setInt(11,producte.getFormat().getId());
+            ps.setInt(12,producte.getProcedencia().getId());
+            ps.setInt(13,producte.getColeccio().getId());
+            ps.setString(14,producte.getCdu());
+            ps.setBoolean(15, producte.getEstat());
+            ps.setInt(16,producte.getId());
             actualitzat=ps.executeUpdate()==1;
+          
         } catch (SQLException ex){
             throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
         }catch( ClassNotFoundException ex) {
@@ -452,13 +520,12 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         objProducte.setAdreçaWeb(rs.getString(ContractProducte.ADRECA_WEB));
         objProducte.setEstat(rs.getBoolean(ContractProducte.ESTAT));
         objProducte.setEditorial(new EditorialDAO().select(rs.getInt(ContractProducte.EDITORIAL_ID)));
-        objProducte.setIdioma(new IdiomaDAO().select(rs.getInt(ContractProducte.IDIOMA_ID)));
         objProducte.setFormat(new FormatDAO().select(rs.getInt(ContractProducte.FORMAT_ID)));
         objProducte.setProcedencia(new ProcedenciaDAO().select(rs.getInt(ContractProducte.PROCEDENCIA_ID)));
-        //objProducte.setNivell(new NivellDAO().select(rs.getInt(ContractProducte.NIVELL_ID))); es una relacio n m s' ha de canviar
         objProducte.setColeccio(new ColeccioDAO().select(rs.getInt(ContractProducte.COLECCIO_ID)));
-        objProducte.setCDU(new CduDAO().select(rs.getInt(ContractProducte.CDU_ID)));
-        objProducte.setExemplars(new HashSet<Exemplar>(0));
+        objProducte.setCdu(rs.getString(ContractProducte.CDU));
+        objProducte.setExemplars(new HashSet<>(0));
+        objProducte.setNivells(new HashSet<>(0));
         objProducte.setLloc(rs.getString(ContractProducte.LLOC));
         return objProducte;
     }

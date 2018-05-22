@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.List;
  * @author albertCorominas
  */
 
-public class CduDAO implements IObjectDAO<Cdu> {
+public class CduDAO{
     private Connection conn;
     private ResultSet rs;
     private PreparedStatement ps;
@@ -26,8 +27,6 @@ public class CduDAO implements IObjectDAO<Cdu> {
         rs = null;
         ps = null;
     }
-
-    @Override
     public List<Cdu> selectAll() throws ClassNotFoundException, SQLException{
         List<Cdu> list = new ArrayList<>();
         Cdu selectCdu;
@@ -39,9 +38,9 @@ public class CduDAO implements IObjectDAO<Cdu> {
             rs = ps.executeQuery();
             while(rs.next()){
                 selectCdu = new Cdu();
-                selectCdu.setId(rs.getInt(1));
+               // selectCdu.setId(rs.getInt(1));
                 selectCdu.setNom(rs.getString(2));
-                selectCdu.setIdPare(rs.getInt(3));
+            //    selectCdu.setIdPare(rs.getInt(3));
                 list.add(selectCdu);
             }
         } catch (SQLException | ClassNotFoundException ex) {
@@ -72,7 +71,6 @@ public class CduDAO implements IObjectDAO<Cdu> {
         }
         return list;
     }
-    @Override
     public Cdu select(int id) throws ClassNotFoundException, SQLException{
         Cdu cdu = new Cdu();
         String sql;
@@ -84,9 +82,9 @@ public class CduDAO implements IObjectDAO<Cdu> {
             ps.setInt(1,id);
             rs = ps.executeQuery();
             cdu = new Cdu();
-            cdu.setId(rs.getInt(1));
+        //    cdu.setId(rs.getInt(1));
             cdu.setNom(rs.getString(2));
-            cdu.setIdPare(rs.getInt(3));
+        //    cdu.setIdPare(rs.getInt(3));
         } catch (SQLException | ClassNotFoundException ex) {
             ex.printStackTrace();
         } finally {
@@ -94,28 +92,36 @@ public class CduDAO implements IObjectDAO<Cdu> {
         }
         return cdu;
     }
-    @Override
     public boolean insert(Cdu cdu) throws ClassNotFoundException, SQLException{
         String insert;
         boolean inserit = false;
         int id;
         try {
             conn=ConnectionFactory.getInstance().getConnection();
-            id = nextId();
-            insert = "Insert into "+ContractCdu.NOM_TAULA+" values (?,?,?)";
+            insert = "Insert into "+ContractCdu.NOM_TAULA+"( "
+                +ContractCdu.ID+ ", "
+                +ContractCdu.NOM+", "
+                +ContractCdu.IDPARE+") values (?,?,?)";
             ps = conn.prepareStatement(insert);
-            ps.setInt(1,id);
+            ps.setString(1,cdu.getId());
             ps.setString(2,cdu.getNom());
-            ps.setInt(3,cdu.getIdPare());
+            if(cdu.getIdPare().isEmpty()){
+                ps.setNull(3, Types.VARCHAR);
+            }
+            else{
+                ps.setString(3,cdu.getIdPare());
+            }
             ps.executeUpdate();
             inserit = true;
         } catch (SQLException | ClassNotFoundException ex) {
+            System.out.println(cdu.getId()+" \t "+cdu.getIdPare()+" \t "+cdu.getNom());
             ex.printStackTrace();
-        }
+        } finally {
+            this.close();
+        } 
         return inserit;
     }
    
-    @Override
     public boolean update(Cdu cdu) throws ClassNotFoundException, SQLException{
         String update;
         boolean actualitzat = false;
@@ -125,8 +131,8 @@ public class CduDAO implements IObjectDAO<Cdu> {
                     ContractCdu.IDPARE+ " = ? where "+ContractCdu.ID+" = ?";
             ps = conn.prepareStatement(update);
             ps.setString(1,cdu.getNom());
-            ps.setInt(2,cdu.getIdPare());
-            ps.setInt(3,cdu.getId());
+          //  ps.setInt(2,cdu.getIdPare());
+        //    ps.setInt(3,cdu.getId());
             ps.executeUpdate();
             actualitzat = true;
         } catch (SQLException | ClassNotFoundException ex) {
@@ -136,24 +142,6 @@ public class CduDAO implements IObjectDAO<Cdu> {
         }
         return actualitzat;
     }
-    @Override
-    public int nextId() throws ClassNotFoundException, SQLException{
-        int id = 1;
-        String sql;
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            sql = "SELECT max("+ContractCdu.ID+") FROM "+ContractCdu.NOM_TAULA;
-            ps = conn.prepareStatement(sql);
-            rs = ps.executeQuery();
-            if(rs.next()){
-                id = rs.getInt(1)+1;
-            }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        }
-        return id;
-    }
-    @Override
     public void close(){
         if(this.conn!=null){
             try {
@@ -181,7 +169,6 @@ public class CduDAO implements IObjectDAO<Cdu> {
         }
     }
 
-    @Override
     public List<Cdu> select(HashMap<String, Object> dades, String campOrdre, Integer totalRegistres, Integer registreInicial, Boolean ascendent) throws SQLException, ClassNotFoundException {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }

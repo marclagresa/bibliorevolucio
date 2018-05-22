@@ -287,7 +287,8 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
         try {
             c=ConnectionFactory.getInstance().getConnection();
             st=c.createStatement();
-            rs=st.executeQuery("SELECT MAX("+ContractEditorial.ID +") FROM "+ContractEditorial.NOM_TAULA);
+            rs=st.executeQuery("SELECT MAX("+ContractEditorial.ID +") FROM "+ContractEditorial.NOM_TAULA +" "
+                    + "WHERE "+ContractEditorial.ID +" > 0");
             if(rs.next()){
                 id=rs.getInt(1) + 1;
             }
