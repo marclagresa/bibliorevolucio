@@ -144,7 +144,7 @@ public class CduDAO{
         try {
             conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractCdu.ID+","+ContractCdu.NOM+","+ContractCdu.IDPARE+
-                        " from "+ContractCdu.NOM_TAULA+" where "+ContractCdu.ID+" like ? ";
+                " from "+ContractCdu.NOM_TAULA+" where "+ContractCdu.ID+" like ? ";
             ps = conn.prepareStatement(sql);
             ps.setString(1,id);
             rs = ps.executeQuery();

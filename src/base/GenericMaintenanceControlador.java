@@ -253,7 +253,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         
     }
     
-    @FXML   // Its called when button is pressed, that gets the data to parse into HashMap to do the search
+    @FXML   // Its called when button is pressed, that gets the data to parse into HashMap then do the search
     private void searchAction(ActionEvent event) {
 
         SearchData sd = _WIDGETSEARCH.getSearchData();
@@ -282,9 +282,11 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             doSearch( data );
 
         } catch ( IllegalArgumentException e ) {
+            System.out.println("aki");
             // Only open an alert
             // If not tested can maybe an error in code            
         } catch ( SQLException | ClassNotFoundException | MaintenanceException ex ) {
+            System.out.println(ex.getMessage());
             // Set in logger
             // Open a generic alert
         }

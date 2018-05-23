@@ -1,11 +1,20 @@
 package base.maintenanceControladors;
 
+import base.EmplanarComboBox.ClCdu;
+import base.EmplanarComboBox.ClColeccio;
+import base.EmplanarComboBox.ClEditorial;
+import base.EmplanarComboBox.ClFormat;
+import base.EmplanarComboBox.ClIdioma;
+import base.EmplanarComboBox.ClNivell;
+import base.EmplanarComboBox.ClProcedencia;
 import base.FXMLProducteController;
 import base.GenericMaintenanceControlador;
 import base.GenericPopUp;
+import bbdd.IObjectDAO;
 import bbdd.ProducteDAO;
+import bbdd.ProducteIdiomaDAO;
+import bbdd.ProducteMateriaDAO;
 import contract.ContractExemplar;
-import contract.ContractMateria;
 import contract.ContractMateriaProducte;
 import contract.ContractProducte;
 import excepcions.MaintenanceException;
@@ -20,6 +29,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.ComboBox;
 
 /**
@@ -28,7 +39,7 @@ import javafx.scene.control.ComboBox;
 public class ProducteMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
     public ProducteMaintenanceControlador() {
-        super( "Producte", 15);
+        super( "Productes", 15);
     }
     
     // AttributeWall
@@ -39,66 +50,94 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
             new AttributeBrick( "id", "ID", true, ContractProducte.ID, AttributeBrick.allowedFormats.Integer),
             new AttributeBrick( "ISBN", "ISBN", true, ContractProducte.ISBN, AttributeBrick.allowedFormats.String),
             new AttributeBrick( "nom", "Nom", true, ContractProducte.NOM, AttributeBrick.allowedFormats.String),
-            new AttributeBrick( "numPag", "Numero Pagines", true, ContractProducte.NUM_PAG, AttributeBrick.allowedFormats.Integer),
-            new AttributeBrick( "dimensions", "Dimensions", true, ContractProducte.DIMENSIONS, AttributeBrick.allowedFormats.String),
-            new AttributeBrick( "anyPublicacio", "Any Publicacio", true, ContractProducte.ANY_PUBLICACIO, AttributeBrick.allowedFormats.String),
-            new AttributeBrick( "resum", "Resum", true, ContractProducte.RESUM, AttributeBrick.allowedFormats.String),
-            new AttributeBrick( "caracterisitques", "Caracteristiques", true, ContractProducte.CARACTERISTIQUES, AttributeBrick.allowedFormats.String),
-            new AttributeBrick( "urlPortada", "Url Portada", true, ContractProducte.URL_PORTADA, AttributeBrick.allowedFormats.String),
-            new AttributeBrick( "adrecaWeb", "Adreca Web", true, ContractProducte.ADRECA_WEB, AttributeBrick.allowedFormats.String),
-            new AttributeBrick( "lloc", "Lloc", true, ContractProducte.LLOC, AttributeBrick.allowedFormats.String),
-            new AttributeBrick( "estat", "Estat", true, ContractProducte.ESTAT, AttributeBrick.allowedFormats.Boolean),
-            new AttributeBrick( "idioma", "Idioma", true, ContractProducte.IDIOMA_ID, AttributeBrick.allowedFormats.Object),
-            new AttributeBrick( "editorial", "Editorial", true, ContractProducte.EDITORIAL_ID, AttributeBrick.allowedFormats.Object),
-            new AttributeBrick( "format", "Format", true, ContractProducte.FORMAT_ID, AttributeBrick.allowedFormats.Object),
-            new AttributeBrick( "procedencia", "Procedencia", true, ContractProducte.PROCEDENCIA_ID, AttributeBrick.allowedFormats.Object),
-          //  new AttributeBrick( "nivell", "Nivell", true, ContractProducte.NIVELL_ID, AttributeBrick.allowedFormats.Object),
-            new AttributeBrick( "coleccio", "Coleccio", true, ContractProducte.COLECCIO_ID, AttributeBrick.allowedFormats.Object),
-           // new AttributeBrick( "cdu", "Cdu", true, ContractProducte.CDU_ID, AttributeBrick.allowedFormats.Object),
-            new AttributeBrick( "exemplar", "Exemplar", true, ContractExemplar.ID, AttributeBrick.allowedFormats.Object),
-            new AttributeBrick( "materia", "Materia", true, ContractMateriaProducte.ID_MATERIA, AttributeBrick.allowedFormats.Object)
+            new AttributeBrick( "numPag", "Numero Pagines", false, ContractProducte.NUM_PAG, AttributeBrick.allowedFormats.Integer),
+            new AttributeBrick( "dimensions", "Dimensions", false, ContractProducte.DIMENSIONS, AttributeBrick.allowedFormats.String),
+            new AttributeBrick( "anyPublicacio", "Any Publicacio", false, ContractProducte.ANY_PUBLICACIO, AttributeBrick.allowedFormats.String),
+            new AttributeBrick( "resum", "Resum", false, ContractProducte.RESUM, AttributeBrick.allowedFormats.String),
+            new AttributeBrick( "caracterisitques", "Caracteristiques", false, ContractProducte.CARACTERISTIQUES, AttributeBrick.allowedFormats.String),
+            new AttributeBrick( "urlPortada", "Url Portada", false, ContractProducte.URL_PORTADA, AttributeBrick.allowedFormats.String),
+            new AttributeBrick( "adrecaWeb", "Adreca Web", false, ContractProducte.ADRECA_WEB, AttributeBrick.allowedFormats.String),
+            //new AttributeBrick( "lloc", "Lloc", false, ContractProducte.LLOC, AttributeBrick.allowedFormats.String),
+            new AttributeBrick( "estat", "Estat", false, ContractProducte.ESTAT, AttributeBrick.allowedFormats.Boolean),
+            new AttributeBrick( "idioma", "Idioma", false, ContractProducte.IDIOMA_ID, AttributeBrick.allowedFormats.Object),
+            new AttributeBrick( "editorial", "Editorial", false, ContractProducte.EDITORIAL_ID, AttributeBrick.allowedFormats.Object),
+            new AttributeBrick( "format", "Format", false, ContractProducte.FORMAT_ID, AttributeBrick.allowedFormats.Object),
+            new AttributeBrick( "procedencia", "Procedencia", false, ContractProducte.PROCEDENCIA_ID, AttributeBrick.allowedFormats.Object),
+            new AttributeBrick( "nivell", "Nivell", true, "---- ARREGLAR ---", AttributeBrick.allowedFormats.List),
+            new AttributeBrick( "coleccio", "Coleccio", false, ContractProducte.COLECCIO_ID, AttributeBrick.allowedFormats.Object),
+            new AttributeBrick( "cdu", "Cdu", true, "---- ARREGLAR ---", AttributeBrick.allowedFormats.List),
+            new AttributeBrick( "exemplar", "Exemplar", false, ContractExemplar.ID, AttributeBrick.allowedFormats.Object),
+            new AttributeBrick( "materia", "Materia", false, ContractMateriaProducte.ID_MATERIA, AttributeBrick.allowedFormats.Object)
         );
         
         return attributeWall;
     }
 
     @Override
-    public Integer parseObject( String contractName, Object object ) throws MaintenanceException {
+    public Object parseObject( String contractName, Object object ) throws MaintenanceException {
 
-        int id = 0;
-        switch( contractName ) {
-            case "nivell":
-                id = ((Nivell) object).getId();
-                break;
-            case "idioma":
-                id = ((Idioma) object).getId();
-                break;
-            case "editorial":
-                id = ((Editorial) object).getId();
-                break;
-            case "format":
-                id = ((Format) object).getId();
-                break;
-            case "procedencia":
-                id = ((Procedencia) object).getId();
-                break;
-            case "coleccio":
-                id = ((Coleccio) object).getId();
-                break;
-            case "cdu":
-           //     id = ((Cdu) object).getId();
-                break;
-            default:
-                throw new MaintenanceException( "This object: " + contractName + " not parsed in a parseObject" );
+        Object id = 0;
+        if ( object != null ) {
+            
+            switch( contractName ) {
+                case "nivell":
+                    id = ((Nivell) object).getId();
+                    break;
+                case "idioma":
+                    id = ((Idioma) object).getId();
+                    break;
+                case "editorial":
+                    id = ((Editorial) object).getId();
+                    break;
+                case "format":
+                    id = ((Format) object).getId();
+                    break;
+                case "procedencia":
+                    id = ((Procedencia) object).getId();
+                    break;
+                case "coleccio":
+                    id = ((Coleccio) object).getId();
+                    break;
+                case "cdu":
+                    id = ((Cdu) object).getId();
+                    break;
+                default:
+                    throw new MaintenanceException( "This object: " + contractName + " not parsed in a parseObject" );
+            }
+
+        } else {
+            
+            throw new IllegalArgumentException( "Invalid data" );
+            
         }
-
+        
         return id;
 
     }
 
     @Override
     public List searchOcurrences( HashMap<String, Object> data, Integer startItem, Integer limitXPage, String attribToOrder, Boolean sortType ) throws SQLException, ClassNotFoundException, IllegalArgumentException {
-        return new ProducteDAO().select( data, attribToOrder, limitXPage, startItem, sortType );
+        
+        ProducteMateriaDAO materies = new ProducteMateriaDAO();
+        ProducteIdiomaDAO idiomes = new ProducteIdiomaDAO();
+        
+        List< Producte > llista = new ProducteDAO().select( data, attribToOrder, limitXPage, startItem, sortType );
+        
+        
+            llista.forEach( ( producte ) -> {
+                
+                try {
+                    producte.setIdiomes( idiomes.selectIdiomes( producte.getId() ) );
+                    producte.setMateries( materies.selectMateries( producte.getId() ) );
+                } catch (SQLException | ClassNotFoundException ex) {
+                    // Set in logger
+                    // Open a generic alert
+                }
+                
+            });
+
+        return llista;
+        
     }
 
     @Override
@@ -124,7 +163,33 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
 
     @Override
     public void parseCombo(String contractName, ComboBox combo) throws MaintenanceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+
+        switch( contractName ) {
+            case "nivell":
+                combo.getEditor().textProperty().addListener( new ClNivell( combo ) );                        
+                break;
+            case "idioma":
+                combo.getEditor().textProperty().addListener( new ClIdioma( combo ) );                        
+                break;
+            case "editorial":
+                combo.getEditor().textProperty().addListener( new ClEditorial( combo ) );                        
+                break;
+            case "format":
+                combo.getEditor().textProperty().addListener( new ClFormat( combo ) );                        
+                break;
+            case "procedencia":
+                combo.getEditor().textProperty().addListener( new ClProcedencia( combo ) );                        
+                break;
+            case "coleccio":
+                combo.getEditor().textProperty().addListener( new ClColeccio( combo ) );                        
+                break;
+            case "cdu":
+                combo.getEditor().textProperty().addListener( new ClCdu( combo ) );                        
+                break;
+            default:
+                throw new MaintenanceException( "This object: " + contractName + " not parsed in a parseCombo" );
+        }
+        
     }
 
 }

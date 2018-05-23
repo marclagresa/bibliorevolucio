@@ -526,7 +526,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         objProducte.setCdu(rs.getString(ContractProducte.CDU));
         objProducte.setExemplars(new HashSet<>(0));
         objProducte.setNivells(new HashSet<>(0));
-        objProducte.setLloc(rs.getString(ContractProducte.LLOC));
+       // objProducte.setLloc(rs.getString(ContractProducte.LLOC));
         return objProducte;
     }
     
