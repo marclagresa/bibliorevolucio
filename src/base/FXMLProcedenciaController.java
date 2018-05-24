@@ -47,6 +47,8 @@ public class FXMLProcedenciaController extends GenericPopUp implements Initializ
         
         return crearPopUp("/fxml/FXMLProcedencia.fxml", FXMLProcedenciaController.class, owner, isModal, tipus);
     } 
+    @FXML
+    private Button btnCancelar;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -107,5 +109,10 @@ public class FXMLProcedenciaController extends GenericPopUp implements Initializ
             }
                    
         }          
-    }    
+    }  
+    
+    @FXML
+    public void cancelar(){
+       ((Stage) (btnCancelar.getScene().getWindow())).close();
+    }
 }

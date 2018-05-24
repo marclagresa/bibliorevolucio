@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import objecte.Coleccio;
 
@@ -30,6 +31,8 @@ public class FXMLColeccioController extends GenericPopUp implements Initializabl
     private Button btnCrearColeccio;
     @FXML
     private Label lblColeccio;
+    @FXML
+    private Button btnCancelar;
 
     /**
      * Initializes the controller class.
@@ -124,5 +127,10 @@ public class FXMLColeccioController extends GenericPopUp implements Initializabl
                     break;
             }           
         }    
+    }
+    
+    @FXML
+    public void cancelar(){
+       ((Stage) (btnCancelar.getScene().getWindow())).close();
     }
 }

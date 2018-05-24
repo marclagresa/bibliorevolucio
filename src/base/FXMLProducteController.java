@@ -69,6 +69,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     ProcedenciaDAO objProcedenciaDAO;
     
     static TipusAccio tipusA;
+    static String pathImatge = "";
     
     @FXML
     private TextArea taResum;
@@ -81,25 +82,11 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     @FXML
     private TextField tfTitol;
     @FXML
-    private TextField tfDimensions;
+    private TextField tfDimensions;    
     @FXML
-    private ComboBox<Persona> cbAutor;
-    @FXML
-    private ComboBox<Editorial> cbEditorial;
-    @FXML
-    private TextField tfNumExemplars;
-    @FXML
-    private ComboBox<Nivell> cbNivell;
+    private TextField tfNumExemplars;   
     @FXML
     private TextField tfAdresaWeb;
-    @FXML
-    private ComboBox<Cdu> cbCDU;
-    @FXML
-    private ComboBox<Format> cbFormat;
-    @FXML
-    private ComboBox<Idioma> cbIdioma;
-    @FXML
-    private ComboBox<Coleccio> cbColeccio;    
     @FXML
     private Button btnNouFormat;
     @FXML
@@ -119,17 +106,31 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     @FXML
     private ImageView imgProducte;
     @FXML
-    private Button btnNouColeccio;
+    private Button btnNouColeccio;   
     @FXML
-    private ComboBox<Materia> cbMateria;
-    @FXML
-    private Button btnNouMateria;
-    @FXML
-    private ComboBox<Procedencia> cbProcedencia;
+    private Button btnNouMateria;    
     @FXML
     private Button btnNouProcedencia;
     @FXML
     private TextArea taCaract;
+    @FXML
+    private ComboBox<Persona> cbAutor;
+    @FXML
+    private ComboBox<Nivell> cbNivell;
+    @FXML
+    private ComboBox<Editorial> cbEditorial;
+    @FXML
+    private ComboBox<Cdu> cbCDU;
+    @FXML
+    private ComboBox<Format> cbFormat;
+    @FXML
+    private ComboBox<Idioma> cbIdioma;
+    @FXML
+    private ComboBox<Coleccio> cbColeccio; 
+    @FXML
+    private ComboBox<Materia> cbMateria;
+    @FXML
+    private ComboBox<Procedencia> cbProcedencia;
     @FXML
     private ScrollPane scrollPane;
     
@@ -142,7 +143,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     
     @FXML
     public void guardar() {
-        
+    
         //Falta afegir comprovadors de els contenidors de text no estan buits
         int data = 0,num_pag = 0,volum = 0,num_exemplars = 0;
         String cdu = "",editorial = "", persona = "",nivellLectura = "",format = "",idioma = "", coleccio = "";
@@ -337,12 +338,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         }
     }
     
-    @FXML
-    public void cancelar(){
-       ((Stage) (btnCancelar.getScene().getWindow())).close();
-        System.out.println("Cancel·lar");
-    }
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {            
         
@@ -475,14 +470,12 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         //Listener Format       
         ClFormat clFormat = new ClFormat(cbFormat);      
         cbFormat.getEditor().textProperty().addListener(clFormat);
-         
-        
+            
         //Listener Nivell        
         ClNivell clNivell = new ClNivell(cbNivell);     
         cbNivell.getEditor().textProperty().addListener(clNivell);
         
-        //Listener Idioma
-        
+        //Listener Idioma        
         ClIdioma clIdioma = new ClIdioma(cbIdioma);      
         cbIdioma.getEditor().textProperty().addListener(clIdioma);
         
@@ -492,7 +485,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         
         //Listener Persona        
         ClPersona clPersona = new ClPersona(cbAutor);
-        cbCDU.getEditor().textProperty().addListener(clPersona);
+        cbAutor.getEditor().textProperty().addListener(clPersona);
         
         //Listener Col·lecció        
         ClColeccio clColeccio = new ClColeccio(cbColeccio);
@@ -507,7 +500,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         cbProcedencia.getEditor().textProperty().addListener(clProcedencia);
     }
     
-    //Métode que s'executa quan cliquem el botó imatge
+    //Métode que s'executa quan cliquem el botó Insertar imatge
     @FXML
     public void btnImatge(){
         FileChooser fileChooser = new FileChooser();
@@ -530,6 +523,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
 	}
     }
 
+    //Seguit de mètodes que obren PopUps(els que comencen per crear) i actualitzen el contingut dels combobox un cop s'ha creat un nou registre a la taula d'on s'estiren les dades per aquell combobox
     @FXML
     private void crearFormat() throws IOException {
         
@@ -592,16 +586,16 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     @FXML
     private void crearAutor() throws IOException {
         
-        FXMLPersonaController c = FXMLPersonaController.crear(this, true, Crear);
+        FXMLAutorController c = FXMLAutorController.crear(this, true, Crear);
         
         c.onAccept( (Object o)->{
-            actualitzarPersona();
+            actualitzarAutor();
         });
         
         c.show();
     }
     
-    public void actualitzarPersona(){        
+    public void actualitzarAutor(){        
         
         try {
             objPersonaDAO = new PersonaDAO();   
@@ -795,10 +789,18 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         );
     }
      
-     private void setImage(File file) { 
+    private void setImage(File file) {
          
-        Image imatge = new Image(file.toURI().toString());
+        pathImatge = file.toURI().toString(); 
+        Image imatge = new Image(pathImatge);
         imgProducte.setImage(imatge);
+    }
+    
+     //Mètode que s'executa quan cliquem el botó cancel·lar
+    @FXML
+    public void cancelar(){
+       ((Stage) (btnCancelar.getScene().getWindow())).close();
+        System.out.println("Cancel·lar");
     }
 
     @Override

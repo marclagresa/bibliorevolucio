@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -23,10 +24,15 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
     static TipusAccio tipusA;
     static Editorial editorialRebutda;
     
-    @FXML
     private TextField tfNomEditorial;
     @FXML
     private Button btnCrearEditorial;
+    @FXML
+    private Label lblEditorial;
+    @FXML
+    private TextField tfEditorial;
+    @FXML
+    private Button btnCancelar;
 
     /**
      * Initializes the controller class.
@@ -97,10 +103,6 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
                 editorialDAO.close();     
                 break;
         }        
-        
-        btnCrearEditorial.setOnAction((ActionEvent event1) -> {
-            ((Stage) (btnCrearEditorial.getScene().getWindow())).close();
-        });
     }
 
     @Override
@@ -125,5 +127,10 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
                     break;
             }           
         }    
+    }
+    
+    @FXML
+    public void cancelar(){
+       ((Stage) (btnCancelar.getScene().getWindow())).close();
     }
 }

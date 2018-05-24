@@ -27,6 +27,8 @@ public class FXMLFormatController extends GenericPopUp implements Initializable 
     private TextField tfNomFormat;
     @FXML
     private Button btnCrearFormat;
+    @FXML
+    private Button btnCancelar;
 
     /**
      * Initializes the controller class.
@@ -125,5 +127,10 @@ public class FXMLFormatController extends GenericPopUp implements Initializable 
                     break;
             }          
         }    
+    }
+    
+    @FXML
+    public void cancelar(){
+       ((Stage) (btnCancelar.getScene().getWindow())).close();
     }
 }

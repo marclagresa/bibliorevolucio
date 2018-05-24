@@ -11,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import objecte.Persona;
 
@@ -19,7 +20,7 @@ import objecte.Persona;
  *
  * @author AdriaLlop
  */
-public class FXMLPersonaController extends GenericPopUp implements Initializable {
+public class FXMLAutorController extends GenericPopUp implements Initializable {
 
     static TipusAccio tipusA;
     static Persona personaRebuda;
@@ -30,6 +31,8 @@ public class FXMLPersonaController extends GenericPopUp implements Initializable
     private TextField tfAutor;
     @FXML
     private Button btnCrearAutor;
+    @FXML
+    private Button btnCancelar;
 
     /**
      * Initializes the controller class.
@@ -41,11 +44,11 @@ public class FXMLPersonaController extends GenericPopUp implements Initializable
         
     }    
     
-    public static FXMLPersonaController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{     
+    public static FXMLAutorController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{     
         
         tipusA = tipus;
         
-        return crearPopUp("/fxml/FXMLPersona.fxml", FXMLPersonaController.class, owner, isModal, tipus);
+        return crearPopUp("/fxml/FXMLAutor.fxml", FXMLAutorController.class, owner, isModal, tipus);
     }
 
     @FXML
@@ -125,5 +128,10 @@ public class FXMLPersonaController extends GenericPopUp implements Initializable
                     break;
             }          
         }
+    }
+    
+    @FXML
+    public void cancelar(){
+       ((Stage) (btnCancelar.getScene().getWindow())).close();
     }
 }

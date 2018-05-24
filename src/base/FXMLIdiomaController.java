@@ -38,6 +38,8 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
         
         return crearPopUp("/fxml/FXMLIdioma.fxml", FXMLIdiomaController.class, owner, isModal, tipus);
     }
+    @FXML
+    private Button btnCancelar;
 
     @FXML
     public void crearIdioma(){
@@ -129,5 +131,10 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
                     break;
             }         
         }   
+    }
+    
+    @FXML
+    public void cancelar(){
+       ((Stage) (btnCancelar.getScene().getWindow())).close();
     }
 }

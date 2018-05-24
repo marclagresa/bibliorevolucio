@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<ScrollPane fx:id="scrollPane" minViewportHeight="50.0" minViewportWidth="50.0" prefViewportHeight="680.0" prefViewportWidth="750.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLProducteController">
+<ScrollPane fx:id="scrollPane" minViewportHeight="225.0" minViewportWidth="250.0" prefViewportHeight="680.0" prefViewportWidth="750.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLProducteController">
     <content>
         <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="516.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1">
            <children>
@@ -148,7 +148,7 @@
                     </HBox>
                     <HBox fx:id="" prefHeight="30.0" prefWidth="282.0">
                        <children>
-                          <TextField id="tfDimensions" fx:id="tfAutor" prefHeight="25.0" prefWidth="270.0" />
+                          <TextField id="tfDimensions" fx:id="tfAutor" editable="false" prefHeight="25.0" prefWidth="270.0" />
                        </children>
                        <padding>
                           <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
@@ -211,7 +211,7 @@
                     </HBox>
                     <HBox prefHeight="30.0" prefWidth="282.0">
                        <children>
-                          <TextField id="tfDimensions" fx:id="tfNivell" prefHeight="25.0" prefWidth="270.0" />
+                          <TextField id="tfDimensions" fx:id="tfNivell" editable="false" prefHeight="25.0" prefWidth="270.0" />
                        </children>
                        <padding>
                           <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />
@@ -253,7 +253,7 @@
                     </HBox>
                     <HBox fx:id="tfAutor1" layoutX="10.0" layoutY="266.0" prefHeight="30.0" prefWidth="282.0">
                        <children>
-                          <TextField id="tfDimensions" fx:id="tfMateria" prefHeight="25.0" prefWidth="270.0" />
+                          <TextField id="tfDimensions" fx:id="tfMateria" editable="false" prefHeight="25.0" prefWidth="270.0" />
                        </children>
                        <padding>
                           <Insets bottom="2.0" left="20.0" right="20.0" top="2.0" />

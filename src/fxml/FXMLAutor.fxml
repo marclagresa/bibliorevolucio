@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" stylesheets="/media/css/estilsPopUps.css" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLPersonaController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" stylesheets="/media/css/estilsPopUps.css" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLAutorController">
    <children>
       <Label fx:id="lblAutor" text="Nom Autor:">
          <font>
@@ -27,7 +27,7 @@
                   <Insets right="40.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnCancelar" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="Cancel·lar" />
+            <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#cancelar" prefHeight="40.0" prefWidth="80.0" text="Cancel·lar" />
          </children>
          <VBox.margin>
             <Insets top="30.0" />
