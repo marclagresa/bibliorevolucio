@@ -32,8 +32,9 @@ public class Producte {
     private SimpleObjectProperty<Set<Persona>> autors;
     private SimpleObjectProperty<Set<Idioma>> idiomes;    
 //Constructor Buit
-
+    
     public Producte(){
+       
         this.numPag = new SimpleIntegerProperty(-1);
         this.pais=new SimpleStringProperty("");
         this.lloc=new SimpleStringProperty("");

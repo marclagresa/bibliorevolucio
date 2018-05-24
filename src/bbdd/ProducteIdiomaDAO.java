@@ -95,7 +95,7 @@ public class ProducteIdiomaDAO {
                 idiomaDAOObj=new IdiomaDAO();
                 idiomesSet.add(idiomaDAOObj.select(rs.getInt(ContractProducteIdioma.ID_IDIOMA)));
                 while(rs.next()){
-                    idiomesSet.add(idiomaDAOObj.select(rs.getInt(ContractProducteIdioma.ID_PRODUCTE)));
+                    idiomesSet.add(idiomaDAOObj.select(rs.getInt(ContractProducteIdioma.ID_IDIOMA)));
                 }
             }
         } catch (SQLException e) {

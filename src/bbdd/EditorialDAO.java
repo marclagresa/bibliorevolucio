@@ -330,7 +330,7 @@ public class EditorialDAO implements IObjectDAO<Editorial>{
             throw new ClassNotFoundException (e.getMessage(),e.getCause());
         }
         finally{
-            
+            this.close();
         }
         return objEditorial;
     }

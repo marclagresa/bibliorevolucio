@@ -1,7 +1,12 @@
 package bbdd;
 
 import base.ConnectionFactory;
+import contract.ContractMateriaProducte;
 import contract.ContractProducte;
+import contract.ContractProducteIdioma;
+import contract.ContractProducteNivell;
+import java.io.IOException;
+import java.nio.file.FileSystems;
 
 
 import java.sql.Connection;
@@ -13,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import objecte.Cdu;
 import objecte.Coleccio;
@@ -47,14 +53,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         Set <Exemplar> exemplars;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ ContractProducte.ID+","+ContractProducte.ISBN+","+ContractProducte.NOM+","
-                    +ContractProducte.NUM_PAG+","+ContractProducte.DIMENSIONS+","+ContractProducte.ANY_PUBLICACIO+","
-                    +ContractProducte.RESUM+","+ContractProducte.CARACTERISTIQUES+","
-                    +ContractProducte.URL_PORTADA+","+ContractProducte.ADRECA_WEB+","+ContractProducte.ESTAT+","
-                    +ContractProducte.IDIOMA_ID+","+ContractProducte.EDITORIAL_ID+","
-                    +ContractProducte.FORMAT_ID+","+ContractProducte.PROCEDENCIA_ID+","
-                    +ContractProducte.COLECCIO_ID+","+ContractProducte.CDU+
-                    "from "+ ContractProducte.NOM_TAULA;
+            sql = "Select * from "+ ContractProducte.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
             list.clear();
@@ -71,32 +70,75 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         return list;
     }
     @Override
-    public List<Producte> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
+    public List<Producte> select(HashMap <String,Object> dades,
+        String campOrdre,Integer totalRegistres,
+        Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
         List<Producte> productes =new ArrayList<>();
         ArrayList<Object>valors;
         String query;
+        Integer[]ids;
         int i;
+        long ini,fin;
         try {
+        
             conn=ConnectionFactory.getInstance().getConnection();
+         
             valors=new ArrayList<>();
             query = "SELECT * FROM "+ContractProducte.NOM_TAULA;
             i=0;
-            for(String camp:dades.keySet()){
+            for (Map.Entry<String, Object> entry : dades.entrySet()) {
+                String camp = entry.getKey();
+                Object valor = entry.getValue();
                 if(i ==0){
                     query += " WHERE ";
                 }
                 else{
                     query += " AND ";
                 }
-                if(dades.get(camp).getClass().equals(String.class)){
-                    query += camp+" LIKE ?";
-                    valors.add("%"+dades.get(camp)+"%");
+                if(valor.getClass().equals(String.class)){
+                    query += camp+" LIKE ? ";
+                    valors.add("%"+valor+"%");
                 }
-                else{
-                    query += camp+ " = ?";
+                else if(valor.getClass().equals(Integer.class)){
+                    query += camp+ " = ? ";
+                    valors.add(dades.get(camp));     
+                }
+                else if(valor.getClass().equals(Boolean.class)){
+                    query += camp+ " = ? ";
                     valors.add(dades.get(camp));
                 }
-
+                else if(valor.getClass().equals(Integer[].class)){
+                    ids=(Integer[])valor;
+                    query +=camp;
+                    for (int j = 0; j < ids.length; j++) {
+                        if(j==0){
+                            query += " WHERE ";
+                        }
+                        else{
+                            query += " OR ";
+                        }
+                        switch(camp){
+                            case ContractProducte.IDIOMA_ID:
+                                query+=ContractProducteIdioma.ID_IDIOMA + " = ? ";
+                                valors.add(ids[j]);
+                                break;
+                            case ContractProducte.AUTORS:
+                                query+=ContractProducteIdioma.ID_IDIOMA + " = ?";
+                                valors.add(ids[j]);
+                                break;
+                            case ContractProducte.MATERIA:
+                                query+=ContractMateriaProducte.ID_MATERIA+ " = ?";
+                                valors.add(ids[j]);
+                                break;
+                            case ContractProducte.NIVELL:
+                                query+=ContractProducteNivell.ID_NIVELL + " = ?";
+                                valors.add(ids[j]);
+                                break;
+                        }
+                    }
+                    query+=")";
+                }
+                i++;
             }
             if(campOrdre!=null){
                 query+=" ORDER BY ? ";
@@ -124,14 +166,20 @@ public class ProducteDAO implements IObjectDAO<Producte> {
 
             }
             ps=conn.prepareStatement(query);
+            
             for(i=0;i<valors.size();i++){
                 ps.setObject(i+1, valors.get(i));
-
             }
+            ini=System.currentTimeMillis();
             rs=ps.executeQuery();
+            fin=System.currentTimeMillis();
+            System.out.println("Fi query:"+ (ini-fin));
+            ini=System.currentTimeMillis();
             while(rs.next()){
                 productes.add(this.read());
             }
+            fin=System.currentTimeMillis();
+            System.out.println("Fi carrega: " + (fin-ini));
         } catch (SQLException ex) {
             throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
         } catch(ClassNotFoundException ex){
@@ -148,6 +196,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             List<Producte> list = new ArrayList<>();
             String sql;
             Object [] valors;
+  
             int i;
             boolean dadaCorrecte=false;
 
@@ -195,10 +244,14 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                 for(i=0;i<valors.length;i++){
                     ps.setObject(i+1, valors[i]);
                 }
+                
                 rs = ps.executeQuery();
+                
+                
                 while(rs.next()){
                     list.add(this.read());
                 }
+                
 
             } catch (SQLException ex){
                 throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
@@ -314,8 +367,10 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     + ContractProducte.FORMAT_ID + ", "
                     + ContractProducte.PROCEDENCIA_ID + ", "
                     + ContractProducte.COLECCIO_ID + ", "
-                    + ContractProducte.CDU + ") "
-                    + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                    + ContractProducte.CDU + ", "
+                    + ContractProducte.PAIS + ","
+                    + ContractProducte.LLOC+" ) "
+                    + " values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
             ps = conn.prepareStatement(insert);
             ps.setInt(1,producte.getId());
             ps.setString(2,producte.getISBN());
@@ -333,6 +388,8 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             ps.setInt(14,producte.getProcedencia().getId());
             ps.setInt(15,producte.getColeccio().getId());
             ps.setString(16,producte.getCdu());
+            ps.setString(17, producte.getPais());
+            ps.setString(18, producte.getLloc());
             ps.executeUpdate();
             producte.getMateries().forEach(action->{
                 try {
@@ -508,7 +565,10 @@ public class ProducteDAO implements IObjectDAO<Producte> {
     }
 
     private Producte read()throws SQLException,ClassNotFoundException{
+        long ini,fin;
+        System.out.println("\n\nPRODUCTE\n\n");
         Producte objProducte = new Producte();
+        ini=System.currentTimeMillis();
         objProducte.setId(rs.getInt(ContractProducte.ID));
         objProducte.setISBN(rs.getString(ContractProducte.ISBN));
         objProducte.setNumPag(rs.getInt(ContractProducte.NUM_PAG));
@@ -519,18 +579,43 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         objProducte.setUrlPortada(rs.getString(ContractProducte.URL_PORTADA));
         objProducte.setAdreçaWeb(rs.getString(ContractProducte.ADRECA_WEB));
         objProducte.setEstat(rs.getBoolean(ContractProducte.ESTAT));
-        objProducte.setEditorial(new EditorialDAO().select(rs.getInt(ContractProducte.EDITORIAL_ID)));
-        objProducte.setFormat(new FormatDAO().select(rs.getInt(ContractProducte.FORMAT_ID)));
-        objProducte.setProcedencia(new ProcedenciaDAO().select(rs.getInt(ContractProducte.PROCEDENCIA_ID)));
-        objProducte.setColeccio(new ColeccioDAO().select(rs.getInt(ContractProducte.COLECCIO_ID)));
+        objProducte.setPais(rs.getString(ContractProducte.PAIS));
+        objProducte.setLloc(rs.getString(ContractProducte.LLOC));
         objProducte.setCdu(rs.getString(ContractProducte.CDU));
+        fin = System.currentTimeMillis();
+        System.out.println("Fi carrega atributs:"+(fin-ini));
+        ini=System.currentTimeMillis();
+        objProducte.setEditorial(new EditorialDAO().select(rs.getInt(ContractProducte.EDITORIAL_ID)));
+        fin=System.currentTimeMillis();
+        
+        System.out.println("Fi carrega editoria:"+(fin-ini));
+         ini=System.currentTimeMillis();
+        objProducte.setFormat(new FormatDAO().select(rs.getInt(ContractProducte.FORMAT_ID)));
+        fin=System.currentTimeMillis();
+        System.out.println("Fi carrega format:"+(fin-ini));
+         ini=System.currentTimeMillis();
+        objProducte.setProcedencia(new ProcedenciaDAO().select(rs.getInt(ContractProducte.PROCEDENCIA_ID)));
+        fin=System.currentTimeMillis();
+        System.out.println("Fi carrega procedencia:"+(fin-ini));
+         ini=System.currentTimeMillis();
+        objProducte.setColeccio(new ColeccioDAO().select(rs.getInt(ContractProducte.COLECCIO_ID)));
+        fin=System.currentTimeMillis();
+        System.out.println("Fi carrega coleccio:"+(fin-ini));
+        ini = System.currentTimeMillis();
         objProducte.setExemplars(new HashSet<>(0));
         objProducte.setNivells(new HashSet<>(0));
-       // objProducte.setLloc(rs.getString(ContractProducte.LLOC));
+        fin=System.currentTimeMillis();
+        System.out.println("Fi carrega hashes:"+(fin-ini));
         return objProducte;
     }
     
-    public static void main(String[] args) {
-        
+    public static void main(String[] args) throws SQLException,ClassNotFoundException,IOException{
+        ConnectionFactory.getInstance().configure( FileSystems.getDefault().getPath("src/base", "configLector.txt"));
+        HashMap<String,Object>consulta = new HashMap<>();
+        consulta.put(ContractProducte.NOM, "a");
+        consulta.put(ContractProducte.IDIOMA_ID, new Integer[]{1,2});
+        consulta.put(ContractProducte.NIVELL, new Integer[]{1});
+        System.out.println(new ProducteDAO().select(consulta,null,null,null,null).size());
+        //new ProducteDAO().select(consulta,null,null,null,null).forEach(action->System.out.println(action.toString()));
     }
 }
