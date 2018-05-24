@@ -608,6 +608,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         System.out.println("\n\nPRODUCTE\n\n");
         Producte objProducte = new Producte();
         ini=System.currentTimeMillis();
+        objProducte.setNom(rs.getString(ContractProducte.NOM));
         objProducte.setId(rs.getInt(ContractProducte.ID));
         objProducte.setISBN(rs.getString(ContractProducte.ISBN));
         objProducte.setNumPag(rs.getInt(ContractProducte.NUM_PAG));
