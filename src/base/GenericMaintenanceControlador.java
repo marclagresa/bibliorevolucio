@@ -8,7 +8,9 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -262,17 +264,20 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
                 case Integer:
                     data.put( contractName, Integer.valueOf( sd.getFieldText() ) );
                     break;
+                case List:
+                    data.put( contractName, new Integer[]{ (Integer) parseObject( sd.getBrick().getNAME(), sd.getObject() ) });
+                    break;
                 case Date:
                 case String:
                     data.put( contractName, sd.getFieldText() );
                     break;
             }
             
-            new Thread(() -> {
-                
+            Platform.runLater(() -> {
+                        
                 // Obrir pop up loading
                 try {
-                    
+
                     doSearch( data );
 
                 } catch ( IllegalArgumentException e ) {
@@ -285,7 +290,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
                     // Tancar pop up loading
                 }
                 
-            }).start();
+            });
             
         } catch ( MaintenanceException ex ) {
             // Set in logger
@@ -302,12 +307,12 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             GenericPopUp w = createPopUpAdvSearch( TipusAccio.Buscar );
             
             w.onAccept( ( map ) -> {
-                    
-                new Thread(() -> {
-
+                
+                Platform.runLater(() -> {
+                        
                     // Obrir pop up loading
                     try {
-                        
+
                         doSearch( (map instanceof HashMap) ? (HashMap) map : null );
 
                     } catch ( IllegalArgumentException e ) {
@@ -319,8 +324,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
                     } finally {
                         // Tancar pop up loading
                     }
-                    
-                }).start();
+                });
                     
             });
             

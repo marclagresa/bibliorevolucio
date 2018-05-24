@@ -54,6 +54,7 @@ public abstract class ContractProducte {
         put(PAIS, Types.VARCHAR);
         put(IDIOMA_ID,Types.ARRAY);
         put(AUTORS,Types.ARRAY);
-        put(MATERIA,Types.ARRAY );
+        put(MATERIA,Types.ARRAY);
+        put(NIVELL,Types.ARRAY);
     }};
 }

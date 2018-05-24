@@ -5,7 +5,9 @@ import base.EmplanarComboBox.ClColeccio;
 import base.EmplanarComboBox.ClEditorial;
 import base.EmplanarComboBox.ClFormat;
 import base.EmplanarComboBox.ClIdioma;
+import base.EmplanarComboBox.ClMateria;
 import base.EmplanarComboBox.ClNivell;
+import base.EmplanarComboBox.ClPersona;
 import base.EmplanarComboBox.ClProcedencia;
 import base.FXMLProducteController;
 import base.GenericMaintenanceControlador;
@@ -15,6 +17,7 @@ import bbdd.ProducteDAO;
 import bbdd.ProducteIdiomaDAO;
 import bbdd.ProducteMateriaDAO;
 import bbdd.ProducteNivellDAO;
+import contract.ContractExemplar;
 import contract.ContractMateriaProducte;
 import contract.ContractProducte;
 import contract.ContractProducteIdioma;
@@ -38,6 +41,12 @@ import javafx.scene.control.ComboBox;
  */
 public class ProducteMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
+    private final String nivell = "nivells";
+    private final String idioma = "idiomes";
+    private final String materia = "materias";
+    private final String coleccio = "coleccio";
+    private final String autors = "autors";
+    
     public ProducteMaintenanceControlador() {
         super( "Productes", 15);
     }
@@ -58,16 +67,17 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
             new AttributeBrick( "urlPortada", "Url Portada", false, ContractProducte.URL_PORTADA, AttributeBrick.allowedFormats.String),
             new AttributeBrick( "adrecaWeb", "Adreca Web", false, ContractProducte.ADRECA_WEB, AttributeBrick.allowedFormats.String),
             new AttributeBrick( "lloc", "Lloc", false, ContractProducte.LLOC, AttributeBrick.allowedFormats.String),
+            new AttributeBrick( "pais", "Païs", false, ContractProducte.PAIS, AttributeBrick.allowedFormats.String),
             new AttributeBrick( "estat", "Estat", false, ContractProducte.ESTAT, AttributeBrick.allowedFormats.Boolean),
-            new AttributeBrick( "idiomes", "Idioma", true, ContractProducteIdioma.ID_IDIOMA, AttributeBrick.allowedFormats.List),
+            new AttributeBrick( "idiomes", "Idioma", true, ContractProducte.IDIOMA_ID, AttributeBrick.allowedFormats.List),
             new AttributeBrick( "editorial", "Editorial", false, ContractProducte.EDITORIAL_ID, AttributeBrick.allowedFormats.Object),
             new AttributeBrick( "format", "Format", false, ContractProducte.FORMAT_ID, AttributeBrick.allowedFormats.Object),
             new AttributeBrick( "procedencia", "Procedencia", false, ContractProducte.PROCEDENCIA_ID, AttributeBrick.allowedFormats.Object),
-            new AttributeBrick( "nivells", "Nivell", true, ContractProducteNivell.ID_NIVELL, AttributeBrick.allowedFormats.List),
+            new AttributeBrick( nivell, "Nivell", true, ContractProducte.NIVELL, AttributeBrick.allowedFormats.List),
+            new AttributeBrick( autors, "Autors", true, ContractProducte.AUTORS, AttributeBrick.allowedFormats.List),
             new AttributeBrick( "coleccio", "Coleccio", false, ContractProducte.COLECCIO_ID, AttributeBrick.allowedFormats.Object),
             new AttributeBrick( "cdu", "Cdu", false, ContractProducte.CDU, AttributeBrick.allowedFormats.String),
-            new AttributeBrick( "exemplars", "Exemplar", true, "--- Arreglar ---", AttributeBrick.allowedFormats.List),
-            new AttributeBrick( "materias", "Materia", true, ContractMateriaProducte.ID_MATERIA, AttributeBrick.allowedFormats.List)
+            new AttributeBrick( "materias", "Materia", true, ContractProducte.MATERIA, AttributeBrick.allowedFormats.List)
         );
         
         return attributeWall;
@@ -80,11 +90,17 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
         if ( object != null ) {
             
             switch( contractName ) {
-                case "nivell":
+                case nivell:
                     id = ((Nivell) object).getId();
                     break;
-                case "idioma":
+                case idioma:
                     id = ((Idioma) object).getId();
+                    break;
+                case materia:
+                    id = ((Materia) object).getId();
+                    break;
+                case autors:
+                    id = ((Autoria) object).getId();
                     break;
                 case "editorial":
                     id = ((Editorial) object).getId();
@@ -95,7 +111,7 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
                 case "procedencia":
                     id = ((Procedencia) object).getId();
                     break;
-                case "coleccio":
+                case coleccio:
                     id = ((Coleccio) object).getId();
                     break;
                 case "cdu":
@@ -132,7 +148,7 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
                     producte.setIdiomes( idiomes.selectIdiomes( producte.getId() ) );
                     producte.setMateries( materies.selectMateries( producte.getId() ) );
                     producte.setNivells( nivells.selectNivells( producte.getId() ) );
-                    //producte.setAutors( autors.);
+                    //producte.setAutors( autors );
                 } catch (SQLException | ClassNotFoundException ex) {
                     // Set in logger
                     // Open a generic alert
@@ -169,11 +185,17 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
     public void parseCombo(String contractName, ComboBox combo) throws MaintenanceException {
 
         switch( contractName ) {
-            case "nivell":
+            case nivell:
                 combo.getEditor().textProperty().addListener( new ClNivell( combo ) );                        
                 break;
-            case "idioma":
+            case idioma:
                 combo.getEditor().textProperty().addListener( new ClIdioma( combo ) );                        
+                break;
+            case materia:
+                combo.getEditor().textProperty().addListener( new ClMateria( combo ) );
+                break;
+            case autors:
+                combo.getEditor().textProperty().addListener( new ClPersona( combo ) );
                 break;
             case "editorial":
                 combo.getEditor().textProperty().addListener( new ClEditorial( combo ) );                        
@@ -184,7 +206,7 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
             case "procedencia":
                 combo.getEditor().textProperty().addListener( new ClProcedencia( combo ) );                        
                 break;
-            case "coleccio":
+            case coleccio:
                 combo.getEditor().textProperty().addListener( new ClColeccio( combo ) );                        
                 break;
             case "cdu":
