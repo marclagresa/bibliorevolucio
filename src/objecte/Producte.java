@@ -32,8 +32,9 @@ public class Producte {
     private SimpleObjectProperty<Set<Persona>> autors;
     private SimpleObjectProperty<Set<Idioma>> idiomes;    
 //Constructor Buit
-
+    
     public Producte(){
+       
         this.numPag = new SimpleIntegerProperty(-1);
         this.pais=new SimpleStringProperty("");
         this.lloc=new SimpleStringProperty("");
@@ -145,7 +146,7 @@ public class Producte {
     //Properties
     public SimpleStringProperty paisProperty(){return this.pais;}
     public SimpleObjectProperty<Set<Persona>>autorsProperty(){return this.autors;}
-    public SimpleObjectProperty<Set<Materia>> materiesProperty(){return this.materias;}
+    public SimpleObjectProperty<Set<Materia>> materiasProperty(){return this.materias;}
     public SimpleStringProperty llocProperty(){return this.lloc;}
     public SimpleIntegerProperty idProperty() { return id; }
     public SimpleStringProperty ISBNProperty() { return ISBN; }

@@ -36,20 +36,9 @@ import maintenance.WidgetSearch.SearchData;
 
     
 /**
- * This class need be implemented like below example 
- * If _WIDGETLIST or _WIDGETSEARCH are null trhow MaintenanceException in method loadElemets() called in constructor
+ * This class need be implemented like example below 
  * 
- * Example in UsuariMaintenanceControlador.java:
- * -------------------------------------------------------------------------
- *  public UsuariMaintenanceControlador() throws MaintenanceException {
- *  
- *   GenericWall wall = new UsuariWall();
- *   this._WIDGETLIST = new WidgetList( wall, "Usuaris" );
- *   this._WIDGETSEARCH = new WidgetSearch( wall );
- *  
- *  }
- * -------------------------------------------------------------------------
- *
+ * Example in UsuariMaintenanceControlador.java
  * @author Rafel
  */
 public abstract class GenericMaintenanceControlador extends GenericControlador implements Initializable, AttributeWall {
@@ -257,7 +246,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     private void searchAction(ActionEvent event) {
 
         SearchData sd = _WIDGETSEARCH.getSearchData();
-        
+        // Falta afegir el format "list" en el switch
         try {
             
             HashMap< String, Object > data = new HashMap<>();
@@ -279,14 +268,26 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
                     break;
             }
             
-            doSearch( data );
+            new Thread(() -> {
+                
+                // Obrir pop up loading
+                try {
+                    
+                    doSearch( data );
 
-        } catch ( IllegalArgumentException e ) {
-            System.out.println("aki");
-            // Only open an alert
-            // If not tested can maybe an error in code            
-        } catch ( SQLException | ClassNotFoundException | MaintenanceException ex ) {
-            System.out.println(ex.getMessage());
+                } catch ( IllegalArgumentException e ) {
+                    // Only open an alert
+                    // If not tested can maybe an error in code            
+                } catch (SQLException | ClassNotFoundException ex) {
+                    // Set in logger
+                    // Open a generic alert
+                } finally {
+                    // Tancar pop up loading
+                }
+                
+            }).start();
+            
+        } catch ( MaintenanceException ex ) {
             // Set in logger
             // Open a generic alert
         }
@@ -301,15 +302,26 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             GenericPopUp w = createPopUpAdvSearch( TipusAccio.Buscar );
             
             w.onAccept( ( map ) -> {
-                try {
-                    doSearch( (map instanceof HashMap) ? (HashMap) map : null );
-                } catch ( SQLException | ClassNotFoundException ex ) {
-                    // Set in logger
-                    // Open a generic alert
-                } catch ( IllegalArgumentException ex ) {
-                    // Only open an alert
-                    // If not tested can maybe an error in code
-                }
+                    
+                new Thread(() -> {
+
+                    // Obrir pop up loading
+                    try {
+                        
+                        doSearch( (map instanceof HashMap) ? (HashMap) map : null );
+
+                    } catch ( IllegalArgumentException e ) {
+                        // Only open an alert
+                        // If not tested can maybe an error in code            
+                    } catch (SQLException | ClassNotFoundException ex) {
+                        // Set in logger
+                        // Open a generic alert
+                    } finally {
+                        // Tancar pop up loading
+                    }
+                    
+                }).start();
+                    
             });
             
             w.show();
@@ -402,7 +414,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         try {
             
             if( _currentPage > 1) {
-                openPage( _currentPage-- );
+                openPage( --_currentPage );
             }
             
         } catch ( SQLException | ClassNotFoundException ex) {
@@ -418,7 +430,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         try {
             
             if( _currentPage < _maxPage ) {
-                openPage( _currentPage++ );
+                openPage( ++_currentPage );
             }
             
         } catch ( SQLException | ClassNotFoundException ex) {

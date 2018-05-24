@@ -48,7 +48,7 @@ public class FXMLLoginController extends GenericControlador implements Initializ
             System.out.println(FileSystems.getDefault().getPath(".", "").toAbsolutePath().toString());
             ConnectionFactory.getInstance().configure( FileSystems.getDefault().getPath("src/base", "configLector.txt"));
             
-        }catch(IOException e){
+        }catch(IOException | SQLException e){
             System.err.println(e.getMessage());
         }
         

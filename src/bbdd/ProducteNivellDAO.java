@@ -43,9 +43,9 @@ public class ProducteNivellDAO {
             rs=ps.executeQuery();
             if(rs.next()){
                 nivellDAOObj = new NivellDAO();
-                nivellsSet.add(nivellDAOObj.select(rs.getInt(ContractProducteNivell.ID_PRODUCTE)));
+                nivellsSet.add(nivellDAOObj.select(rs.getInt(ContractProducteNivell.ID_NIVELL)));
                 while(rs.next()){
-                    nivellsSet.add(nivellDAOObj.select(rs.getInt(ContractProducteNivell.ID_PRODUCTE)));
+                    nivellsSet.add(nivellDAOObj.select(rs.getInt(ContractProducteNivell.ID_NIVELL)));
                 }
             }
         } catch(SQLException e){

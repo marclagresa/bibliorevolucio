@@ -160,7 +160,8 @@ public class FXMLTraspasController implements Initializable {
                                 p.setProcedencia(getProcedencia(reader.get("PROC")));
                                 p.setCaracteristiques(reader.get("CARC"));
                                 p.setEditorial(getEditorial(reader.get("EDITORIAL")));
-                                p.setLloc(reader.get("LLOC")+","+reader.get("PAIS"));
+                                p.setLloc(reader.get("LLOC"));
+                                p.setPais(reader.get("PAIS"));
                                 pDAO.insert(p);
                                 eDAO.insert(new Exemplar(new ExemplarDAO().nextId(),true,p,new Biblioteca(1,"inspladelestany")));
                             }

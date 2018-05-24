@@ -6,16 +6,14 @@
 
 package base;
 
-import com.sun.deploy.config.Platform;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
+import org.apache.commons.dbcp2.BasicDataSource;
 
 /**
  * Classe per obtenir una conexió oberta a la BBDD
@@ -23,15 +21,17 @@ import java.util.Properties;
  */
 public class ConnectionFactory {
     private static ConnectionFactory instance=null;
+    private BasicDataSource dataSource;
     private String usuari;
     private String contrasenya;
-    public String url;
-    public String driver;
+    private String url;
+    private String driver;
     private ConnectionFactory(){
         this.usuari=null;
         this.contrasenya=null;
         this.url=null;
         this.driver=null;
+        dataSource=null;
     }
     
     public static ConnectionFactory getInstance(){
@@ -40,8 +40,11 @@ public class ConnectionFactory {
         }
         return ConnectionFactory.instance;
     }
-    public void configure(Path configFile) throws IOException{   
+    public void configure(Path configFile) throws IOException,SQLException{   
         List<String> liniesFitxer=Files.readAllLines(configFile, Charset.forName("utf-8"));
+        if(dataSource!=null){
+            dataSource.close();
+        }
         liniesFitxer.forEach(linia->{
             String []dadesLinia=linia.split(";");
             switch(dadesLinia[0]){
@@ -59,6 +62,11 @@ public class ConnectionFactory {
                     break;
             }
         });
+        dataSource=new BasicDataSource();
+        dataSource.setDriverClassName(driver);
+        dataSource.setUsername(usuari);
+        dataSource.setUrl(url);
+        dataSource.setPassword(contrasenya);
     }
     
     
@@ -71,11 +79,7 @@ public class ConnectionFactory {
      */
     
     public Connection getConnection() throws ClassNotFoundException,SQLException{
-        Connection c = null;
-        Class.forName(driver);
-        c=DriverManager.getConnection(url,usuari,contrasenya);
-        
-        return c;
+        return dataSource.getConnection();
     }
     
 }
