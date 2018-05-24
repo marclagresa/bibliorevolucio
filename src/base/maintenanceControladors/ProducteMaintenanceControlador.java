@@ -10,13 +10,15 @@ import base.EmplanarComboBox.ClProcedencia;
 import base.FXMLProducteController;
 import base.GenericMaintenanceControlador;
 import base.GenericPopUp;
-import bbdd.IObjectDAO;
+import bbdd.ProducteAutorDAO;
 import bbdd.ProducteDAO;
 import bbdd.ProducteIdiomaDAO;
 import bbdd.ProducteMateriaDAO;
-import contract.ContractExemplar;
+import bbdd.ProducteNivellDAO;
 import contract.ContractMateriaProducte;
 import contract.ContractProducte;
+import contract.ContractProducteIdioma;
+import contract.ContractProducteNivell;
 import excepcions.MaintenanceException;
 import maintenance.AttributeBrick;
 import maintenance.AttributeWall;
@@ -29,8 +31,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.scene.control.ComboBox;
 
 /**
@@ -57,17 +57,17 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
             new AttributeBrick( "caracterisitques", "Caracteristiques", false, ContractProducte.CARACTERISTIQUES, AttributeBrick.allowedFormats.String),
             new AttributeBrick( "urlPortada", "Url Portada", false, ContractProducte.URL_PORTADA, AttributeBrick.allowedFormats.String),
             new AttributeBrick( "adrecaWeb", "Adreca Web", false, ContractProducte.ADRECA_WEB, AttributeBrick.allowedFormats.String),
-            //new AttributeBrick( "lloc", "Lloc", false, ContractProducte.LLOC, AttributeBrick.allowedFormats.String),
+            new AttributeBrick( "lloc", "Lloc", false, ContractProducte.LLOC, AttributeBrick.allowedFormats.String),
             new AttributeBrick( "estat", "Estat", false, ContractProducte.ESTAT, AttributeBrick.allowedFormats.Boolean),
-            new AttributeBrick( "idioma", "Idioma", false, ContractProducte.IDIOMA_ID, AttributeBrick.allowedFormats.Object),
+            new AttributeBrick( "idiomes", "Idioma", true, ContractProducteIdioma.ID_IDIOMA, AttributeBrick.allowedFormats.List),
             new AttributeBrick( "editorial", "Editorial", false, ContractProducte.EDITORIAL_ID, AttributeBrick.allowedFormats.Object),
             new AttributeBrick( "format", "Format", false, ContractProducte.FORMAT_ID, AttributeBrick.allowedFormats.Object),
             new AttributeBrick( "procedencia", "Procedencia", false, ContractProducte.PROCEDENCIA_ID, AttributeBrick.allowedFormats.Object),
-            new AttributeBrick( "nivell", "Nivell", true, "---- ARREGLAR ---", AttributeBrick.allowedFormats.List),
+            new AttributeBrick( "nivells", "Nivell", true, ContractProducteNivell.ID_NIVELL, AttributeBrick.allowedFormats.List),
             new AttributeBrick( "coleccio", "Coleccio", false, ContractProducte.COLECCIO_ID, AttributeBrick.allowedFormats.Object),
-            new AttributeBrick( "cdu", "Cdu", true, "---- ARREGLAR ---", AttributeBrick.allowedFormats.List),
-            new AttributeBrick( "exemplar", "Exemplar", false, ContractExemplar.ID, AttributeBrick.allowedFormats.Object),
-            new AttributeBrick( "materia", "Materia", false, ContractMateriaProducte.ID_MATERIA, AttributeBrick.allowedFormats.Object)
+            new AttributeBrick( "cdu", "Cdu", false, ContractProducte.CDU, AttributeBrick.allowedFormats.String),
+            new AttributeBrick( "exemplars", "Exemplar", true, "--- Arreglar ---", AttributeBrick.allowedFormats.List),
+            new AttributeBrick( "materias", "Materia", true, ContractMateriaProducte.ID_MATERIA, AttributeBrick.allowedFormats.List)
         );
         
         return attributeWall;
@@ -120,6 +120,8 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
         
         ProducteMateriaDAO materies = new ProducteMateriaDAO();
         ProducteIdiomaDAO idiomes = new ProducteIdiomaDAO();
+        ProducteNivellDAO nivells = new ProducteNivellDAO();
+        ProducteAutorDAO autors = new ProducteAutorDAO();
         
         List< Producte > llista = new ProducteDAO().select( data, attribToOrder, limitXPage, startItem, sortType );
         
@@ -129,6 +131,8 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
                 try {
                     producte.setIdiomes( idiomes.selectIdiomes( producte.getId() ) );
                     producte.setMateries( materies.selectMateries( producte.getId() ) );
+                    producte.setNivells( nivells.selectNivells( producte.getId() ) );
+                    //producte.setAutors( autors.);
                 } catch (SQLException | ClassNotFoundException ex) {
                     // Set in logger
                     // Open a generic alert

@@ -60,6 +60,7 @@ public class WidgetSearch {
                     _SEARCHCHECKB.setVisible( true );
                     break;
                 case Object:
+                case List:
                     changeCombo.change( newBrick.getNAME(), _SEARCHCOMBOB );
                     _SEARCHCOMBOB.setVisible( true );
                     break;
