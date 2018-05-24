@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane prefHeight="430.0" prefWidth="473.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.ControllerUsuari">
+<Pane prefHeight="430.0" prefWidth="473.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLUsuariController">
    <children>
       <HBox layoutY="14.0" prefHeight="34.0" prefWidth="473.0">
          <children>
@@ -22,14 +22,14 @@
                   <Insets right="15.0" />
                </padding>
             </Label>
-            <TextField fx:id="nomTF" prefHeight="25.0" prefWidth="192.0" />
+            <TextField fx:id="tfNom" prefHeight="25.0" prefWidth="192.0" />
             <Label fx:id="nivellL" alignment="CENTER_RIGHT" prefHeight="17.0" prefWidth="67.0" text="Nivell:">
                <padding>
                   <Insets right="15.0" />
                </padding>
             </Label>
-            <ComboBox fx:id="nivellComB" editable="true" prefHeight="25.0" prefWidth="88.0" />
-            <Button fx:id="btnNouFormat" mnemonicParsing="false" onAction="#crearFormat" prefHeight="12.0" prefWidth="21.0" text="+">
+            <ComboBox fx:id="cbNivell" editable="true" prefHeight="25.0" prefWidth="88.0" />
+            <Button fx:id="btnCrearNivell" mnemonicParsing="false" onAction="#crearNivell" prefHeight="12.0" prefWidth="21.0" text="+">
                <font>
                   <Font size="10.0" />
                </font>
@@ -46,7 +46,7 @@
                   <Insets right="15.0" />
                </padding>
             </Label>
-            <TextField fx:id="cognom_1TF" prefHeight="25.0" prefWidth="192.0" />
+            <TextField fx:id="tfCognom1" prefHeight="25.0" prefWidth="192.0" />
          </children>
       </HBox>
       <HBox layoutY="143.0" prefHeight="34.0" prefWidth="473.0">
@@ -56,7 +56,7 @@
                   <Insets right="15.0" />
                </padding>
             </Label>
-            <TextField fx:id="emailTF" prefHeight="25.0" prefWidth="348.0" />
+            <TextField fx:id="tfEmail" prefHeight="25.0" prefWidth="348.0" />
          </children>
       </HBox>
       <HBox layoutY="334.0" prefHeight="34.0" prefWidth="473.0">
@@ -88,7 +88,7 @@
                   <Insets right="15.0" />
                </padding>
             </Label>
-            <TextField fx:id="cognom_2TF" prefHeight="25.0" prefWidth="192.0" />
+            <TextField fx:id="tfCognom2" prefHeight="25.0" prefWidth="192.0" />
          </children>
       </HBox>
       <HBox layoutY="190.0" prefHeight="34.0" prefWidth="473.0">
@@ -98,7 +98,7 @@
                   <Insets right="15.0" />
                </padding>
             </Label>
-            <TextField fx:id="emailTF1" prefHeight="25.0" prefWidth="191.0" />
+            <TextField fx:id="tfTelefonFixe" prefHeight="25.0" prefWidth="191.0" />
          </children>
       </HBox>
       <HBox layoutY="237.0" prefHeight="34.0" prefWidth="473.0">
@@ -108,7 +108,7 @@
                   <Insets right="15.0" />
                </padding>
             </Label>
-            <TextField fx:id="emailTF11" prefHeight="25.0" prefWidth="191.0" />
+            <TextField fx:id="tfTelefonMobil" prefHeight="25.0" prefWidth="191.0" />
          </children>
       </HBox>
       <HBox layoutY="282.0" prefHeight="34.0" prefWidth="473.0">
@@ -118,7 +118,7 @@
                   <Insets right="15.0" />
                </padding>
             </Label>
-            <TextField fx:id="emailTF111" prefHeight="25.0" prefWidth="191.0" />
+            <TextField fx:id="tfPassword" prefHeight="25.0" prefWidth="191.0" />
          </children>
       </HBox>
       <HBox layoutY="375.0" prefHeight="34.0" prefWidth="473.0" style="-fx-alignment: center;">
@@ -128,7 +128,7 @@
                   <Insets right="10.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="buscarB1" mnemonicParsing="false" onAction="#handleButtonAction" text="Cancel·lar" textAlignment="CENTER">
+            <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#cancelar" text="Cancel·lar" textAlignment="CENTER">
                <HBox.margin>
                   <Insets right="10.0" />
                </HBox.margin>
