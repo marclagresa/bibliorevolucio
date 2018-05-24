@@ -52,6 +52,7 @@ public abstract class ContractProducte {
         put(CDU, Types.VARCHAR);
         put(LLOC, Types.VARCHAR);
         put(PAIS, Types.VARCHAR);
+        put(NIVELL,Types.ARRAY);
         put(IDIOMA_ID,Types.ARRAY);
         put(AUTORS,Types.ARRAY);
         put(MATERIA,Types.ARRAY );

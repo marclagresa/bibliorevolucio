@@ -272,29 +272,68 @@ public class ProducteDAO implements IObjectDAO<Producte> {
     public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
         int count=0;
         ArrayList<Object> valors;
+        Integer []ids;
         int i;
+        
         String query;
         try {
             conn=ConnectionFactory.getInstance().getConnection();
             valors=new ArrayList<>();
             query = "SELECT COUNT(*) FROM "+ContractProducte.NOM_TAULA;
             i=0;
-            for(String camp:dades.keySet()){
+            for(Map.Entry<String, Object> entry : dades.entrySet()){
+                String camp = entry.getKey();
+                Object valor = entry.getValue();
                 if(i ==0){
                     query += " WHERE ";
                 }
                 else{
                     query += " AND ";
                 }
-                if(dades.get(camp).getClass().equals(String.class)){
-                    query += camp+" LIKE ?";
-                    valors.add("%"+dades.get(camp)+"%");
+                if(valor.getClass().equals(String.class)){
+                    query += camp+" LIKE ? ";
+                    valors.add("%"+valor+"%");
                 }
-                else{
-                    query += camp+ " = ?";
+                else if(valor.getClass().equals(Integer.class)){
+                    query += camp+ " = ? ";
+                    valors.add(dades.get(camp));     
+                }
+                else if(valor.getClass().equals(Boolean.class)){
+                    query += camp+ " = ? ";
                     valors.add(dades.get(camp));
                 }
-
+                else if(valor.getClass().equals(Integer[].class)){
+                    ids=(Integer[])valor;
+                    query +=camp;
+                    for (int j = 0; j < ids.length; j++) {
+                        if(j==0){
+                            query += " WHERE ";
+                        }
+                        else{
+                            query += " OR ";
+                        }
+                        switch(camp){
+                            case ContractProducte.IDIOMA_ID:
+                                query+=ContractProducteIdioma.ID_IDIOMA + " = ? ";
+                                valors.add(ids[j]);
+                                break;
+                            case ContractProducte.AUTORS:
+                                query+=ContractProducteIdioma.ID_IDIOMA + " = ?";
+                                valors.add(ids[j]);
+                                break;
+                            case ContractProducte.MATERIA:
+                                query+=ContractMateriaProducte.ID_MATERIA+ " = ?";
+                                valors.add(ids[j]);
+                                break;
+                            case ContractProducte.NIVELL:
+                                query+=ContractProducteNivell.ID_NIVELL + " = ?";
+                                valors.add(ids[j]);
+                                break;
+                        }
+                    }
+                    query+=")";
+                }
+                i++;
             }
             ps=conn.prepareStatement(query);
             for(i=0;i<valors.size();i++){
