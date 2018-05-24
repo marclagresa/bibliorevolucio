@@ -26,8 +26,6 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
     static Materia materiaRebuda;
     
     @FXML
-    private Label lblNivell;
-    @FXML
     private TextField tfMateria;
     @FXML
     private Button btnCrearMateria;
@@ -47,34 +45,14 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
         
         return crearPopUp("/fxml/FXMLMateria.fxml", FXMLMateriaController.class, owner, isModal, tipus);
     }   
+    @FXML
+    private Label lblMateria;
+    @FXML
+    private Button btnCancelar;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }
-
-    @Override
-    public void emplenarDades(Object obj) {
-        
-        Materia materia;
-        materia = (Materia) obj;
-        
-        if (materia!=null){            
-            tfMateria.setText(materia.getNom());
-            
-            switch(tipusA){
-                case Modificar:
-                    btnCrearMateria.setText("Modificar");     
-                    break;
-                case Deshabilitar:
-                    btnCrearMateria.setText("Deshabilitar");     
-                    break;
-                case Buscar:
-                    btnCrearMateria.setText("Buscar");
-                    btnCrearMateria.setDisable(true);
-                    break;
-            }                  
-        } 
     }
 
     @FXML
@@ -133,5 +111,34 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
         btnCrearMateria.setOnAction((ActionEvent event1) -> {
             ((Stage) (btnCrearMateria.getScene().getWindow())).close();
         });
+    }
+    
+    @Override
+    public void emplenarDades(Object obj) {
+        
+        Materia materia;
+        materia = (Materia) obj;
+        
+        if (materia!=null){            
+            tfMateria.setText(materia.getNom());
+            
+            switch(tipusA){
+                case Modificar:
+                    btnCrearMateria.setText("Modificar");     
+                    break;
+                case Deshabilitar:
+                    btnCrearMateria.setText("Deshabilitar");     
+                    break;
+                case Buscar:
+                    btnCrearMateria.setText("Buscar");
+                    btnCrearMateria.setDisable(true);
+                    break;
+            }                  
+        } 
+    }
+    
+    @FXML
+    public void cancelar(){
+       ((Stage) (btnCancelar.getScene().getWindow())).close();
     }
 }

@@ -38,6 +38,8 @@ public class FXMLNivellController extends GenericPopUp implements Initializable 
         
         return crearPopUp("/fxml/FXMLNivell.fxml", FXMLNivellController.class, owner, isModal, tipus);
     }
+    @FXML
+    private Button btnCancelar;
     
     @FXML
     public void crearNivell(){
@@ -130,4 +132,9 @@ public class FXMLNivellController extends GenericPopUp implements Initializable 
             }         
         }    
     }   
+    
+    @FXML
+    public void cancelar(){
+       ((Stage) (btnCancelar.getScene().getWindow())).close();
+    }
 }

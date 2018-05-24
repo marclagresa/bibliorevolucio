@@ -27,7 +27,7 @@
                   <Insets right="40.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="btnCancelar" mnemonicParsing="false" prefHeight="40.0" prefWidth="80.0" text="Cancel·lar" />
+            <Button fx:id="btnCancelar" mnemonicParsing="false" onAction="#cancelar" prefHeight="40.0" prefWidth="80.0" text="Cancel·lar" />
          </children>
          <VBox.margin>
             <Insets top="30.0" />
