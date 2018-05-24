@@ -19,17 +19,20 @@ public abstract class ContractProducte {
     public static final String URL_PORTADA = NOM_TAULA+".url_portada";
     public static final String ADRECA_WEB = NOM_TAULA+".adreca_web";
     public static final String ESTAT = NOM_TAULA+".estat";
+
     public static final String EDITORIAL_ID = NOM_TAULA+".editorial_id";
     public static final String FORMAT_ID = NOM_TAULA+".format_id";
     public static final String PROCEDENCIA_ID = NOM_TAULA+".procedencia_id";
     public static final String COLECCIO_ID = NOM_TAULA+".coleccio_id";
     public static final String CDU = NOM_TAULA+".cdu";
     public static final String LLOC = NOM_TAULA+".lloc";
+
     public static final String PAIS = NOM_TAULA+".pais";
     public static final String IDIOMA_ID = ID+" in ( SELECT " + ContractProducteIdioma.ID_PRODUCTE + " FROM " + ContractProducteIdioma.NOM_TAULA;
     public static final String AUTORS = ID + " in ( SELECT " + ContractProductePersona.ID_PRODUCTE + " FROM " + ContractProductePersona.NOM_TAULA;
     public static final String NIVELL = ID + " IN (SELECT " + ContractProducteNivell.ID_PRODUCTE+ " FROM " + ContractProducteNivell.NOM_TAULA;
     public static final String MATERIA = ID + " IN (SELECT " + ContractMateriaProducte.ID_PRODUCTE+ " FROM " + ContractMateriaProducte.NOM_TAULA;
+
     public static HashMap<String,Integer> DEFINICIO = new HashMap<String,Integer>(){{
         put(ID, Types.INTEGER);
         put(ISBN, Types.VARCHAR);

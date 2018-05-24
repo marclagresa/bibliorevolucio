@@ -146,7 +146,7 @@ public class Producte {
     //Properties
     public SimpleStringProperty paisProperty(){return this.pais;}
     public SimpleObjectProperty<Set<Persona>>autorsProperty(){return this.autors;}
-    public SimpleObjectProperty<Set<Materia>> materiesProperty(){return this.materias;}
+    public SimpleObjectProperty<Set<Materia>> materiasProperty(){return this.materias;}
     public SimpleStringProperty llocProperty(){return this.lloc;}
     public SimpleIntegerProperty idProperty() { return id; }
     public SimpleStringProperty ISBNProperty() { return ISBN; }

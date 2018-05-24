@@ -34,11 +34,11 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -83,13 +83,13 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     @FXML
     private TextField tfDimensions;
     @FXML
-    private ComboBox<Persona> cbPersona;
+    private ComboBox<Persona> cbAutor;
     @FXML
     private ComboBox<Editorial> cbEditorial;
     @FXML
     private TextField tfNumExemplars;
     @FXML
-    private ComboBox<Nivell> cbNivellLectura;
+    private ComboBox<Nivell> cbNivell;
     @FXML
     private TextField tfAdresaWeb;
     @FXML
@@ -117,8 +117,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     @FXML
     private Button btnImatge;
     @FXML
-    private VBox vBox;
-    @FXML
     private ImageView imgProducte;
     @FXML
     private Button btnNouColeccio;
@@ -132,6 +130,8 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     private Button btnNouProcedencia;
     @FXML
     private TextArea taCaract;
+    @FXML
+    private ScrollPane scrollPane;
     
     public static FXMLProducteController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{
 
@@ -167,9 +167,9 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         }
 
         //Autor->comprovació de que no estigui buit el cbEditorial
-        boolean cbPersonaBuit = (cbPersona.getValue() == null);
-        if(!cbPersonaBuit){ 
-            objPersona = cbPersona.getValue();
+        boolean cbAutorBuit = (cbAutor.getValue() == null);
+        if(!cbAutorBuit){ 
+            objPersona = cbAutor.getValue();
             persona = objPersona.getNom();
             System.out.println("Autor: "+persona);
         }     
@@ -183,11 +183,11 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("Editorial: "+editorial);    
         }
         
-        //Nivell lectura->comprovació de que no estigui buit el cbNivellLectura
-        boolean cbNivellLecturaBuit = (cbNivellLectura.getValue() == null);       
+        //Nivell lectura->comprovació de que no estigui buit el cbNivell
+        boolean cbNivellBuit = (cbNivell.getValue() == null);       
         
-        if(!cbNivellLecturaBuit){
-            ojbNivell = cbNivellLectura.getValue();
+        if(!cbNivellBuit){
+            ojbNivell = cbNivell.getValue();
             nivellLectura = ojbNivell.getNom();
             System.out.println("Nivell lectura: "+nivellLectura);    
         }
@@ -287,9 +287,9 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
                cbIdioma.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
            }           
            if(nivellLectura.equals("")){
-               cbNivellLectura.setStyle("-fx-border-color: red;");
+               cbNivell.setStyle("-fx-border-color: red;");
            }else{
-               cbNivellLectura.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+               cbNivell.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
            }
            if(cdu.equals("")){
                cbCDU.setStyle("-fx-border-color: red;");
@@ -297,9 +297,9 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
                cbCDU.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
            }
            if(persona.equals("")){
-               cbPersona.setStyle("-fx-border-color: red;");
+               cbAutor.setStyle("-fx-border-color: red;");
            }else{
-               cbPersona.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+               cbAutor.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
            }
            if(coleccio.equals("")){
                cbColeccio.setStyle("-fx-border-color: red;");
@@ -327,10 +327,10 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             tfNumPag.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             cbColeccio.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             tfTitol.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
-            cbNivellLectura.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+            cbNivell.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             tfDimensions.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             cbIdioma.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
-            cbPersona.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+            cbAutor.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             cbCDU.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             cbEditorial.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             tfNumExemplars.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");            
@@ -373,7 +373,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         try {
             objPersonaDAO = new PersonaDAO(); 
             opcionsPersona = FXCollections.observableArrayList(objPersonaDAO.selectAll());
-            cbPersona.setItems(opcionsPersona);
+            cbAutor.setItems(opcionsPersona);
         } catch (ClassNotFoundException ex) {
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
@@ -387,7 +387,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         try {
             objNivellDAO= new NivellDAO(); 
             opcionsNivell = FXCollections.observableArrayList(objNivellDAO.selectAll());
-            cbNivellLectura.setItems(opcionsNivell);
+            cbNivell.setItems(opcionsNivell);
         } catch(ClassNotFoundException ex){
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
@@ -478,8 +478,8 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
          
         
         //Listener Nivell        
-        ClNivell clNivell = new ClNivell(cbNivellLectura);     
-        cbNivellLectura.getEditor().textProperty().addListener(clNivell);
+        ClNivell clNivell = new ClNivell(cbNivell);     
+        cbNivell.getEditor().textProperty().addListener(clNivell);
         
         //Listener Idioma
         
@@ -491,7 +491,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         cbCDU.getEditor().textProperty().addListener(clCdu);
         
         //Listener Persona        
-        ClPersona clPersona = new ClPersona(cbPersona);
+        ClPersona clPersona = new ClPersona(cbAutor);
         cbCDU.getEditor().textProperty().addListener(clPersona);
         
         //Listener Col·lecció        
@@ -505,17 +505,19 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         //Listener Procedència       
         ClProcedencia clProcedencia = new ClProcedencia(cbProcedencia);
         cbProcedencia.getEditor().textProperty().addListener(clProcedencia);
-        
-        btnImatge.setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();
-            configureFileChooser(fileChooser);
-            Stage stage = (Stage) vBox.getScene().getWindow();           
-            
-            File file = fileChooser.showOpenDialog(stage);
-            if (file != null) {
-                setImage(file);
-            }
-        });
+    }
+    
+    //Métode que s'executa quan cliquem el botó imatge
+    @FXML
+    public void btnImatge(){
+        FileChooser fileChooser = new FileChooser();
+        configureFileChooser(fileChooser);
+        Stage stage = (Stage) scrollPane.getScene().getWindow();           
+           
+        File file = fileChooser.showOpenDialog(stage);
+        if (file != null) {
+            setImage(file);
+        }
     }
     
     //Comprovem que un string nomes conte numeros
@@ -588,7 +590,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     }
 
     @FXML
-    private void crearPersona() throws IOException {
+    private void crearAutor() throws IOException {
         
         FXMLPersonaController c = FXMLPersonaController.crear(this, true, Crear);
         
@@ -604,7 +606,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         try {
             objPersonaDAO = new PersonaDAO();   
             ObservableList<Persona> opcionsPersona = FXCollections.observableArrayList(objPersonaDAO.selectAll());
-            cbPersona.setItems(opcionsPersona);
+            cbAutor.setItems(opcionsPersona);
         } catch(ClassNotFoundException ex){
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
@@ -656,7 +658,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         ObservableList<Nivell> opcionsNivell;
         try {
             opcionsNivell = FXCollections.observableArrayList(objNivellDAO.selectAll());
-            cbNivellLectura.setItems(opcionsNivell);
+            cbNivell.setItems(opcionsNivell);
         } catch(ClassNotFoundException ex){
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
