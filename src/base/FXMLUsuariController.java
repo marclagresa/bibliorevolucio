@@ -4,22 +4,17 @@ import base.EmplanarComboBox.ClNivell;
 import bbdd.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import objecte.*;
-
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.FileSystems;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
@@ -52,13 +47,13 @@ public class FXMLUsuariController extends GenericPopUp implements Initializable 
     @FXML
     private ComboBox<Nivell> cbNivell;
     @FXML
-    private Button btnNouNivell;
+    private Button btnCrearNivell;
     @FXML
     private Button btnCancelar;
     
     public static FXMLUsuariController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{
         tipusA = tipus;
-        return crearPopUp("FXMLUsuari.fxml", FXMLUsuariController.class, owner, isModal, tipus);
+        return crearPopUp("/fxml/FXMLUsuari.fxml", FXMLUsuariController.class, owner, isModal, tipus);
     }    
     
     @FXML
@@ -156,29 +151,17 @@ public class FXMLUsuariController extends GenericPopUp implements Initializable 
     
     @FXML
     public void cancelar(){
-       ((Stage) (btnCancelar.getScene().getWindow())).close();
+        ((Stage) btnCancelar.getScene().getWindow()).close();
         System.out.println("Cancel·lar");
     }
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) {            
-        
-        //Posem els items que hi ha la BD dins dels combobox
-        
-        //Nivell              
-        ObservableList<Nivell> opcionsNivell = null;
+    public void initialize(URL url, ResourceBundle rb) {
         try {
-            objNivellDAO= new NivellDAO(); 
-            opcionsNivell = FXCollections.observableArrayList(objNivellDAO.selectAll());
-            cbNivell.setItems(opcionsNivell);
-        } catch(ClassNotFoundException ex){
-            System.out.println("ClassNotFoundException: "+ex.getMessage());
-        } catch (SQLException ex) {
-            System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objNivellDAO.close();
+            ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        
         //Ara omplim els combobox a partir del text que s'ha escrit en ells(busqueda)
         
         //Listener Nivell        
@@ -199,21 +182,15 @@ public class FXMLUsuariController extends GenericPopUp implements Initializable 
     @FXML
     private void crearNivell() throws IOException{
         
-        FXMLNivellController c = FXMLNivellController.crear(this, true, Crear);
-        
-        c.onAccept( (Object o)->{
-            actualitzarNivell();
-        });
-        
-        c.onCancel(() -> {            
-        });    
-        
+        FXMLNivellController c = FXMLNivellController.crear(this,true, Crear);
+        c.onAccept( (Object o)-> actualitzarNivell());
+        c.onCancel(this::cancelar);
         c.show();
     }
     
     public void actualitzarNivell(){
         
-        objNivellDAO= new NivellDAO();       
+        objNivellDAO= new NivellDAO();
         ObservableList<Nivell> opcionsNivell;
         try {
             opcionsNivell = FXCollections.observableArrayList(objNivellDAO.selectAll());
@@ -228,6 +205,7 @@ public class FXMLUsuariController extends GenericPopUp implements Initializable 
     }
 
     @Override
-    public void emplenarDades(Object obj) {        
+    public void emplenarDades(Object obj) {
+
     }
 }
