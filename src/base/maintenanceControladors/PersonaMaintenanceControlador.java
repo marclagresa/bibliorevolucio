@@ -1,6 +1,6 @@
 package base.maintenanceControladors;
 
-import base.FXMLPersonaController;
+import base.FXMLAutorController;
 import base.GenericMaintenanceControlador;
 import base.GenericPopUp;
 import bbdd.PersonaDAO;
@@ -62,12 +62,12 @@ public class PersonaMaintenanceControlador extends GenericMaintenanceControlador
 
     @Override
     public GenericPopUp createPopUpObject(GenericPopUp.TipusAccio tipusAccio) throws IOException {
-        return FXMLPersonaController.crear(this.getScene().getWindow(), true, tipusAccio);
+        return FXMLAutorController.crear(this.getScene().getWindow(), true, tipusAccio);
     }
 
     @Override
     public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
-        return FXMLPersonaController.crear( this.getScene().getWindow(), true, tipusAccio );
+        return FXMLAutorController.crear( this.getScene().getWindow(), true, tipusAccio );
     }
 
     @Override
