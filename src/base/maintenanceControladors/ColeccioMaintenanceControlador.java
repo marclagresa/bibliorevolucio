@@ -1,18 +1,13 @@
 package base.maintenanceControladors;
 
-import base.FXMLCduController;
 import base.FXMLColeccioController;
 import base.GenericMaintenanceControlador;
 import base.GenericPopUp;
 import bbdd.ColeccioDAO;
-import bbdd.UsuariDAO;
 import contract.ContractColeccio;
-import contract.ContractUsuari;
 import excepcions.MaintenanceException;
 import maintenance.AttributeBrick;
 import maintenance.AttributeWall;
-import objecte.Nivell;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -44,8 +39,35 @@ public class ColeccioMaintenanceControlador extends GenericMaintenanceControlado
     }
 
     @Override
-    public Integer parseObject( String contractName, Object object ) throws MaintenanceException {
-        return 0;
+    public Object parseObject( String contractName, Object object ) throws MaintenanceException {
+        
+        Object id = 0;
+        if ( object != null ) {
+            
+            switch( contractName ) {
+                // If add some object consider the return statement
+                default:
+                    throw new MaintenanceException( "This object: " + contractName + " not parsed in a parseObject" );
+            }
+
+        } else {
+            
+            throw new IllegalArgumentException( "Invalid data" );
+            
+        }
+        
+        //return id;
+        
+    }
+    
+    @Override
+    public void parseCombo(String contractName, ComboBox combo) throws MaintenanceException {
+        
+        switch( contractName ) {
+            default:
+                throw new MaintenanceException( "This object: " + contractName + " not parsed in a parseCombo" );
+        }
+        
     }
 
     @Override
@@ -62,6 +84,10 @@ public class ColeccioMaintenanceControlador extends GenericMaintenanceControlado
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb); // optional custom init
+        
+        _lblAdvancedSearch.setDisable( true );
+        _lblAdvancedSearch.setVisible( false );
+        
     }
 
     @Override
@@ -72,11 +98,6 @@ public class ColeccioMaintenanceControlador extends GenericMaintenanceControlado
     @Override
     public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
         return FXMLColeccioController.crear( this.getScene().getWindow(), true, tipusAccio );
-    }
-
-    @Override
-    public void parseCombo(String contractName, ComboBox combo) throws MaintenanceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }

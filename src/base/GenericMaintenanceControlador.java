@@ -75,7 +75,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     @FXML
     private Button _btnSearch;
     @FXML
-    private Label _lblAdvancedSearch;
+    protected Label _lblAdvancedSearch;
     @FXML
     private Button _btnAdd;
     @FXML

@@ -73,15 +73,15 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
             new AttributeBrick( "lloc", "Lloc", false, ContractProducte.LLOC, AttributeBrick.allowedFormats.String),
             new AttributeBrick( "pais", "Païs", false, ContractProducte.PAIS, AttributeBrick.allowedFormats.String),
             new AttributeBrick( "estat", "Estat", false, ContractProducte.ESTAT, AttributeBrick.allowedFormats.Boolean),
-            new AttributeBrick( idiomes, "Idioma", true, ContractProducte.IDIOMA_ID, AttributeBrick.allowedFormats.List),
+            new AttributeBrick( "coleccio", "Coleccio", false, ContractProducte.COLECCIO_ID, AttributeBrick.allowedFormats.Object),
+            new AttributeBrick( idiomes, "Idioma", false, ContractProducte.IDIOMA_ID, AttributeBrick.allowedFormats.List),
             new AttributeBrick( editorial, "Editorial", false, ContractProducte.EDITORIAL_ID, AttributeBrick.allowedFormats.Object),
             new AttributeBrick( format, "Format", false, ContractProducte.FORMAT_ID, AttributeBrick.allowedFormats.Object),
             new AttributeBrick( procedencia, "Procedencia", false, ContractProducte.PROCEDENCIA_ID, AttributeBrick.allowedFormats.Object),
-            new AttributeBrick( nivells, "Nivell", true, ContractProducte.NIVELL, AttributeBrick.allowedFormats.List),
-            new AttributeBrick( autors, "Autors", true, ContractProducte.AUTORS, AttributeBrick.allowedFormats.List),
-            new AttributeBrick( "coleccio", "Coleccio", false, ContractProducte.COLECCIO_ID, AttributeBrick.allowedFormats.Object),
+            new AttributeBrick( nivells, "Nivell", false, ContractProducte.NIVELL, AttributeBrick.allowedFormats.List),
+            new AttributeBrick( autors, "Autors", false, ContractProducte.AUTORS, AttributeBrick.allowedFormats.List),
             new AttributeBrick( cdu, "Cdu", false, ContractProducte.CDU, AttributeBrick.allowedFormats.String),
-            new AttributeBrick( materies, "Materia", true, ContractProducte.MATERIA, AttributeBrick.allowedFormats.List)
+            new AttributeBrick( materies, "Materia", false, ContractProducte.MATERIA, AttributeBrick.allowedFormats.List)
         );
         
         return attributeWall;
@@ -188,7 +188,7 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
                 try {
                     producte.setIdiomes( idiDAO.selectIdiomes( producte.getId() ) );
                     producte.setMateries( matDAO.selectMateries( producte.getId() ) );
-                    producte.setNivells( nivDAO    .selectNivells( producte.getId() ) );
+                    producte.setNivells( nivDAO.selectNivells( producte.getId() ) );
                     //producte.setAutors( autors );
                 } catch (SQLException | ClassNotFoundException ex) {
                     // Set in logger
