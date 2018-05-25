@@ -157,11 +157,6 @@ public class FXMLUsuariController extends GenericPopUp implements Initializable 
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         //Ara omplim els combobox a partir del text que s'ha escrit en ells(busqueda)
         
         //Listener Nivell        
