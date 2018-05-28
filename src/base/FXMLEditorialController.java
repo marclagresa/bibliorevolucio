@@ -25,8 +25,6 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
     static Editorial editorialRebutda;
     
     @FXML
-    private TextField tfNomEditorial;
-    @FXML
     private Button btnCrearEditorial;
     @FXML
     private Label lblEditorial;
@@ -57,7 +55,7 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
         
         Editorial editorial = null;
         int id = -1;
-        String nomEditorial = tfNomEditorial.getText();
+        String nomEditorial = tfEditorial.getText();
         EditorialDAO editorialDAO = new EditorialDAO();
         
         switch(tipusA){
@@ -97,8 +95,15 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
                 id = editorialRebutda.getId();
                 editorial = new Editorial();
                 editorial.setId(id);
-                
-                //editorialDAO.delete(editorial);    
+                editorial.setActiva(false);                
+            
+                try {
+                    editorialDAO.update(editorial);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }
                 break;
         }        
         
@@ -112,7 +117,7 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
         editorial = (Editorial) obj;
         
         if (editorial!=null){            
-            tfNomEditorial.setText(editorial.getNom());
+            tfEditorial.setText(editorial.getNom());
             
             switch(tipusA){
                 case Modificar:

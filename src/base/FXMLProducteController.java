@@ -9,6 +9,7 @@ import base.EmplanarComboBox.ClMateria;
 import base.EmplanarComboBox.ClNivell;
 import base.EmplanarComboBox.ClPersona;
 import base.EmplanarComboBox.ClProcedencia;
+import base.EmplanarComboBox.OpcionsListView;
 import static base.GenericPopUp.TipusAccio.Crear;
 import bbdd.CduDAO;
 import bbdd.ColeccioDAO;
@@ -24,7 +25,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.ResourceBundle;
+import java.util.Set;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -35,18 +38,19 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import objecte.Cdu;
 import objecte.Coleccio;
 import objecte.Editorial;
+import objecte.Exemplar;
 import objecte.Format;
 import objecte.Idioma;
 import objecte.Materia;
@@ -74,6 +78,12 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     static TipusAccio tipusA;
     static String pathImatge = "";
     
+    public  ObservableList<Persona> itemsAutors = FXCollections.observableArrayList();
+    public  ObservableList<Materia> itemsMateries = FXCollections.observableArrayList();
+    public  ObservableList<Nivell> itemsNivells = FXCollections.observableArrayList();
+    public  ObservableList<Idioma> itemsIdiomes = FXCollections.observableArrayList();
+    public  ObservableList<String> itemsCdus = FXCollections.observableArrayList();
+    
     @FXML
     private TextArea taResum;
     @FXML
@@ -85,33 +95,15 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     @FXML
     private TextField tfTitol;
     @FXML
-    private TextField tfDimensions;    
-    @FXML
-    private TextField tfNumExemplars;   
+    private TextField tfDimensions;      
     @FXML
     private TextField tfAdresaWeb;
-    @FXML
-    private Button btnNouFormat;
-    @FXML
-    private Button btnNouCDU;
-    @FXML
-    private Button btnNouAutor;
-    @FXML
-    private Button btnNouEditorial;
-    @FXML
-    private Button btnNouNivell;
-    @FXML
-    private Button btnNouIdioma;
     @FXML
     private Button btnCancelar;
     @FXML
     private Button btnImatge;
     @FXML
     private ImageView imgProducte;
-    @FXML
-    private Button btnNouMateria;    
-    @FXML
-    private Button btnNouProcedencia;
     @FXML
     private ComboBox<Persona> cbAutor;
     @FXML
@@ -132,33 +124,35 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     private ComboBox<Procedencia> cbProcedencia;
     @FXML
     private ScrollPane scrollPane;
-    
-    public static FXMLProducteController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{
-
-        tipusA = tipus;
-        
-        return crearPopUp("/fxml/FXMLProducte.fxml", FXMLProducteController.class, owner, isModal, tipus);
-    }    
-    @FXML
-    private TextField tfAutor;
-    @FXML
-    private TextField tfNivell;
-    @FXML
-    private HBox tfAutor1;
-    @FXML
-    private TextField tfMateria;
     @FXML
     private TextField tfPais;
     @FXML
     private TextField tfLloc;
     @FXML
     private TextArea taCaracteristiques;
+    @FXML
+    private ListView LvAutors;
+    @FXML
+    private ListView LvNivells;
+    @FXML
+    private ListView LvMateries;
+     @FXML
+    private ListView LvIdiomes;
+    @FXML
+    private ListView LvCdus;
+    
+    public static FXMLProducteController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{
+
+        tipusA = tipus;
+        
+        return crearPopUp("/fxml/FXMLProducte.fxml", FXMLProducteController.class, owner, isModal, tipus);
+    }   
     
     public void guardar() {
     
         //Falta afegir comprovadors de els contenidors de text no estan buits
         int num_pag = 0,volum = 0,num_exemplars = 0;
-        String cdu = "",editorial = "", persona = "",nivellLectura = "",format = "",idioma = "", coleccio = "", data = "";
+        String cdu = "",editorial = "", persona = "",nivellLectura = "",format = "",idioma = "", coleccio = "", data = "",llistaCdu = "";
         Editorial objEditorial = null;
         Persona objAutor = null;
         Cdu objCDU = null;
@@ -221,18 +215,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             objFormat = cbFormat.getValue();
             format = objFormat.getNom();
             System.out.println("Format: "+format);    
-        }
-        
-        //Num exemplars
-        String validacioNumExemplars = tfNumExemplars.getText();
-        if(!"".equals(validacioNumExemplars)){
-            if(isNumeric(validacioNumExemplars)){
-                 num_exemplars = Integer.valueOf(validacioNumExemplars);
-            }else{
-                tfNumExemplars.setStyle("-fx-border-color: red; -fx-background-color:#FFCDD2");
-                tfNumExemplars.setText("");
-            }             
-        }
+        }        
         
         //Any
         String validacioData = tfAny.getText();    
@@ -342,7 +325,35 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             } catch (SQLException ex) {
                 System.out.println("SQLException: "+ex.getMessage());
             }
-           /*Producte producte = new Producte(id, ISBN, nom, num_pag, dimensions, data, resum, caracteristiques,pathImatge, adresaWeb, true, setIdioma, objEditorial, objFormat, objProcedencia, setNivells, objColeccio, cdu, setExemplars, lloc, pais, setMateries, setAutors?);*/
+            
+            HashSet<Nivell> setNivells = new HashSet<>();
+            setNivells.addAll(itemsNivells);
+            
+            HashSet<Persona> setAutors = new HashSet<>();
+            setAutors.addAll(itemsAutors);
+            
+            HashSet<Materia> setMateries = new HashSet<>();
+            setMateries.addAll(itemsMateries);
+            
+            HashSet<Idioma> setIdiomes = new HashSet<>();
+            setIdiomes.addAll(itemsIdiomes);
+            
+            HashSet<Exemplar> setExemplars = new HashSet<>();
+            
+            for (int i = 0; i < itemsCdus.size(); i++) {
+               
+                llistaCdu = llistaCdu+"+"+itemsCdus.get(i);
+           }
+            
+           Producte producte = new Producte(id, ISBN, nom, num_pag, dimensions, data, resum, caracteristiques,pathImatge, adresaWeb, true, setIdiomes, objEditorial, objFormat, objProcedencia, setNivells, objColeccio, cdu, setExemplars, lloc, pais, setMateries, setAutors);
+           
+            try {
+                producteDAO.insert(producte);
+            } catch (ClassNotFoundException ex) {
+                System.out.println("ClassNotFoundException-ProducteController: "+ex.getMessage());
+            } catch (SQLException ex) {
+                System.out.println("SQLException-ProducteController: "+ex.getMessage());
+            }
             
             //Retornem el border dels textFields i combobox al color original
             cbFormat.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
@@ -377,7 +388,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         }
         
         
-        //Format        
+        //Format       
         ObservableList<Format> opcionsFormat = null;
         try {
             objFormatDAO= new FormatDAO();
@@ -803,37 +814,65 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     }
 
     @Override
-    public void emplenarDades(Object obj) { 
-        
-        /*ObservableList<Persona> llistaAutors = null;
-        ObservableList<Nivell> llistaNivells;
-        ObservableList<Materia> llistaMateries;
-        ObservableList<Idioma> llistaIdiomes;*/
+    public void emplenarDades(Object obj) {        
                
         Producte producte = (Producte) obj;
+        boolean nouCdu = true;
         
         if(producte!=null){
             cbFormat.setValue(producte.getFormat());
             tfISBN.setText(producte.getISBN());
-            //cbCDU.setValue(producte.getCdu());
+            
+            while(nouCdu){
+                String llistatCdus = producte.getCdu();
+                int posicio1 = 0, posicio2 = llistatCdus.indexOf("+");
+                String cdu = llistatCdus.substring(posicio1,posicio2);
+                itemsCdus.add(cdu);
+                while(llistatCdus.length()>posicio2){
+                    posicio1 = posicio2;
+                    posicio2 = llistatCdus.indexOf("+");
+                    cdu = llistatCdus.substring(posicio1,posicio2);
+                    itemsCdus.add(cdu);
+                }
+                nouCdu = false;
+                LvCdus.setItems(itemsCdus);
+            }
+            
             tfAny.setText(producte.getAnyPublicacio());
             tfNumPag.setText(String.valueOf(producte.getNumPag()));
             cbColeccio.setValue(producte.getColeccio());
             tfTitol.setText(producte.getNom());
             
-            /*Set llistaAutors1 = producte.getAutors();
-            llistaAutors1.stream().forEach((objs) -> {
+            Set llistaAutors = producte.getAutors();
+            llistaAutors.stream().forEach((objs) -> {
                 Persona persona = (Persona) objs;
-                llistaAutors.add(persona);
-            });*/
+                itemsAutors.add(persona);
+            });            
+                      
+            //itemsAutors.addAll(producte.getAutors());
             
-            //cbAutor.setItems(llistaAutors);
             cbEditorial.setValue(producte.getEditorial());
-            //tfNumExemplars.setText(producte.get);
-            //cbNivell.setItems(producte.getNivells());
+            
+            Set llistaNivells = producte.getNivells();
+            llistaNivells.stream().forEach((objs) -> {
+                Nivell nivell = (Nivell) objs;
+                itemsNivells.add(nivell);
+            });
+                      
+            //itemsNivells.addAll(producte.getNivells());
+            
             tfDimensions.setText(producte.getDimensions());
-            //cbMateria.setItems(producte.getMateries());
+
+            Set llistaMateries = producte.getMateries();
+            llistaMateries.stream().forEach((objs) -> {
+                Materia materia = (Materia) objs;
+                itemsMateries.add(materia);
+            }); 
+            
+            //itemsMateries.addAll(producte.getMateries());
+            
             cbProcedencia.setValue(producte.getProcedencia());
+            
             //cbIdioma.setItems(producte.getIdiomes());
             tfAdresaWeb.setText(producte.getAdreçaWeb());
             tfPais.setText(producte.getPais());
@@ -841,5 +880,55 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             taResum.setText(producte.getResum());
             taCaracteristiques.setText(producte.getCaracteristiques());
         }        
+    }
+
+    @FXML
+    private void afegirAutor(ActionEvent event) {
+        OpcionsListView.afeguirDadeListView(cbAutor, LvAutors, itemsAutors);
+    }
+
+    @FXML
+    private void eliminarAutor(ActionEvent event) {
+        OpcionsListView.elimDadeListView(LvAutors,itemsAutors);
+    }
+
+    @FXML
+    private void afegirNivell(ActionEvent event) {
+        OpcionsListView.afeguirDadeListView(cbNivell, LvNivells, itemsNivells);
+    }
+
+    @FXML
+    private void eliminarNivell(ActionEvent event) {
+        OpcionsListView.elimDadeListView(LvNivells,itemsNivells);
+    }
+
+    @FXML
+    private void afegirMateria(ActionEvent event) {
+        OpcionsListView.afeguirDadeListView(cbMateria, LvMateries, itemsMateries);
+    }
+
+    @FXML
+    private void eliminarMateria(ActionEvent event) {
+        OpcionsListView.elimDadeListView(LvMateries,itemsMateries);
+    }
+
+    @FXML
+    private void afegirIdioma(ActionEvent event) {
+        OpcionsListView.afeguirDadeListView(cbIdioma, LvIdiomes, itemsIdiomes);
+    }
+
+    @FXML
+    private void eliminarIdioma(ActionEvent event) {
+        OpcionsListView.elimDadeListView(LvIdiomes,itemsIdiomes);
+    }
+
+    @FXML
+    private void afegirCdu(ActionEvent event) {
+        OpcionsListView.afeguirDadeListView(cbCDU, LvCdus, itemsCdus);
+    }
+
+    @FXML
+    private void eliminarCdu(ActionEvent event) {
+        OpcionsListView.elimDadeListView(LvCdus,itemsCdus);
     }
 }

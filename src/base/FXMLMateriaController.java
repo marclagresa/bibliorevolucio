@@ -29,6 +29,10 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
     private TextField tfMateria;
     @FXML
     private Button btnCrearMateria;
+    @FXML
+    private Label lblMateria;
+    @FXML
+    private Button btnCancelar;
     
     /**
      * Initializes the controller class.
@@ -45,10 +49,6 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
         
         return crearPopUp("/fxml/FXMLMateria.fxml", FXMLMateriaController.class, owner, isModal, tipus);
     }   
-    @FXML
-    private Label lblMateria;
-    @FXML
-    private Button btnCancelar;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -100,8 +100,15 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
                 id = materiaRebuda.getId();
                 materia = new Materia();
                 materia.setId(id);
-                
-                //materiaDAO.delete(materia);   
+                materia.setActiva(false);           
+          
+                try {
+                    materiaDAO.update(materia);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }        
                 break;
         }
         
