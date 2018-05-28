@@ -5,6 +5,7 @@ import contract.ContractMateriaProducte;
 import contract.ContractProducte;
 import contract.ContractProducteIdioma;
 import contract.ContractProducteNivell;
+import contract.ContractProductePersona;
 
 
 
@@ -114,7 +115,7 @@ public class ProducteDAO extends BDObject implements IObjectDAO<Producte> {
                                     valors.add(ids[j]);
                                     break;
                                 case ContractProducte.AUTORS:
-                                    query+=ContractProducteIdioma.ID_IDIOMA + " = ?";
+                                    query+=ContractProductePersona.ID_PERSONA + " = ?";
                                     valors.add(ids[j]);
                                     break;
                                 case ContractProducte.MATERIA:
@@ -294,7 +295,7 @@ public class ProducteDAO extends BDObject implements IObjectDAO<Producte> {
                                     valors.add(ids[j]);
                                     break;
                                 case ContractProducte.AUTORS:
-                                    query+=ContractProducteIdioma.ID_IDIOMA + " = ?";
+                                    query+=ContractProductePersona.ID_PERSONA + " = ?";
                                     valors.add(ids[j]);
                                     break;
                                 case ContractProducte.MATERIA:

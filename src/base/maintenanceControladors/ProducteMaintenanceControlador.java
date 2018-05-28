@@ -186,7 +186,7 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
                     producte.setIdiomes( idiDAO.selectIdiomes( producte.getId() ) );
                     producte.setMateries( matDAO.selectMateries( producte.getId() ) );
                     producte.setNivells( nivDAO.selectNivells( producte.getId() ) );
-                    //producte.setAutors( autors );
+                    producte.setAutors( autDAO.selectPersones( producte.getId(), "") );
                 } catch (SQLException | ClassNotFoundException ex) {
                     // Set in logger
                     // Open a generic alert
