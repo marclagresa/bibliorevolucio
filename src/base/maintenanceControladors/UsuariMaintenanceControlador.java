@@ -3,6 +3,7 @@ package base.maintenanceControladors;
 import base.FXMLCduController;
 import base.GenericPopUp;
 import base.EmplanarComboBox.ClNivell;
+import base.FXMLUsuariController;
 import bbdd.UsuariDAO;
 import contract.ContractUsuari;
 import java.io.IOException;
@@ -25,8 +26,10 @@ import maintenance.AttributeWall;
  */
 public class UsuariMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
+    private final String nivell = "nivell";
+    
     public UsuariMaintenanceControlador() {
-        super( "Usuaris", 3);
+        super( "Usuaris", 15);
     }
     
     // AttributeWall
@@ -43,7 +46,7 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
             new AttributeBrick( "email", "Correu", false, ContractUsuari.EMAIL, AttributeBrick.allowedFormats.String ),
             new AttributeBrick( "actiu", "Actiu", false, ContractUsuari.ACTIU, AttributeBrick.allowedFormats.Boolean ),
             new AttributeBrick( "admin", "Administrador", false, ContractUsuari.ADMIN, AttributeBrick.allowedFormats.Boolean ),
-            new AttributeBrick( "nivell", "Nivell", false, ContractUsuari.ID_NIVELL, AttributeBrick.allowedFormats.Object )
+            new AttributeBrick( nivell, "Nivell", false, ContractUsuari.ID_NIVELL, AttributeBrick.allowedFormats.Object )
         );
         
         return attributeWall;
@@ -57,7 +60,7 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
         if ( object != null ) {
             
             switch( name ) {
-                case "nivell":
+                case nivell:
                     id = ((Nivell) object).getId();
                     break;
                 default:
@@ -78,7 +81,7 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     public void parseCombo( String name, ComboBox combo ) throws MaintenanceException {
         
         switch( name ) {
-            case "nivell":
+            case nivell:
                 combo.getEditor().textProperty().addListener( new ClNivell( combo ) );                        
                 break;
             default:
@@ -112,14 +115,14 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     @Override
     public GenericPopUp createPopUpObject(GenericPopUp.TipusAccio tipusAccio) throws IOException {
         
-        return FXMLCduController.crear( this.getScene().getWindow(), true, tipusAccio );
+        return FXMLUsuariController.crear( this.getScene().getWindow(), true, tipusAccio );
         
     }
 
     @Override
     public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
         
-        return FXMLCduController.crear( this.getScene().getWindow(), true, tipusAccio );
+        return FXMLUsuariController.crear( this.getScene().getWindow(), true, tipusAccio );
         
     }
 

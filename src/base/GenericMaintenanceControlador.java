@@ -75,7 +75,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     @FXML
     private Button _btnSearch;
     @FXML
-    private Label _lblAdvancedSearch;
+    protected Label _lblAdvancedSearch;
     @FXML
     private Button _btnAdd;
     @FXML
@@ -134,6 +134,10 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             }
             
         });
+        
+        // Disable duplicate option
+        _btnDuplicate.setVisible(false);
+        _btnDuplicate.setDisable(true);
         
     }
     
@@ -360,6 +364,27 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             Object object = _WIDGETLIST.getSelected();
             GenericPopUp window = createPopUpObject( TipusAccio.Modificar );
             window.emplenarDades( object );
+            
+            window.onAccept( ( nothing ) -> {
+                
+                Platform.runLater(() -> {
+                        
+                    try {
+
+                        openPage( _currentPage );
+                        
+                    } catch ( IllegalArgumentException e ) {
+                        // Only open an alert
+                        // If not tested can maybe an error in code            
+                    } catch (SQLException | ClassNotFoundException ex) {
+                        // Set in logger
+                        // Open a generic alert
+                    } 
+                    
+                });
+                    
+            });
+            
             window.show();
             
         } catch ( IOException ex ) {
@@ -380,6 +405,27 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             Object object = _WIDGETLIST.getSelected();
             GenericPopUp window = createPopUpObject( TipusAccio.Deshabilitar );
             window.emplenarDades( object );
+            
+            window.onAccept( ( nothing ) -> {
+                
+                Platform.runLater(() -> {
+                        
+                    try {
+
+                        openPage( _currentPage );
+                        
+                    } catch ( IllegalArgumentException e ) {
+                        // Only open an alert
+                        // If not tested can maybe an error in code            
+                    } catch (SQLException | ClassNotFoundException ex) {
+                        // Set in logger
+                        // Open a generic alert
+                    } 
+                    
+                });
+                    
+            });
+            
             window.show();
             
         } catch ( IOException ex ) {
@@ -400,6 +446,27 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             Object object = _WIDGETLIST.getSelected();
             GenericPopUp window = createPopUpObject( TipusAccio.Crear );
             window.emplenarDades( object );
+            
+            window.onAccept( ( nothing ) -> {
+                
+                Platform.runLater(() -> {
+                        
+                    try {
+
+                        openPage( _currentPage );
+                        
+                    } catch ( IllegalArgumentException e ) {
+                        // Only open an alert
+                        // If not tested can maybe an error in code            
+                    } catch (SQLException | ClassNotFoundException ex) {
+                        // Set in logger
+                        // Open a generic alert
+                    } 
+                    
+                });
+                    
+            });
+            
             window.show();
             
         } catch ( IOException ex ) {

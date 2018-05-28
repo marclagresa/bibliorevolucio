@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+
+<Pane prefHeight="690.0" prefWidth="660.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="base.FXMLControllerConsultaAvanzadaProducta">
+   <children>
+      <HBox layoutY="14.0" prefHeight="34.0" prefWidth="473.0">
+         <children>
+            <Label fx:id="titolL" alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="115.0" text="Titol:" textAlignment="CENTER">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+            </Label>
+            <TextField fx:id="titolTF" prefHeight="25.0" prefWidth="306.0" />
+         </children>
+      </HBox>
+      <HBox layoutY="48.0" prefHeight="105.0" prefWidth="649.0">
+         <children>
+            <Label fx:id="AutorL" alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="115.0" text="Autor:">
+               <padding>
+                  <Insets left="30.0" />
+               </padding></Label>
+            <VBox prefHeight="86.0" prefWidth="425.0" style="-fx-border-color: #CCC8C8;">
+            <children>
+               <ComboBox fx:id="autorComB" editable="true" prefHeight="25.0" prefWidth="426.0">
+                  <VBox.margin>
+                     <Insets bottom="10.0" />
+                  </VBox.margin></ComboBox>
+               <ListView fx:id="autorList" prefHeight="55.0" prefWidth="425.0" />
+            </children>
+            <padding>
+               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+            </padding>
+            <HBox.margin>
+               <Insets />
+            </HBox.margin>
+         </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Button fx:id="afegirAutor" mnemonicParsing="false" onAction="#afegirAutor" text="Afegir">
+                     <VBox.margin>
+                        <Insets left="10.0" top="5.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="elimAutor" mnemonicParsing="false" onAction="#elimAutor" text="Eliminar">
+                     <VBox.margin>
+                        <Insets left="10.0" top="25.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox layoutX="-2.0" layoutY="161.0" prefHeight="34.0" prefWidth="473.0">
+         <children>
+            <Label fx:id="EditorialL" alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="115.0" text="Editorial:">
+               <padding>
+                  <Insets left="30.0" />
+               </padding></Label>
+            <ComboBox fx:id="editorialComB" editable="true" prefHeight="25.0" prefWidth="212.0" />
+         </children>
+      </HBox>
+      <HBox layoutX="-2.0" layoutY="195.0" prefHeight="34.0" prefWidth="473.0">
+         <children>
+            <Label fx:id="isbnL" alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="115.0" text="ISBN:">
+               <padding>
+                  <Insets left="30.0" />
+               </padding></Label>
+            <TextField fx:id="isbnTF" prefHeight="25.0" prefWidth="143.0" />
+         </children>
+      </HBox>
+      <HBox layoutY="263.0" prefHeight="34.0" prefWidth="473.0">
+         <children>
+            <Label fx:id="cLliureL" alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="115.0" text="Camp Lliure:">
+               <padding>
+                  <Insets left="30.0" />
+               </padding></Label>
+            <TextField fx:id="cLliureTF" prefHeight="25.0" prefWidth="265.0" />
+         </children>
+      </HBox>
+      <HBox layoutY="294.0" prefHeight="105.0" prefWidth="649.0">
+         <children>
+            <Label fx:id="idiomaL" alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="115.0" text="Idioma:">
+               <padding>
+                  <Insets left="30.0" />
+               </padding></Label>
+            <VBox prefHeight="86.0" prefWidth="425.0" style="-fx-border-color: #CCC8C8;">
+               <children>
+                  <ComboBox fx:id="idiomaComB" editable="true" prefHeight="25.0" prefWidth="426.0">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin></ComboBox>
+                  <ListView fx:id="idiomaList" prefHeight="55.0" prefWidth="425.0" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Button fx:id="afegirIdioma" mnemonicParsing="false" onAction="#afegirIdioma" text="Afegir">
+                     <VBox.margin>
+                        <Insets left="10.0" top="5.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="elimIdioma" mnemonicParsing="false" onAction="#elimIdioma" text="Eliminar">
+                     <VBox.margin>
+                        <Insets left="10.0" top="25.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox layoutY="411.0" prefHeight="34.0" prefWidth="473.0">
+         <children>
+            <Label fx:id="formatL" alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="115.0" text="Format:">
+               <padding>
+                  <Insets left="30.0" />
+               </padding></Label>
+            <ComboBox fx:id="formatComB" editable="true" prefHeight="25.0" prefWidth="142.0" />
+         </children>
+      </HBox>
+      <HBox layoutY="445.0" prefHeight="105.0" prefWidth="649.0">
+         <children>
+            <Label fx:id="nivellL" alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="115.0" text="Nivell:">
+               <padding>
+                  <Insets left="30.0" />
+               </padding></Label>
+            <VBox prefHeight="86.0" prefWidth="425.0" style="-fx-border-color: #CCC8C8;">
+               <children>
+                  <ComboBox fx:id="nivellComB" editable="true" prefHeight="25.0" prefWidth="426.0">
+                     <VBox.margin>
+                        <Insets bottom="10.0" />
+                     </VBox.margin></ComboBox>
+                  <ListView fx:id="nivellList" prefHeight="55.0" prefWidth="425.0" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0">
+               <children>
+                  <Button fx:id="afegirNivell" mnemonicParsing="false" onAction="#afegirNivell" text="Afegir">
+                     <VBox.margin>
+                        <Insets left="10.0" top="5.0" />
+                     </VBox.margin>
+                  </Button>
+                  <Button fx:id="elimNivell" mnemonicParsing="false" onAction="#elimNivell" text="Eliminar">
+                     <VBox.margin>
+                        <Insets left="10.0" top="25.0" />
+                     </VBox.margin>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+      <HBox layoutY="558.0" prefHeight="34.0" prefWidth="473.0">
+         <children>
+            <Label fx:id="dataL" alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="115.0" text="Data:">
+               <padding>
+                  <Insets left="30.0" />
+               </padding></Label>
+            <DatePicker fx:id="dataDP" />
+         </children>
+      </HBox>
+      <HBox layoutY="642.0" prefHeight="34.0" prefWidth="473.0">
+         <children>
+            <Button fx:id="tornarEnreraB" mnemonicParsing="false" onAction="#cancelar" prefHeight="25.0" prefWidth="117.0" text="Cancel·lar">
+               <HBox.margin>
+                  <Insets left="25.0" right="240.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="consultaB" mnemonicParsing="false" onAction="#consultar" text="Consulta">
+               <HBox.margin>
+                  <Insets right="25.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <HBox layoutY="229.0" prefHeight="34.0" prefWidth="469.0">
+         <children>
+            <Label fx:id="cduL" alignment="CENTER_LEFT" prefHeight="17.0" prefWidth="115.0" text="CDU:">
+               <HBox.margin>
+                  <Insets />
+               </HBox.margin>
+               <padding>
+                  <Insets left="30.0" />
+               </padding></Label>
+            <ComboBox fx:id="cduComB" editable="true" prefHeight="25.0" prefWidth="110.0" />
+         </children>
+      </HBox>
+   </children>
+</Pane>

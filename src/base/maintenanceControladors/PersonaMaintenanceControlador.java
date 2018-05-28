@@ -1,6 +1,6 @@
 package base.maintenanceControladors;
 
-import base.FXMLPersonaController;
+import base.FXMLAutorController;
 import base.GenericMaintenanceControlador;
 import base.GenericPopUp;
 import bbdd.PersonaDAO;
@@ -40,10 +40,37 @@ public class PersonaMaintenanceControlador extends GenericMaintenanceControlador
     }
 
     @Override
-    public Integer parseObject( String contractName, Object object ) throws MaintenanceException {
-        return 0;
-    }
+    public Object parseObject( String contractName, Object object ) throws MaintenanceException {
+        
+        Object id = 0;
+        if ( object != null ) {
+            
+            switch( contractName ) {
+                // If add some object consider the return statement
+                default:
+                    throw new MaintenanceException( "This object: " + contractName + " not parsed in a parseObject" );
+            }
 
+        } else {
+            
+            throw new IllegalArgumentException( "Invalid data" );
+            
+        }
+        
+        //return id;
+        
+    }
+    
+    @Override
+    public void parseCombo(String contractName, ComboBox combo) throws MaintenanceException {
+        
+        switch( contractName ) {
+            default:
+                throw new MaintenanceException( "This object: " + contractName + " not parsed in a parseCombo" );
+        }
+        
+    }
+    
     @Override
     public List searchOcurrences( HashMap<String, Object> data, Integer startItem, Integer limitXPage, String attribToOrder, Boolean sortType ) throws SQLException, ClassNotFoundException, IllegalArgumentException {
         return new PersonaDAO().select( data, attribToOrder, limitXPage, startItem, sortType );
@@ -58,21 +85,20 @@ public class PersonaMaintenanceControlador extends GenericMaintenanceControlador
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb); // optional custom init
+        
+        _lblAdvancedSearch.setDisable( true );
+        _lblAdvancedSearch.setVisible( false );
+        
     }
 
     @Override
     public GenericPopUp createPopUpObject(GenericPopUp.TipusAccio tipusAccio) throws IOException {
-        return FXMLPersonaController.crear(this.getScene().getWindow(), true, tipusAccio);
+        return FXMLAutorController.crear(this.getScene().getWindow(), true, tipusAccio);
     }
 
     @Override
     public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
-        return FXMLPersonaController.crear( this.getScene().getWindow(), true, tipusAccio );
-    }
-
-    @Override
-    public void parseCombo(String contractName, ComboBox combo) throws MaintenanceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return FXMLAutorController.crear( this.getScene().getWindow(), true, tipusAccio );
     }
 
 }

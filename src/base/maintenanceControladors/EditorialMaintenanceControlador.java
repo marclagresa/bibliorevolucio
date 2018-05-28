@@ -1,12 +1,9 @@
 package base.maintenanceControladors;
 
-import base.FXMLCduController;
 import base.FXMLEditorialController;
 import base.GenericMaintenanceControlador;
 import base.GenericPopUp;
-import bbdd.CduDAO;
 import bbdd.EditorialDAO;
-import contract.ContractCdu;
 import contract.ContractEditorial;
 import excepcions.MaintenanceException;
 import maintenance.AttributeBrick;
@@ -43,8 +40,35 @@ public class EditorialMaintenanceControlador extends GenericMaintenanceControlad
     }
 
     @Override
-    public Integer parseObject( String contractName, Object object ) throws MaintenanceException {
-        return 0;
+    public Object parseObject( String contractName, Object object ) throws MaintenanceException {
+        
+        Object id = 0;
+        if ( object != null ) {
+            
+            switch( contractName ) {
+                // If add some object consider the return statement
+                default:
+                    throw new MaintenanceException( "This object: " + contractName + " not parsed in a parseObject" );
+            }
+
+        } else {
+            
+            throw new IllegalArgumentException( "Invalid data" );
+            
+        }
+        
+        //return id;
+        
+    }
+    
+    @Override
+    public void parseCombo(String contractName, ComboBox combo) throws MaintenanceException {
+        
+        switch( contractName ) {
+            default:
+                throw new MaintenanceException( "This object: " + contractName + " not parsed in a parseCombo" );
+        }
+        
     }
 
     @Override
@@ -61,6 +85,10 @@ public class EditorialMaintenanceControlador extends GenericMaintenanceControlad
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         super.initialize(url, rb); // optional custom init
+        
+        _lblAdvancedSearch.setDisable( true );
+        _lblAdvancedSearch.setVisible( false );
+        
     }
 
     @Override
@@ -71,11 +99,6 @@ public class EditorialMaintenanceControlador extends GenericMaintenanceControlad
     @Override
     public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
         return FXMLEditorialController.crear( this.getScene().getWindow(), true, tipusAccio );
-    }
-
-    @Override
-    public void parseCombo(String contractName, ComboBox combo) throws MaintenanceException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
