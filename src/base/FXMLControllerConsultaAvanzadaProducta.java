@@ -84,9 +84,15 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
         ArrayList<Integer> arrayNivell = new ArrayList<>();
         Producte prod = new Producte();
         HashMap<String, Object> consulta = new HashMap<>();
-        consulta.put(ContractProducte.NOM, titolTF.getText());
-        consulta.put(ContractProducte.ISBN, isbnTF.getText());
-        consulta.put(ContractProducte.ANY_PUBLICACIO, dataDP.getValue());
+        if (titolTF.getText() != null) {
+            consulta.put(ContractProducte.NOM, titolTF.getText());
+        }
+        if (titolTF.getText() != null) {
+            consulta.put(ContractProducte.ISBN, isbnTF.getText());
+        }
+        if (titolTF.getText() != null){
+            consulta.put(ContractProducte.ANY_PUBLICACIO, dataDP.getValue());
+        }
 
         if(editorialComB.getSelectionModel().getSelectedIndex()!= -1) {
             consulta.put(ContractProducte.EDITORIAL_ID, editorialComB.getItems().get(editorialComB.getSelectionModel().getSelectedIndex()).getId());
@@ -102,15 +108,6 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
 
 
         if(autorComB.getSelectionModel().getSelectedIndex()!= -1) {
-
-            Iterator<Persona> it = itemsAutors.iterator();
-            while (it.hasNext()) {
-                Object p = it.next();
-                System.out.println("P; " + p.getClass());
-            }
-
-
-
             for(int j = 0;itemsAutors.size()>j;j++) {
                 arrayAutor.add(itemsAutors.get(j).getId());
             }
@@ -131,10 +128,17 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
             consulta.put(ContractIdioma.ID, arrayIdioma);
         }
         System.out.println(consulta);
-        ((Stage) consultaB.getScene().getWindow()).close();
+        if(onAcceptCallBack != null) {
+            onAcceptCallBack.accept(consulta);
+        }
+            ((Stage) consultaB.getScene().getWindow()).close();
+
     }
     @FXML
     public void cancelar(){
+        if(onCancelCallBack != null) {
+            onCancelCallBack.run();
+        }
         ((Stage) consultaB.getScene().getWindow()).close();
 
     }
