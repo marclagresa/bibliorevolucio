@@ -84,10 +84,10 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
         ArrayList<Integer> arrayNivell = new ArrayList<>();
         Producte prod = new Producte();
         HashMap<String, Object> consulta = new HashMap<>();
-        if (titolTF.getText() != null) {
+        if (!titolTF.getText().isEmpty()) {
             consulta.put(ContractProducte.NOM, titolTF.getText());
         }
-        if (isbnTF.getText() != null) {
+        if (!isbnTF.getText().isEmpty()) {
             consulta.put(ContractProducte.ISBN, isbnTF.getText());
         }
         if (dataDP.getValue() != null){
@@ -113,21 +113,20 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
             }
 
             System.out.println(arrayAutor);
-            consulta.put(ContractPersona.ID, arrayAutor);
+            consulta.put(ContractPersona.ID, arrayAutor.toArray(new Integer[arrayAutor.size()]));
         }
         if( nivellComB.getSelectionModel().getSelectedIndex()!= -1) {
             for(int j = 0;itemsNivell.size()>j;j++) {
                 arrayNivell.add(itemsNivell.get(j).getId());
             }
-            consulta.put(ContractNivell.ID, arrayNivell);
+            consulta.put(ContractNivell.ID, arrayNivell.toArray(new Integer[arrayNivell.size()]));
         }
         if( idiomaComB.getSelectionModel().getSelectedIndex()!= -1) {
             for(int j = 0;itemsIdioma.size()>j;j++) {
                 arrayIdioma.add(itemsIdioma.get(j).getId());
             }
-            consulta.put(ContractIdioma.ID, arrayIdioma);
+            consulta.put(ContractIdioma.ID, arrayIdioma.toArray(new Integer[arrayIdioma.size()]));
         }
-        System.out.println(consulta);
         if(onAcceptCallBack != null) {
             onAcceptCallBack.accept(consulta);
         }
