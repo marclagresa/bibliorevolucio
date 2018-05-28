@@ -367,9 +367,15 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         //Posem els items que hi ha la BD dins dels combobox
         
         //Editorial
-        objEditorialDAO= new EditorialDAO();
-        final ObservableList<Editorial> opcionsEditorial = FXCollections.observableArrayList(objEditorialDAO.selectAll());
-        cbEditorial.setItems(opcionsEditorial);
+        try {
+            objEditorialDAO= new EditorialDAO();
+            cbEditorial.setItems(FXCollections.observableArrayList(objEditorialDAO.selectAll()));
+        } catch (SQLException e) {
+            System.out.println("SQLException: "+e.getMessage());
+        } catch(ClassNotFoundException e){
+            System.out.println("ClassNotFoundException: "+e.getMessage());
+        }
+        
         
         //Format        
         ObservableList<Format> opcionsFormat = null;
@@ -623,10 +629,15 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     }
     
     public void actualitzarEditorial(){
+        try {
+            objEditorialDAO= new EditorialDAO();
+            cbEditorial.setItems(FXCollections.observableArrayList(objEditorialDAO.selectAll()));
+        } catch (SQLException e) {
+            System.out.println("SQLException: "+e.getMessage());
+        } catch(ClassNotFoundException e){
+            System.out.println("ClassNotFoundException"+e.getMessage());
+        }
         
-        objEditorialDAO= new EditorialDAO();
-        final ObservableList<Editorial> opcionsEditorial = FXCollections.observableArrayList(objEditorialDAO.selectAll());
-        cbEditorial.setItems(opcionsEditorial);
     }
 
     @FXML

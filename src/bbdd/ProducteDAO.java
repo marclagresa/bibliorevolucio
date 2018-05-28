@@ -5,13 +5,9 @@ import contract.ContractMateriaProducte;
 import contract.ContractProducte;
 import contract.ContractProducteIdioma;
 import contract.ContractProducteNivell;
-import java.io.IOException;
-import java.nio.file.FileSystems;
 
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
+
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -29,15 +25,11 @@ import objecte.Nivell;
 import objecte.Procedencia;
 import objecte.Producte;
 
-public class ProducteDAO implements IObjectDAO<Producte> {
-    private Connection conn;
-    private ResultSet rs;
-    private PreparedStatement ps;
+public class ProducteDAO extends BDObject implements IObjectDAO<Producte> {
+ 
 
     public ProducteDAO(){
-        conn=null;
-        rs=null;
-        ps=null;
+        super();
     }
     @Override
     public List<Producte> selectAll() throws ClassNotFoundException, SQLException{
@@ -78,128 +70,125 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         String query;
         Integer[]ids;
         int i;
-        long ini,fin;
-        try {
-        
-            conn=ConnectionFactory.getInstance().getConnection();
-         
-            valors=new ArrayList<>();
-            query = "SELECT * FROM "+ContractProducte.NOM_TAULA;
-            i=0;
-            for (Map.Entry<String, Object> entry : dades.entrySet()) {
-                String camp = entry.getKey();
-                Object valor = entry.getValue();
-                if(i ==0){
-                    query += " WHERE ";
-                }
-                else{
-                    query += " AND ";
-                }
-                if(valor.getClass().equals(String.class)){
-                    query += camp+" LIKE ? ";
-                    valors.add("%"+valor+"%");
-                }
-                else if(valor.getClass().equals(Integer.class)){
-                    query += camp+ " = ? ";
-                    valors.add(dades.get(camp));     
-                }
-                else if(valor.getClass().equals(Boolean.class)){
-                    query += camp+ " = ? ";
-                    valors.add(dades.get(camp));
-                }
-                else if(valor.getClass().equals(Integer[].class)){
-                    ids=(Integer[])valor;
-                    query +=camp;
-                    for (int j = 0; j < ids.length; j++) {
-                        if(j==0){
-                            query += " WHERE ";
-                        }
-                        else{
-                            query += " OR ";
-                        }
-                        switch(camp){
-                            case ContractProducte.IDIOMA_ID:
-                                query+=ContractProducteIdioma.ID_IDIOMA + " = ? ";
-                                valors.add(ids[j]);
-                                break;
-                            case ContractProducte.AUTORS:
-                                query+=ContractProducteIdioma.ID_IDIOMA + " = ?";
-                                valors.add(ids[j]);
-                                break;
-                            case ContractProducte.MATERIA:
-                                query+=ContractMateriaProducte.ID_MATERIA+ " = ?";
-                                valors.add(ids[j]);
-                                break;
-                            case ContractProducte.NIVELL:
-                                query+=ContractProducteNivell.ID_NIVELL + " = ?";
-                                valors.add(ids[j]);
-                                break;
-                        }
+        boolean dadesCorrectes=comprovarDadesConsulta(dades, ContractProducte.DEFINICIO);
+        if(dadesCorrectes){
+            try {
+                conn=ConnectionFactory.getInstance().getConnection();
+                valors=new ArrayList<>();
+                query = "SELECT * FROM "+ContractProducte.NOM_TAULA;
+                i=0;
+                for (Map.Entry<String, Object> entry : dades.entrySet()) {
+                    String camp = entry.getKey();
+                    Object valor = entry.getValue();
+                    if(i ==0){
+                        query += " WHERE ";
                     }
-                    query+=")";
+                    else{
+                        query += " AND ";
+                    }
+                    if(valor.getClass().equals(String.class)){
+                        query += camp+" LIKE ? ";
+                        valors.add("%"+valor+"%");
+                    }
+                    else if(valor.getClass().equals(Integer.class)){
+                        query += camp+ " = ? ";
+                        valors.add(dades.get(camp));     
+                    }
+                    else if(valor.getClass().equals(Boolean.class)){
+                        query += camp+ " = ? ";
+                        valors.add(dades.get(camp));
+                    }
+                    else if(valor.getClass().equals(Integer[].class)){
+                        ids=(Integer[])valor;
+                        query +=camp;
+                        for (int j = 0; j < ids.length; j++) {
+                            if(j==0){
+                                query += " WHERE ";
+                            }
+                            else{
+                                query += " OR ";
+                            }
+                            switch(camp){
+                                case ContractProducte.IDIOMA_ID:
+                                    query+=ContractProducteIdioma.ID_IDIOMA + " = ? ";
+                                    valors.add(ids[j]);
+                                    break;
+                                case ContractProducte.AUTORS:
+                                    query+=ContractProducteIdioma.ID_IDIOMA + " = ?";
+                                    valors.add(ids[j]);
+                                    break;
+                                case ContractProducte.MATERIA:
+                                    query+=ContractMateriaProducte.ID_MATERIA+ " = ?";
+                                    valors.add(ids[j]);
+                                    break;
+                                case ContractProducte.NIVELL:
+                                    query+=ContractProducteNivell.ID_NIVELL + " = ?";
+                                    valors.add(ids[j]);
+                                    break;
+                            }
+                        }
+                        query+=")";
+                    }
+                    i++;
                 }
-                i++;
-            }
-            if(campOrdre!=null){
-                query+=" ORDER BY ? ";
-                valors.add(campOrdre);
-                if(ascendent){
-                    query+=" ASC ";
+                if(campOrdre!=null){
+                    query+=" ORDER BY "+campOrdre;
+                    if(ascendent){
+                        query+=" ASC ";
+                    }
+                    else{
+                        query+= " DESC ";
+                    }
                 }
-                else{
-                    query+= " DESC ";
-                }
-            }
-            if(registreInicial!=null || totalRegistres!=null){
-                query += " LIMIT ";
-                if(registreInicial!=null){
-                    query += " ?, ";
-                    valors.add(registreInicial);
-                }
-                if(totalRegistres==null){
-                    query +=" 18446744073709551615";
-                }
-                else{
-                    query +=" ?";
-                    valors.add(totalRegistres);
-                }
+                if(registreInicial!=null || totalRegistres!=null){
+                    query += " LIMIT ";
+                    if(registreInicial!=null){
+                        query += " ?, ";
+                        valors.add(registreInicial);
+                    }
+                    if(totalRegistres==null){
+                        query +=" 18446744073709551615";
+                    }
+                    else{
+                        query +=" ?";
+                        valors.add(totalRegistres);
+                    }
 
+                }
+                ps=conn.prepareStatement(query);
+
+                for(i=0;i<valors.size();i++){
+                    ps.setObject(i+1, valors.get(i));
+                }
+                rs=ps.executeQuery();
+                while(rs.next()){
+                    productes.add(this.read());
+                }
+            } catch (SQLException ex) {
+                throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+            } catch(ClassNotFoundException ex){
+                throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+            }finally{
+                this.close();
             }
-            ps=conn.prepareStatement(query);
-            
-            for(i=0;i<valors.size();i++){
-                ps.setObject(i+1, valors.get(i));
-            }
-            ini=System.currentTimeMillis();
-            rs=ps.executeQuery();
-            fin=System.currentTimeMillis();
-            System.out.println("Fi query:"+ (ini-fin));
-            ini=System.currentTimeMillis();
-            while(rs.next()){
-                productes.add(this.read());
-            }
-            fin=System.currentTimeMillis();
-            System.out.println("Fi carrega: " + (fin-ini));
-        } catch (SQLException ex) {
-            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
-        } catch(ClassNotFoundException ex){
-            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
-        }finally{
-            this.close();
+
         }
-
+        else{
+            throw new IllegalArgumentException("Els tipus de dades de la consulta no són correctes.");
+        }
+        
         return productes;
     }
 
     public List<Producte> select(HashMap <String,Object> dades) throws ClassNotFoundException, SQLException{
-        if(dades!=null){
-            List<Producte> list = new ArrayList<>();
-            String sql;
-            Object [] valors;
-  
-            int i;
-            boolean dadaCorrecte=false;
+        
+        List<Producte> list = new ArrayList<>();
+        String sql;
+        Object [] valors;
 
+        int i;
+        boolean dadesCorrecte=comprovarDadesConsulta(dades, ContractProducte.DEFINICIO);
+        if(dadesCorrecte){
             try {
                 conn = ConnectionFactory.getInstance().getConnection();
                 sql = "SELECT * FROM "+ContractProducte.NOM_TAULA;
@@ -207,18 +196,6 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                 valors=new Object[dades.size()];
                 for(String camp:dades.keySet()){
                     valors=new Object[dades.size()];
-                    switch(ContractProducte.DEFINICIO.get(camp)){
-                        case Types.INTEGER:
-                            dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
-                            break;
-                        case Types.CHAR:
-                        case Types.VARCHAR:
-                            dadaCorrecte=dades.get(camp).getClass().equals(String.class);
-                            break;
-                        case Types.BOOLEAN:
-                            dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
-                            break;
-                    }
                     if(i ==0){
                         sql += " WHERE " ;
                     }
@@ -232,124 +209,127 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                     else{
                         sql+=" = ?";
                     }
-                    if(dadaCorrecte){
-                        valors[i]=dades.get(camp);
-                        i++;
-                    }
-                    else{
-                        throw new IllegalArgumentException("Dades incorrectes.");
-                    }
+
+                    valors[i]=dades.get(camp);
+                    i++;
+
                 }
                 ps = conn.prepareStatement(sql);
                 for(i=0;i<valors.length;i++){
                     ps.setObject(i+1, valors[i]);
                 }
-                
+
                 rs = ps.executeQuery();
-                
-                
+
+
                 while(rs.next()){
                     list.add(this.read());
                 }
-                
+
 
             } catch (SQLException ex){
                 throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
             }catch( ClassNotFoundException ex) {
                 throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
-            }catch(IllegalArgumentException ex){
-                throw new IllegalArgumentException(ex.getMessage());
             } finally {
                 this.close();
             }
-            return list;
+        }else{
+            throw new IllegalArgumentException("Els tipus de dades de la consulta no són correctes.");
         }
-        else{
-            throw new NullPointerException();
-        }
-    }
 
+
+        return list;
+    
+    }
+    @Override
     public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
         int count=0;
         ArrayList<Object> valors;
         Integer []ids;
+        boolean dadesCorrectes=comprovarDadesConsulta(dades, ContractProducte.DEFINICIO);
         int i;
         
         String query;
-        try {
-            conn=ConnectionFactory.getInstance().getConnection();
-            valors=new ArrayList<>();
-            query = "SELECT COUNT(*) FROM "+ContractProducte.NOM_TAULA;
-            i=0;
-            for(Map.Entry<String, Object> entry : dades.entrySet()){
-                String camp = entry.getKey();
-                Object valor = entry.getValue();
-                if(i ==0){
-                    query += " WHERE ";
-                }
-                else{
-                    query += " AND ";
-                }
-                if(valor.getClass().equals(String.class)){
-                    query += camp+" LIKE ? ";
-                    valors.add("%"+valor+"%");
-                }
-                else if(valor.getClass().equals(Integer.class)){
-                    query += camp+ " = ? ";
-                    valors.add(dades.get(camp));     
-                }
-                else if(valor.getClass().equals(Boolean.class)){
-                    query += camp+ " = ? ";
-                    valors.add(dades.get(camp));
-                }
-                else if(valor.getClass().equals(Integer[].class)){
-                    ids=(Integer[])valor;
-                    query +=camp;
-                    for (int j = 0; j < ids.length; j++) {
-                        if(j==0){
-                            query += " WHERE ";
-                        }
-                        else{
-                            query += " OR ";
-                        }
-                        switch(camp){
-                            case ContractProducte.IDIOMA_ID:
-                                query+=ContractProducteIdioma.ID_IDIOMA + " = ? ";
-                                valors.add(ids[j]);
-                                break;
-                            case ContractProducte.AUTORS:
-                                query+=ContractProducteIdioma.ID_IDIOMA + " = ?";
-                                valors.add(ids[j]);
-                                break;
-                            case ContractProducte.MATERIA:
-                                query+=ContractMateriaProducte.ID_MATERIA+ " = ?";
-                                valors.add(ids[j]);
-                                break;
-                            case ContractProducte.NIVELL:
-                                query+=ContractProducteNivell.ID_NIVELL + " = ?";
-                                valors.add(ids[j]);
-                                break;
-                        }
+        if(dadesCorrectes){
+            try {
+                conn=ConnectionFactory.getInstance().getConnection();
+                valors=new ArrayList<>();
+                query = "SELECT COUNT(*) FROM "+ContractProducte.NOM_TAULA;
+                i=0;
+                for(Map.Entry<String, Object> entry : dades.entrySet()){
+                    String camp = entry.getKey();
+                    Object valor = entry.getValue();
+                    if(i ==0){
+                        query += " WHERE ";
                     }
-                    query+=")";
+                    else{
+                        query += " AND ";
+                    }
+                    if(valor.getClass().equals(String.class)){
+                        query += camp+" LIKE ? ";
+                        valors.add("%"+valor+"%");
+                    }
+                    else if(valor.getClass().equals(Integer.class)){
+                        query += camp+ " = ? ";
+                        valors.add(dades.get(camp));     
+                    }
+                    else if(valor.getClass().equals(Boolean.class)){
+                        query += camp+ " = ? ";
+                        valors.add(dades.get(camp));
+                    }
+                    else if(valor.getClass().equals(Integer[].class)){
+                        ids=(Integer[])valor;
+                        query +=camp;
+                        for (int j = 0; j < ids.length; j++) {
+                            if(j==0){
+                                query += " WHERE ";
+                            }
+                            else{
+                                query += " OR ";
+                            }
+                            switch(camp){
+                                case ContractProducte.IDIOMA_ID:
+                                    query+=ContractProducteIdioma.ID_IDIOMA + " = ? ";
+                                    valors.add(ids[j]);
+                                    break;
+                                case ContractProducte.AUTORS:
+                                    query+=ContractProducteIdioma.ID_IDIOMA + " = ?";
+                                    valors.add(ids[j]);
+                                    break;
+                                case ContractProducte.MATERIA:
+                                    query+=ContractMateriaProducte.ID_MATERIA+ " = ?";
+                                    valors.add(ids[j]);
+                                    break;
+                                case ContractProducte.NIVELL:
+                                    query+=ContractProducteNivell.ID_NIVELL + " = ?";
+                                    valors.add(ids[j]);
+                                    break;
+                            }
+                        }
+                        query+=")";
+                    }
+                    i++;
                 }
-                i++;
+                ps=conn.prepareStatement(query);
+                for(i=0;i<valors.size();i++){
+                    ps.setObject(i+1, valors.get(i));
+                }
+                rs=ps.executeQuery();
+                if(rs.next()){
+                    count=rs.getInt(1);
+                }
+            } catch (SQLException ex) {
+                throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+            } catch(ClassNotFoundException ex){
+                throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+            }finally{
+                this.close();
             }
-            ps=conn.prepareStatement(query);
-            for(i=0;i<valors.size();i++){
-                ps.setObject(i+1, valors.get(i));
-            }
-            rs=ps.executeQuery();
-            if(rs.next()){
-                count=rs.getInt(1);
-            }
-        } catch (SQLException ex) {
-            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
-        } catch(ClassNotFoundException ex){
-            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
-        }finally{
-            this.close();
+        }else{
+            throw new IllegalArgumentException("Els tipus de dades de la consulta no són correctes.");
         }
+        
         return count;
     }
     @Override
@@ -358,14 +338,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "+ContractProducte.ID+","+ContractProducte.ISBN+","+ContractProducte.NOM+","
-                    +ContractProducte.NUM_PAG+","+ContractProducte.DIMENSIONS+","+ContractProducte.ANY_PUBLICACIO+","
-                    +ContractProducte.RESUM+","+ContractProducte.CARACTERISTIQUES+","
-                    +ContractProducte.URL_PORTADA+","+ContractProducte.ADRECA_WEB+","+ContractProducte.ESTAT+","
-                    +ContractProducte.IDIOMA_ID+","+ContractProducte.EDITORIAL_ID+","
-                    +ContractProducte.FORMAT_ID+","+ContractProducte.PROCEDENCIA_ID+","
-                    +ContractProducte.COLECCIO_ID+","+ContractProducte.CDU+
-                    " from "+ ContractProducte.NOM_TAULA + " where " + ContractProducte.ID + " = ? ";
+            sql = "Select * from "+ ContractProducte.NOM_TAULA + " where " + ContractProducte.ID + " = ? ";
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs = ps.executeQuery();
@@ -457,7 +430,7 @@ public class ProducteDAO implements IObjectDAO<Producte> {
             producte.getAutors().forEach(action->{
                 String descripcio="autor";
                 ProducteAutorDAO paDAO = new ProducteAutorDAO();
-                HashMap<String,String> descripcions = new HashMap<>();
+                HashMap<String,String> descripcions = new HashMap<>(); //Aquest mapa era per el traspas de dades poder ficar la definicio.
                 descripcions.put("[tr]", "traductor/a");
                 descripcions.put("[trad.]", "traductor/a");
                 descripcions.put("[traduct.]", "traductor/a");
@@ -497,13 +470,16 @@ public class ProducteDAO implements IObjectDAO<Producte> {
                 descripcions.put("[[autora]]", "autor/a");
                 descripcions.put("[[autor]]", "autor/a");
                 
-                
                 for(String possibleDescripcio : descripcions.keySet()){
                     if(action.getNom().contains(possibleDescripcio)){
                         descripcio=descripcions.get(possibleDescripcio);
                     }
                 }
-                paDAO.insert(producte.getId(), action.getId(), descripcio,1);
+                try {
+                    paDAO.insert(producte.getId(), action.getId(), descripcio,1);
+                } catch (ClassNotFoundException | SQLException e) {
+                }
+                
             });
             inserit = true;
         } catch (SQLException ex) {
@@ -576,38 +552,8 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         return id;
     }
     @Override
-    public void close(){
-        if(this.conn!=null){
-            try {
-                this.conn.close();
-                this.conn=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if(this.ps!=null){
-            try {
-                this.ps.close();
-                this.ps=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if(this.rs!=null){
-            try{
-                this.rs.close();
-                this.rs=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    private Producte read()throws SQLException,ClassNotFoundException{
-        long ini,fin;
-        System.out.println("\n\nPRODUCTE\n\n");
+    protected Producte read()throws SQLException,ClassNotFoundException{
         Producte objProducte = new Producte();
-        ini=System.currentTimeMillis();
         objProducte.setNom(rs.getString(ContractProducte.NOM));
         objProducte.setId(rs.getInt(ContractProducte.ID));
         objProducte.setISBN(rs.getString(ContractProducte.ISBN));
@@ -622,40 +568,15 @@ public class ProducteDAO implements IObjectDAO<Producte> {
         objProducte.setPais(rs.getString(ContractProducte.PAIS));
         objProducte.setLloc(rs.getString(ContractProducte.LLOC));
         objProducte.setCdu(rs.getString(ContractProducte.CDU));
-        fin = System.currentTimeMillis();
-        System.out.println("Fi carrega atributs:"+(fin-ini));
-        ini=System.currentTimeMillis();
         objProducte.setEditorial(new EditorialDAO().select(rs.getInt(ContractProducte.EDITORIAL_ID)));
-        fin=System.currentTimeMillis();
-        
-        System.out.println("Fi carrega editoria:"+(fin-ini));
-         ini=System.currentTimeMillis();
         objProducte.setFormat(new FormatDAO().select(rs.getInt(ContractProducte.FORMAT_ID)));
-        fin=System.currentTimeMillis();
-        System.out.println("Fi carrega format:"+(fin-ini));
-         ini=System.currentTimeMillis();
         objProducte.setProcedencia(new ProcedenciaDAO().select(rs.getInt(ContractProducte.PROCEDENCIA_ID)));
-        fin=System.currentTimeMillis();
-        System.out.println("Fi carrega procedencia:"+(fin-ini));
-         ini=System.currentTimeMillis();
         objProducte.setColeccio(new ColeccioDAO().select(rs.getInt(ContractProducte.COLECCIO_ID)));
-        fin=System.currentTimeMillis();
-        System.out.println("Fi carrega coleccio:"+(fin-ini));
-        ini = System.currentTimeMillis();
         objProducte.setExemplars(new HashSet<>(0));
         objProducte.setNivells(new HashSet<>(0));
-        fin=System.currentTimeMillis();
-        System.out.println("Fi carrega hashes:"+(fin-ini));
         return objProducte;
     }
     
-    public static void main(String[] args) throws SQLException,ClassNotFoundException,IOException{
-        ConnectionFactory.getInstance().configure( FileSystems.getDefault().getPath("src/base", "configLector.txt"));
-        HashMap<String,Object>consulta = new HashMap<>();
-        consulta.put(ContractProducte.NOM, "a");
-        consulta.put(ContractProducte.IDIOMA_ID, new Integer[]{1,2});
-        consulta.put(ContractProducte.NIVELL, new Integer[]{1});
-        System.out.println(new ProducteDAO().select(consulta,null,null,null,null).size());
-        //new ProducteDAO().select(consulta,null,null,null,null).forEach(action->System.out.println(action.toString()));
-    }
+
 }
+

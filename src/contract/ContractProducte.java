@@ -7,7 +7,14 @@ import java.util.HashMap;
  */
 
 public abstract class ContractProducte {
+
+    //NOM DE LA TAULA: es el nom de la taula que s'utilitza a la base de dades.
+
     public static final String NOM_TAULA = "producte";
+
+    //CAMPS DE LA TAULA: es el noms dels camps* que conté la taula.
+    //*S'afagueix el nom de la taula i un punt al principi per que els camps no siguin ambigu.
+
     public static final String ID = NOM_TAULA+".id_producte";
     public static final String ISBN = NOM_TAULA+".ISBN";
     public static final String NOM = NOM_TAULA+".nom";
@@ -32,6 +39,9 @@ public abstract class ContractProducte {
     public static final String AUTORS = ID + " in ( SELECT " + ContractProductePersona.ID_PRODUCTE + " FROM " + ContractProductePersona.NOM_TAULA;
     public static final String NIVELL = ID + " IN (SELECT " + ContractProducteNivell.ID_PRODUCTE+ " FROM " + ContractProducteNivell.NOM_TAULA;
     public static final String MATERIA = ID + " IN (SELECT " + ContractMateriaProducte.ID_PRODUCTE+ " FROM " + ContractMateriaProducte.NOM_TAULA;
+
+    //DEFINICIO DE LA TAULA: amb aquest HashMap el que aconseguim es relacionar tots els camps de la taula amb un tipus de variable*.
+    //*Aixó ens serveix més endevant per poder fer comprovacions d'entrades d'usuari.
 
     public static HashMap<String,Integer> DEFINICIO = new HashMap<String,Integer>(){{
         put(ID, Types.INTEGER);

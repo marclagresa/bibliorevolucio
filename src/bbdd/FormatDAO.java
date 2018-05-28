@@ -2,11 +2,7 @@ package bbdd;
 
 import base.ConnectionFactory;
 import contract.ContractFormat;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import objecte.Format;
 
 
@@ -14,15 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class FormatDAO implements IObjectDAO<Format>{
-    private Connection conn;
-    private ResultSet rs;
-    private PreparedStatement ps;
+public class FormatDAO extends BDObject implements IObjectDAO<Format>{
+
 
     public FormatDAO(){
-        conn=null;
-        rs=null;
-        ps=null;
+
     }
      public Format select(String nom)throws ClassNotFoundException,SQLException{
         Format format=new Format();
@@ -42,7 +34,7 @@ public class FormatDAO implements IObjectDAO<Format>{
         }catch(SQLException e){
             throw new SQLException(e.getMessage(),e.getSQLState(),e.getErrorCode(),e.getCause());
         }finally{
-            this.close();
+            close();
         }
         return format;
     }
@@ -67,12 +59,12 @@ public class FormatDAO implements IObjectDAO<Format>{
         }catch( ClassNotFoundException ex) {
             throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
-            this.close();
+            close();
         }
         return list;
     }
     @Override
-    public List<Format> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
+    public List<Format> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException,IllegalArgumentException{
         List<Format> formats =new ArrayList<>();
         ArrayList<Object>valors;
         String query;
@@ -82,56 +74,62 @@ public class FormatDAO implements IObjectDAO<Format>{
             valors=new ArrayList<>();
             query = "SELECT * FROM "+ContractFormat.NOM_TAULA;
             i=0;
-            for(String camp:dades.keySet()){
-                if(i ==0){
-                    query += " WHERE ";
-                }
-                else{
-                    query += " AND ";
-                }
-                if(dades.get(camp).getClass().equals(String.class)){
-                    query += camp+" LIKE ?";
-                    valors.add("%"+dades.get(camp)+"%");
-                }
-                else{
-                    query += camp+ " = ?";
-                    valors.add(dades.get(camp));
-                }
+            if(super.comprovarDadesConsulta(dades, ContractFormat.DEFINICIO)){
+                for(String camp:dades.keySet()){
+                    if(i ==0){
+                        query += " WHERE ";
+                    }
+                    else{
+                        query += " AND ";
+                    }
+                    if(dades.get(camp).getClass().equals(String.class)){
+                        query += camp+" LIKE ?";
+                        valors.add("%"+dades.get(camp)+"%");
+                    }
+                    else{
+                        query += camp+ " = ?";
+                        valors.add(dades.get(camp));
+                    }
+                    i++;
 
-            }
-            if(campOrdre!=null){
-                query+=" ORDER BY ? ";
-                valors.add(campOrdre);
-                if(ascendent){
-                    query+=" ASC ";
                 }
-                else{
-                    query+= " DESC ";
+                if(campOrdre!=null){
+                    query+=" ORDER BY " +campOrdre;
+                    
+                    if(ascendent){
+                        query+=" ASC ";
+                    }
+                    else{
+                        query+= " DESC ";
+                    }
                 }
-            }
-            if(registreInicial!=null || totalRegistres!=null){
-                query += " LIMIT ";
-                if(registreInicial!=null){
-                    query += " ?, ";
-                    valors.add(registreInicial);
-                }
-                if(totalRegistres==null){
-                    query +=" 18446744073709551615";
-                }
-                else{
-                    query +=" ?";
-                    valors.add(totalRegistres);
-                }
+                if(registreInicial!=null || totalRegistres!=null){
+                    query += " LIMIT ";
+                    if(registreInicial!=null){
+                        query += " ?, ";
+                        valors.add(registreInicial);
+                    }
+                    if(totalRegistres==null){
+                        query +=" 18446744073709551615";
+                    }
+                    else{
+                        query +=" ?";
+                        valors.add(totalRegistres);
+                    }
 
+                }
+                ps=conn.prepareStatement(query);
+                for(i=0;i<valors.size();i++){
+                    ps.setObject(i+1, valors.get(i));
+                }
+                rs=ps.executeQuery();
+                while(rs.next()){
+                    formats.add(this.read());
+                }
             }
-            ps=conn.prepareStatement(query);
-            for(i=0;i<valors.size();i++){
-                ps.setObject(i+1, valors.get(i));
-            }
-            rs=ps.executeQuery();
-            while(rs.next()){
-                formats.add(this.read());
-            }
+            else{
+                throw new IllegalArgumentException("Les dades de la consulta no corresponent amb els camps.");
+            } 
         } catch (SQLException ex) {
             throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
         } catch(ClassNotFoundException ex){
@@ -143,69 +141,56 @@ public class FormatDAO implements IObjectDAO<Format>{
         return formats;
     }
 
-    public List<Format> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
+    public List<Format> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException,IllegalArgumentException{
         List<Format> list = new ArrayList<>();
         String sql;
         Object [] valors;
         int i;
-        boolean dadaCorrecte=false;
-
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            sql = "SELECT * FROM "+ContractFormat.NOM_TAULA;
-            i=0;
-            valors=new Object[dades.size()];
-            for(String camp:dades.keySet()){
+        boolean dadesCorrecte=super.comprovarDadesConsulta(dades, ContractFormat.DEFINICIO);
+        if(dadesCorrecte){
+            try {
+                conn = ConnectionFactory.getInstance().getConnection();
+                sql = "SELECT * FROM "+ContractFormat.NOM_TAULA;
+                i=0;
                 valors=new Object[dades.size()];
-                switch(ContractFormat.DEFINICIO.get(camp)){
-                    case Types.INTEGER:
-                        dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
-                        break;
-                    case Types.CHAR:
-                    case Types.VARCHAR:
-                        dadaCorrecte=dades.get(camp).getClass().equals(String.class);
-                        break;
-                    case Types.BOOLEAN:
-                        dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
-                        break;
-                }
-                if(i ==0){
-                    sql += " WHERE " ;
-                }
-                else{
-                    sql += " AND ";
-                }
-                sql+=camp;
-                if(dades.get(camp).getClass().equals(String.class)){
-                    sql +=" LIKE ? ";
-                    valors[i]="%"+dades.get(camp)+"%";
-                }
-                else{
-                    sql+=" = ?";
-                    valors[i]=dades.get(camp);
-                }
-                if(dadaCorrecte){
+                for(String camp:dades.keySet()){
+                    valors=new Object[dades.size()];
+                    if(i ==0){
+                        sql += " WHERE " ;
+                    }
+                    else{
+                        sql += " AND ";
+                    }
+                    sql+=camp;
+                    if(dades.get(camp).getClass().equals(String.class)){
+                        sql +=" LIKE ? ";
+                        valors[i]="%"+dades.get(camp)+"%";
+                    }
+                    else{
+                        sql+=" = ?";
+                        valors[i]=dades.get(camp);
+                    }
                     i++;
                 }
-                else{
-                    throw new SQLException("Error tipus de dades incorrectes!!");
+                ps = conn.prepareStatement(sql);
+                for(i=0;i<valors.length;i++){
+                    ps.setObject(i+1, valors[i]);
                 }
-            }
-            ps = conn.prepareStatement(sql);
-            for(i=0;i<valors.length;i++){
-                ps.setObject(i+1, valors[i]);
-            }
-            rs = ps.executeQuery();
-            while(rs.next()){
-                list.add(this.read());
-            }
+                rs = ps.executeQuery();
+                while(rs.next()){
+                    list.add(this.read());
+                }
 
-        } catch (SQLException ex){
-            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
-        }catch( ClassNotFoundException ex) {
-            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
-        } finally {
-            this.close();
+            } catch (SQLException ex){
+                throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+            }catch( ClassNotFoundException ex) {
+                throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
+            } finally {
+                this.close();
+            }
+        }
+        else{
+            throw new IllegalArgumentException("Les dades de la consulta no corresponent amb els camps.");
         }
         return list;
     }
@@ -215,42 +200,49 @@ public class FormatDAO implements IObjectDAO<Format>{
         ArrayList<Object> valors;
         int i;
         String query;
-        try {
-            conn=ConnectionFactory.getInstance().getConnection();
-            valors=new ArrayList<>();
-            query = "SELECT COUNT(*) FROM "+ContractFormat.NOM_TAULA;
-            i=0;
-            for(String camp:dades.keySet()){
-                if(i ==0){
-                    query += " WHERE ";
-                }
-                else{
-                    query += " AND ";
-                }
-                if(dades.get(camp).getClass().equals(String.class)){
-                    query += camp+" LIKE ?";
-                    valors.add("%"+dades.get(camp)+"%");
-                }
-                else{
-                    query += camp+ " = ?";
-                    valors.add(dades.get(camp));
-                }
+        boolean dadesCorrectes=super.comprovarDadesConsulta(dades,ContractFormat.DEFINICIO);
+        if(dadesCorrectes){
+            try {
+                conn=ConnectionFactory.getInstance().getConnection();
+                valors=new ArrayList<>();
+                query = "SELECT COUNT(*) FROM "+ContractFormat.NOM_TAULA;
+                i=0;
+                for(String camp:dades.keySet()){
+                    if(i ==0){
+                        query += " WHERE ";
+                    }
+                    else{
+                        query += " AND ";
+                    }
+                    if(dades.get(camp).getClass().equals(String.class)){
+                        query += camp+" LIKE ?";
+                        valors.add("%"+dades.get(camp)+"%");
+                    }
+                    else{
+                        query += camp+ " = ?";
+                        valors.add(dades.get(camp));
+                    }
+                    i++;
 
+                }
+                ps=conn.prepareStatement(query);
+                for(i=0;i<valors.size();i++){
+                    ps.setObject(i+1, valors.get(i));
+                }
+                rs=ps.executeQuery();
+                if(rs.next()){
+                    count=rs.getInt(1);
+                }
+            } catch (SQLException ex) {
+                throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+            } catch(ClassNotFoundException ex){
+                throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+            }finally{
+                this.close();
             }
-            ps=conn.prepareStatement(query);
-            for(i=0;i<valors.size();i++){
-                ps.setObject(i+1, valors.get(i));
-            }
-            rs=ps.executeQuery();
-            if(rs.next()){
-                count=rs.getInt(1);
-            }
-        } catch (SQLException ex) {
-            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
-        } catch(ClassNotFoundException ex){
-            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
-        }finally{
-            this.close();
+        }
+        else{
+            throw new IllegalArgumentException("Les dades de la consulta no corresponent amb els camps.");
         }
         return count;
     }
@@ -341,46 +333,15 @@ public class FormatDAO implements IObjectDAO<Format>{
         }catch( ClassNotFoundException ex) {
             throw new ClassNotFoundException (ex.getMessage(),ex.getCause());
         } finally {
-            this.close();
+            super.close();
         }
         return id;
     }
     @Override
-    public void close(){
-        if(this.conn!=null){
-            try {
-                this.conn.close();
-                this.conn=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if(this.ps!=null){
-            try {
-                this.ps.close();
-                this.ps=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if(this.rs!=null){
-            try{
-                this.rs.close();
-                this.rs=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    private Format read() throws SQLException,ClassNotFoundException{
+    protected Format read() throws SQLException,ClassNotFoundException{
         Format objFormat = new Format();
         objFormat.setId(rs.getInt(ContractFormat.ID));
         objFormat.setNom(rs.getString(ContractFormat.NOM));
         return objFormat;
-    }
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-
     }
 }
