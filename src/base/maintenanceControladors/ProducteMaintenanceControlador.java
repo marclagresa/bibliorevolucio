@@ -9,6 +9,7 @@ import base.EmplanarComboBox.ClMateria;
 import base.EmplanarComboBox.ClNivell;
 import base.EmplanarComboBox.ClPersona;
 import base.EmplanarComboBox.ClProcedencia;
+import base.FXMLControllerConsultaAvanzadaProducta;
 import base.FXMLProducteController;
 import base.GenericMaintenanceControlador;
 import base.GenericPopUp;
@@ -17,11 +18,7 @@ import bbdd.ProducteDAO;
 import bbdd.ProducteIdiomaDAO;
 import bbdd.ProducteMateriaDAO;
 import bbdd.ProducteNivellDAO;
-import contract.ContractExemplar;
-import contract.ContractMateriaProducte;
 import contract.ContractProducte;
-import contract.ContractProducteIdioma;
-import contract.ContractProducteNivell;
 import excepcions.MaintenanceException;
 import maintenance.AttributeBrick;
 import maintenance.AttributeWall;
@@ -177,7 +174,7 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
         
         ProducteMateriaDAO matDAO = new ProducteMateriaDAO();
         ProducteIdiomaDAO idiDAO = new ProducteIdiomaDAO();
-        ProducteNivellDAO nivDAO     = new ProducteNivellDAO();
+        ProducteNivellDAO nivDAO = new ProducteNivellDAO();
         ProducteAutorDAO autDAO = new ProducteAutorDAO();
         
         List< Producte > llista = new ProducteDAO().select( data, attribToOrder, limitXPage, startItem, sortType );
@@ -218,8 +215,8 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
     }
 
     @Override
-    public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
-        return FXMLProducteController.crear( this.getScene().getWindow(), true, tipusAccio );
+    public GenericPopUp createPopUpAdvSearch() throws IOException {
+        return FXMLControllerConsultaAvanzadaProducta.crear( this.getScene().getWindow(), true );
     }
 
 }

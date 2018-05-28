@@ -6,9 +6,6 @@ import base.GenericPopUp;
 import bbdd.BibliotecaDAO;
 import contract.ContractBiblioteca;
 import excepcions.MaintenanceException;
-import maintenance.AttributeBrick;
-import maintenance.AttributeWall;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -17,6 +14,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.scene.control.ComboBox;
+import maintenance.AttributeBrick;
+import maintenance.AttributeWall;
 
 /**
  * @author Albert Corominas
@@ -88,7 +87,6 @@ public class BibliotecaMaintenanceControlador extends GenericMaintenanceControla
 
         _lblAdvancedSearch.setDisable( true );
         _lblAdvancedSearch.setVisible( false );
-        
     }
 
     @Override
@@ -97,8 +95,8 @@ public class BibliotecaMaintenanceControlador extends GenericMaintenanceControla
     }
 
     @Override
-    public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
-        return FXMLBibliotecaController.crear( this.getScene().getWindow(), true, tipusAccio );
+    public GenericPopUp createPopUpAdvSearch() throws MaintenanceException {
+        throw new MaintenanceException( "Not implemented" );
     }
 
 }

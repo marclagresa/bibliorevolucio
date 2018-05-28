@@ -33,7 +33,7 @@ public class CduMaintenanceControlador extends GenericMaintenanceControlador imp
         List<AttributeBrick> attributeWall = Arrays.asList(
             new AttributeBrick( "id", "ID", true, ContractCdu.ID, AttributeBrick.allowedFormats.String ),
             new AttributeBrick( "nom", "Nom", true, ContractCdu.NOM, AttributeBrick.allowedFormats.String ),
-            new AttributeBrick( "idPare", "IDPare", true, ContractCdu.IDPARE, AttributeBrick.allowedFormats.String )
+            new AttributeBrick( "idPare", "ID Pare", true, ContractCdu.IDPARE, AttributeBrick.allowedFormats.String )
         );
         
         return attributeWall;
@@ -78,8 +78,7 @@ public class CduMaintenanceControlador extends GenericMaintenanceControlador imp
 
     @Override
     public Integer getTotalItems( HashMap<String, Object> data ) throws ClassNotFoundException, SQLException {
-        //return new CduDAO().selectCount( data );
-        return 0;
+        return new CduDAO().selectCount( data );
     }
     
     // GenericMaintenanceControlador
@@ -98,8 +97,8 @@ public class CduMaintenanceControlador extends GenericMaintenanceControlador imp
     }
 
     @Override
-    public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
-        return FXMLCduController.crear( this.getScene().getWindow(), true, tipusAccio );
+    public GenericPopUp createPopUpAdvSearch() throws MaintenanceException {
+        throw new MaintenanceException( "Not implemented" );
     }
 
 }

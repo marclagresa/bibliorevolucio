@@ -96,8 +96,8 @@ public class ColeccioMaintenanceControlador extends GenericMaintenanceControlado
     }
 
     @Override
-    public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
-        return FXMLColeccioController.crear( this.getScene().getWindow(), true, tipusAccio );
+    public GenericPopUp createPopUpAdvSearch() throws MaintenanceException {
+        throw new MaintenanceException( "Not implemented" );
     }
 
 }

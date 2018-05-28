@@ -8,7 +8,6 @@ import contract.ContractPersona;
 import excepcions.MaintenanceException;
 import maintenance.AttributeBrick;
 import maintenance.AttributeWall;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -97,8 +96,8 @@ public class PersonaMaintenanceControlador extends GenericMaintenanceControlador
     }
 
     @Override
-    public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
-        return FXMLAutorController.crear( this.getScene().getWindow(), true, tipusAccio );
+    public GenericPopUp createPopUpAdvSearch() throws MaintenanceException {
+        throw new MaintenanceException( "Not implemented" );
     }
 
 }

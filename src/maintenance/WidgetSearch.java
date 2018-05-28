@@ -24,7 +24,7 @@ public class WidgetSearch {
     private final Object _OBJECTE = null;
 
     public WidgetSearch( AttributeWall _wallClass, TextField _SEARCHFIELD, CheckBox _SEARCHCHECKB, ComboBox _SEARCHCOMBOB, ChoiceBox<AttributeBrick> _CBATTRIBUTES, OnChange changeCombo ) {
-
+        
         this._SEARCHFIELD = _SEARCHFIELD;
         this._SEARCHCHECKB = _SEARCHCHECKB;
         this._SEARCHCOMBOB = _SEARCHCOMBOB;

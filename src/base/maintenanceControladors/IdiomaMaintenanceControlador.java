@@ -96,8 +96,8 @@ public class IdiomaMaintenanceControlador extends GenericMaintenanceControlador 
     }
 
     @Override
-    public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
-        return FXMLIdiomaController.crear( this.getScene().getWindow(), true, tipusAccio );
+    public GenericPopUp createPopUpAdvSearch() throws MaintenanceException {
+        throw new MaintenanceException( "Not implemented" );
     }
 
 }
