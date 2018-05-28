@@ -13,7 +13,14 @@ import java.sql.Types;
  * @author sergiclotas
  */
 public abstract class ContractUsuari {
+
+    //NOM DE LA TAULA: es el nom de la taula que s'utilitza a la base de dades.
+
     public static final String NOM_TAULA = "usuari";
+
+    //CAMPS DE LA TAULA: es el noms dels camps* que conté la taula.
+    //*S'afagueix el nom de la taula i un punt al principi per que els camps no siguin ambigu.
+
     public static final String ID = NOM_TAULA+".id";
     public static final String NOM = NOM_TAULA+".nom";
     public static final String PRIMER_COGNOM = NOM_TAULA+".p_cognom";
@@ -26,9 +33,11 @@ public abstract class ContractUsuari {
     public static final String SALT = NOM_TAULA+".saltContr";
     public static final String ADMIN = NOM_TAULA+".esAdmin";
     public static final String ID_NIVELL = NOM_TAULA+".nivell";
+
+    //DEFINICIO DE LA TAULA: amb aquest HashMap el que aconseguim es relacionar tots els camps de la taula amb un tipus de variable*.
+    //*Aixó ens serveix més endevant per poder fer comprovacions d'entrades d'usuari.
+
     public static final HashMap<String,Integer> DEFINICIO  = new HashMap<String,Integer>(){{
-        //Aquest HashMap s' utilitza per comprovar el tipus de dades rebudes en una query
-        //Ens defineix cada columna de quin tipus es.
         put(ID, Types.INTEGER);
         put(NOM, Types.VARCHAR);
         put(PRIMER_COGNOM, Types.VARCHAR);
