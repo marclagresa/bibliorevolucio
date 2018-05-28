@@ -87,10 +87,10 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
         if (titolTF.getText() != null) {
             consulta.put(ContractProducte.NOM, titolTF.getText());
         }
-        if (titolTF.getText() != null) {
+        if (isbnTF.getText() != null) {
             consulta.put(ContractProducte.ISBN, isbnTF.getText());
         }
-        if (titolTF.getText() != null){
+        if (dataDP.getValue() != null){
             consulta.put(ContractProducte.ANY_PUBLICACIO, dataDP.getValue());
         }
 
