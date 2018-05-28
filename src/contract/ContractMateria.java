@@ -17,6 +17,7 @@ public abstract class ContractMateria {
 
     public static final String ID = NOM_TAULA+".id";
     public static final String NOM = NOM_TAULA+".nom";
+    public static final String ACTIVA = NOM_TAULA+".activa";
 
     //DEFINICIO DE LA TAULA: amb aquest HashMap el que aconseguim es relacionar tots els camps de la taula amb un tipus de variable*.
     //*Aixó ens serveix més endevant per poder fer comprovacions d'entrades d'usuari.
@@ -24,5 +25,6 @@ public abstract class ContractMateria {
     public static HashMap<String,Integer> DEFINICIO = new HashMap<String,Integer>(){{
         put(ID, Types.INTEGER);
         put(NOM, Types.VARCHAR);
+        put(ACTIVA, Types.BOOLEAN);
     }};
 }

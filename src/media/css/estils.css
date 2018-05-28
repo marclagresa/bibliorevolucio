@@ -155,6 +155,9 @@
 #LabelCercaAbansada:hover{
     -fx-text-fill: #FF4619;
 }
+#_hbPages:nth-child:odd{
+    -fx-text-fill: #FFCCBB;
+}
 #numerosParells{
     
 }

@@ -19,7 +19,7 @@ public abstract class ContractCdu {
     public static final String ID = NOM_TAULA+".id";
     public static final String NOM = NOM_TAULA+".nom";
     public static final String IDPARE = NOM_TAULA+".idPare";
-
+    public static final String ACTIVA = NOM_TAULA+".activa";
     //DEFINICIO DE LA TAULA: amb aquest HashMap el que aconseguim es relacionar tots els camps de la taula amb un tipus de variable*.
     //*Aixó ens serveix més endevant per poder fer comprovacions d'entrades d'usuari.
 
@@ -27,5 +27,6 @@ public abstract class ContractCdu {
        put(ID,Types.VARCHAR);
        put(IDPARE,Types.VARCHAR);
        put(NOM,Types.VARCHAR);
+        put(ACTIVA, Types.VARCHAR);
     }};
 }

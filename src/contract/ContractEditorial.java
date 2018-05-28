@@ -18,8 +18,10 @@ public abstract class ContractEditorial {
 
     public static final String ID = NOM_TAULA+".id";
     public static final String NOM = NOM_TAULA+".nom";
+    public static final String ACTIVA = NOM_TAULA+".activa";
     public static final HashMap<String,Integer>DEFINICIO= new HashMap<String,Integer>(){{
         put(ID, Types.INTEGER);
         put(NOM, Types.VARCHAR);
+        put(ACTIVA, Types.BOOLEAN);
     }};
 }
