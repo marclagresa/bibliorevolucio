@@ -58,12 +58,6 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        try {
-            ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         ClNivell clNivell = new ClNivell(nivellComB);
         nivellComB.getEditor().textProperty().addListener(clNivell);
 
