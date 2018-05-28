@@ -103,7 +103,7 @@
                         <VBox alignment="TOP_RIGHT" spacing="5.0">
                            <children>
                               <Button fx:id="_btnSearch" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#searchAction" styleClass="botosGenerics" text="Cerca" />
-                              <Label id="LabelCercaAbansada" fx:id="_lblAdvancedSearch" onMousePressed="#advSearchAction" text="Cerca avançada" textFill="#0a66ff" />
+                              <Label id="LabelCercaAbansada" fx:id="_lblAdvancedSearch" onMousePressed="#advSearchAction" text="Cerca avançada" textFill="#0a66ff" underline="true" />
                            </children>
                         </VBox>
                         <Button fx:id="_btnAdd" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addAction" styleClass="botosGenerics" text="Afegir" />
