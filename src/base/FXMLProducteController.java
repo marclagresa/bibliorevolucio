@@ -19,6 +19,7 @@ import bbdd.MateriaDAO;
 import bbdd.NivellDAO;
 import bbdd.PersonaDAO;
 import bbdd.ProcedenciaDAO;
+import bbdd.ProducteDAO;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -39,6 +40,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -51,6 +53,7 @@ import objecte.Materia;
 import objecte.Nivell;
 import objecte.Persona;
 import objecte.Procedencia;
+import objecte.Producte;
 
 /**
  *
@@ -106,13 +109,9 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     @FXML
     private ImageView imgProducte;
     @FXML
-    private Button btnNouColeccio;   
-    @FXML
     private Button btnNouMateria;    
     @FXML
     private Button btnNouProcedencia;
-    @FXML
-    private TextArea taCaract;
     @FXML
     private ComboBox<Persona> cbAutor;
     @FXML
@@ -140,22 +139,35 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         
         return crearPopUp("/fxml/FXMLProducte.fxml", FXMLProducteController.class, owner, isModal, tipus);
     }    
-    
     @FXML
+    private TextField tfAutor;
+    @FXML
+    private TextField tfNivell;
+    @FXML
+    private HBox tfAutor1;
+    @FXML
+    private TextField tfMateria;
+    @FXML
+    private TextField tfPais;
+    @FXML
+    private TextField tfLloc;
+    @FXML
+    private TextArea taCaracteristiques;
+    
     public void guardar() {
     
         //Falta afegir comprovadors de els contenidors de text no estan buits
-        int data = 0,num_pag = 0,volum = 0,num_exemplars = 0;
-        String cdu = "",editorial = "", persona = "",nivellLectura = "",format = "",idioma = "", coleccio = "";
-        Editorial objEditorial;
-        Persona objPersona;
-        Cdu objCDU;
-        Format objFormat;
-        Nivell ojbNivell;
-        Idioma objIdioma;
-        Coleccio objColeccio;
-        Materia objMateria;
-        Procedencia objProcedencia;
+        int num_pag = 0,volum = 0,num_exemplars = 0;
+        String cdu = "",editorial = "", persona = "",nivellLectura = "",format = "",idioma = "", coleccio = "", data = "";
+        Editorial objEditorial = null;
+        Persona objAutor = null;
+        Cdu objCDU = null;
+        Format objFormat = null;
+        Nivell ojbNivell = null;
+        Idioma objIdioma = null;
+        Coleccio objColeccio = null;
+        Materia objMateria = null;
+        Procedencia objProcedencia = null;
          
         //CDU->comprovació de que no estigui buit el cbCDU
         //boolean cbCDUBuit = (cbCDU.getValue() == null);       
@@ -170,8 +182,8 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         //Autor->comprovació de que no estigui buit el cbEditorial
         boolean cbAutorBuit = (cbAutor.getValue() == null);
         if(!cbAutorBuit){ 
-            objPersona = cbAutor.getValue();
-            persona = objPersona.getNom();
+            objAutor = cbAutor.getValue();
+            persona = objAutor.getNom();
             System.out.println("Autor: "+persona);
         }     
 
@@ -226,7 +238,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         String validacioData = tfAny.getText();    
         if (!"".equals(validacioData)) {
             if(isNumeric(validacioData)){
-                data = Integer.valueOf(validacioData);
+                data = validacioData;
             }else{
                 tfAny.setStyle("-fx-border-color: red; -fx-background-color:#FFCDD2");
                 tfAny.setText("");
@@ -251,12 +263,16 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             objColeccio = cbColeccio.getValue();
             coleccio = objColeccio.getNom();
             System.out.println("Col·lecció: "+coleccio);    
-        }        
+        }
 
         String nom = tfTitol.getText();
         String ISBN = tfISBN.getText();        
         String dimensions = tfDimensions.getText();
         String resum = taResum.getText();
+        String caracteristiques = taCaracteristiques.getText();
+        String adresaWeb = tfAdresaWeb.getText();
+        String pais = tfPais.getText();
+        String lloc = tfLloc.getText();
        
         //Comprovem que tots aquests camps que no poden estar buits no ho estan
        if(ISBN.equals("") || nom.equals("") || format.equals("") || idioma.equals("") || editorial.equals("") || nivellLectura.equals("") || cdu.equals("") || coleccio.equals("")){
@@ -306,8 +322,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
                cbColeccio.setStyle("-fx-border-color: red;");
            }else{
                cbColeccio.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
-           }
-           
+           }           
            
             Alert alerta = new Alert(AlertType.WARNING);
             alerta.setTitle("Alerta");
@@ -318,7 +333,16 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
                 }
         });
         }else{
-            /*Producte producte = new Producte(id, ISBN, nom, num_pag, dimensions, data, resum, caracteristiques,                 urlPortada, adreçaWeb, estat, idTipusProducte, idIdioma, idEditorial, idFormat, idProcedencia, idNivell,            idColeccio, idCDU);*/
+           ProducteDAO producteDAO = new ProducteDAO();
+           int id = -1;
+            try {
+                id = producteDAO.nextId();
+            } catch (ClassNotFoundException ex) {
+            System.out.println("ClassNotFoundException: "+ex.getMessage());
+            } catch (SQLException ex) {
+                System.out.println("SQLException: "+ex.getMessage());
+            }
+           /*Producte producte = new Producte(id, ISBN, nom, num_pag, dimensions, data, resum, caracteristiques,pathImatge, adresaWeb, true, setIdioma, objEditorial, objFormat, objProcedencia, setNivells, objColeccio, cdu, setExemplars, lloc, pais, setMateries, setAutors?);*/
             
             //Retornem el border dels textFields i combobox al color original
             cbFormat.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
@@ -334,7 +358,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             cbAutor.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             cbCDU.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
             cbEditorial.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
-            tfNumExemplars.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");            
         }
     }
     
@@ -347,7 +370,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         objEditorialDAO= new EditorialDAO();
         final ObservableList<Editorial> opcionsEditorial = FXCollections.observableArrayList(objEditorialDAO.selectAll());
         cbEditorial.setItems(opcionsEditorial);
-        objEditorialDAO.close();
         
         //Format        
         ObservableList<Format> opcionsFormat = null;
@@ -359,9 +381,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objFormatDAO.close();
-        }      
+        }  
         
         //Persona              
         ObservableList<Persona> opcionsPersona;
@@ -373,8 +393,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objPersonaDAO.close();
         }
         
         //Nivell              
@@ -387,8 +405,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objNivellDAO.close();
         }
         
         //Idioma        
@@ -401,8 +417,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objIdiomaDAO.close();
         }
         
         //CDU    
@@ -415,8 +429,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objCduDAO.close();
         }
         
         //Materia  
@@ -429,8 +441,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objMateriaDAO.close();
         }
 
         //Procedencia  
@@ -443,8 +453,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objProcedenciaDAO.close();
         }
         
         //Col·lecció  
@@ -457,8 +465,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objColeccioDAO.close();
         }
         
         //Ara omplim els combobox a partir del text que s'ha escrit en ells(busqueda)
@@ -551,8 +557,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objFormatDAO.close();
         }
     }
 
@@ -578,9 +582,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objCduDAO.close();
-        }  
+        } 
     }
 
     @FXML
@@ -605,10 +607,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }
-        finally{
-            objPersonaDAO.close();
-        }
+        }        
     }
 
     @FXML
@@ -628,7 +627,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         objEditorialDAO= new EditorialDAO();
         final ObservableList<Editorial> opcionsEditorial = FXCollections.observableArrayList(objEditorialDAO.selectAll());
         cbEditorial.setItems(opcionsEditorial);
-        objEditorialDAO.close();
     }
 
     @FXML
@@ -657,8 +655,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objNivellDAO.close();
         }
     }
 
@@ -685,8 +681,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objIdiomaDAO.close();
         }
     }
     
@@ -713,8 +707,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objColeccioDAO.close();
         }
     }
 
@@ -741,8 +733,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objMateriaDAO.close();
         }
     }
     
@@ -769,8 +759,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objProcedenciaDAO.close();
         }
     }
     
@@ -804,6 +792,43 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     }
 
     @Override
-    public void emplenarDades(Object obj) {        
+    public void emplenarDades(Object obj) { 
+        
+        /*ObservableList<Persona> llistaAutors = null;
+        ObservableList<Nivell> llistaNivells;
+        ObservableList<Materia> llistaMateries;
+        ObservableList<Idioma> llistaIdiomes;*/
+               
+        Producte producte = (Producte) obj;
+        
+        if(producte!=null){
+            cbFormat.setValue(producte.getFormat());
+            tfISBN.setText(producte.getISBN());
+            //cbCDU.setValue(producte.getCdu());
+            tfAny.setText(producte.getAnyPublicacio());
+            tfNumPag.setText(String.valueOf(producte.getNumPag()));
+            cbColeccio.setValue(producte.getColeccio());
+            tfTitol.setText(producte.getNom());
+            
+            /*Set llistaAutors1 = producte.getAutors();
+            llistaAutors1.stream().forEach((objs) -> {
+                Persona persona = (Persona) objs;
+                llistaAutors.add(persona);
+            });*/
+            
+            //cbAutor.setItems(llistaAutors);
+            cbEditorial.setValue(producte.getEditorial());
+            //tfNumExemplars.setText(producte.get);
+            //cbNivell.setItems(producte.getNivells());
+            tfDimensions.setText(producte.getDimensions());
+            //cbMateria.setItems(producte.getMateries());
+            cbProcedencia.setValue(producte.getProcedencia());
+            //cbIdioma.setItems(producte.getIdiomes());
+            tfAdresaWeb.setText(producte.getAdreçaWeb());
+            tfPais.setText(producte.getPais());
+            tfLloc.setText(producte.getLloc());
+            taResum.setText(producte.getResum());
+            taCaracteristiques.setText(producte.getCaracteristiques());
+        }        
     }
 }

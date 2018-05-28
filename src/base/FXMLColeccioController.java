@@ -65,7 +65,6 @@ public class FXMLColeccioController extends GenericPopUp implements Initializabl
                     id = coleccioDAO.nextId();
                     coleccio = new Coleccio(id, nomColeccio);
                     coleccioDAO.insert(coleccio);
-                    coleccioDAO.close();
 
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
@@ -91,7 +90,6 @@ public class FXMLColeccioController extends GenericPopUp implements Initializabl
                    if(onAcceptCallBack!= null){
                         onAcceptCallBack.accept(coleccio);
                     }
-                    coleccioDAO.close();
                 }      
                 break;
             case Deshabilitar:
@@ -99,10 +97,11 @@ public class FXMLColeccioController extends GenericPopUp implements Initializabl
                 coleccio = new Coleccio();
                 coleccio.setId(id);
                 
-                //coleccioDAO.delete(coleccio);
-                coleccioDAO.close();     
+                //coleccioDAO.delete(coleccio);  
                 break;
         }
+        
+        ((Stage) (btnCrearColeccio.getScene().getWindow())).close();
     }
 
     @Override
