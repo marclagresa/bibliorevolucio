@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -55,7 +54,6 @@ public class FXMLNivellController extends GenericPopUp implements Initializable 
                     id = nivellDAO.nextId();
                     nivell = new Nivell(id, nomNivell);
                     nivellDAO.insert(nivell);
-                    nivellDAO.close();
 
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
@@ -81,7 +79,6 @@ public class FXMLNivellController extends GenericPopUp implements Initializable 
                    if(onAcceptCallBack!= null){
                         onAcceptCallBack.accept(nivell);
                     }
-                    nivellDAO.close();
                 }      
                 break;
             case Deshabilitar:
@@ -89,14 +86,11 @@ public class FXMLNivellController extends GenericPopUp implements Initializable 
                 nivell = new Nivell();
                 nivell.setId(id);
                 
-                //nivellDAO.delete(nivell);
-                nivellDAO.close();     
+                //nivellDAO.delete(nivell);     
                 break;
         }
         
-        btnCrearNivell.setOnAction((ActionEvent event1) -> {
-            ((Stage) (btnCrearNivell.getScene().getWindow())).close();
-        });
+        ((Stage) (btnCrearNivell.getScene().getWindow())).close();
     }
 
     /**

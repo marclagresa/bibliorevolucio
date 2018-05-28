@@ -24,6 +24,7 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
     static TipusAccio tipusA;
     static Editorial editorialRebutda;
     
+    @FXML
     private TextField tfNomEditorial;
     @FXML
     private Button btnCrearEditorial;
@@ -65,7 +66,6 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
                     id = editorialDAO.nextId();
                     editorial = new Editorial(id, nomEditorial);
                     editorialDAO.insert(editorial);
-                    editorialDAO.close();
 
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
@@ -91,7 +91,6 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
                    if(onAcceptCallBack!= null){
                         onAcceptCallBack.accept(editorial);
                     }
-                    editorialDAO.close();
                 }      
                 break;
             case Deshabilitar:
@@ -99,10 +98,11 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
                 editorial = new Editorial();
                 editorial.setId(id);
                 
-                //editorialDAO.delete(editorial);
-                editorialDAO.close();     
+                //editorialDAO.delete(editorial);    
                 break;
         }        
+        
+        ((Stage) (btnCrearEditorial.getScene().getWindow())).close();
     }
 
     @Override

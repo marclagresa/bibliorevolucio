@@ -11,8 +11,8 @@
      -fx-background-size: cover, auto;
 }
 .label {
- -fx-font-size: 25px;
- -fx-text-fill: #000000;
+ /*-fx-font-size: 25px;
+ -fx-text-fill: #000000;*/
 }
 #contingut1{
     -fx-alignment: CENTER;
@@ -98,8 +98,11 @@
    /* -fx-background-color: #D0D3D4;*/
 }
 .gridPaneMant{
-    -fx-text-fill: #000000;
+  /*  -fx-text-fill: #000000;*/
 }
+.labelsMenu{-fx-font-size: 20px;
+            -fx-text-fill: #000000;
+            -fx-font-weight:bold;}
 
 #opcioSubMenuAutor{               -fx-image: url('../img/MantAutor.png'); }
 #opcioSubMenuAutor:hover{         -fx-image: url('../img/MantAutor2.png'); }
@@ -136,6 +139,31 @@
     -fx-alignment: CENTER;
     -fx-font-size: 15px;
     -fx-text-fill:#464646;
+}
+/*------------------------Generic Cerca-------------------------------*/
+#numerosPaginacio{
+    -fx-font-size: 15px;
+    -fx-text-fill: #FF4619;
+    
+}
+#botoSelect{
+    -fx-font-size: 15px;
+    -fx-text-fill: #FF4619;
+}
+.botosGenerics{-fx-font-size:15px;  -fx-font-weight:bold;  -fx-border-radius:5px;  -fx-border-color:#0069FF;}
+.botosGenerics:hover{-fx-font-weight:bold;  -fx-text-fill:#f3f3f3; -fx-background-color: #464646;-fx-border-color:#FF4619;}
+#LabelCercaAbansada{
+     -fx-font-size: 15px;
+    -fx-text-decoration: underline overline;
+}
+#LabelCercaAbansada:hover{
+    -fx-text-fill: #FF4619;
+}
+#numerosParells{
+     -fx-background-color: #d9d9d9;
+}
+#numerosSeleccionats{
+     -fx-background-color: #666666;
 }
 
 

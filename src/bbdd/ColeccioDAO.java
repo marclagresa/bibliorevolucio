@@ -2,22 +2,23 @@ package bbdd;
 
 import base.ConnectionFactory;
 import contract.ContractColeccio;
+import java.sql.SQLException;
+import java.sql.Types;
 import objecte.Coleccio;
 
-import java.sql.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-public class ColeccioDAO implements IObjectDAO<Coleccio> {
-    private Connection conn;
-    private ResultSet rs;
-    private PreparedStatement ps;
-
-    public ColeccioDAO(){
-        conn = null;
-        rs = null;
-        ps = null;
+/**
+ * Classe encarregade de la lectura i escritura de la taula
+ * bibliorevolucio.coleccio
+ * @author albertCorominas,sergiclotas
+ */
+public class ColeccioDAO extends BDObject implements IObjectDAO<Coleccio> {
+  
+      public ColeccioDAO(){
+        super();
     }
     public Coleccio select(String nom) throws ClassNotFoundException,SQLException{
         Coleccio colObj=new Coleccio();
@@ -32,15 +33,14 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
             rs = ps.executeQuery();
             
             if(rs.next()){
-                colObj.setId(rs.getInt(ContractColeccio.ID));
-                colObj.setNom(rs.getString(ContractColeccio.NOM));
+                colObj=read();
             }
         } catch (SQLException ex){
             throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
         }catch( ClassNotFoundException ex) {
             throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
-            this.close();
+            close();
         }
         return colObj;
     }
@@ -58,14 +58,14 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
             rs = ps.executeQuery();
             list.clear();
             while(rs.next()){
-                list.add(this.read());
+                list.add(read());
             }
         } catch (SQLException ex){
             throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
         }catch( ClassNotFoundException ex) {
             throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
-            this.close();
+            close();
         }
         return list;
     }
@@ -74,181 +74,181 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
         List<Coleccio> coleccions =new ArrayList<>();
         ArrayList<Object>valors;
         String query;
+        boolean dadesCorrectes=super.comprovarDadesConsulta(dades, ContractColeccio.DEFINICIO);
         int i;
-        try {
-            conn=ConnectionFactory.getInstance().getConnection();
-            valors=new ArrayList<>();
-            query = "SELECT * FROM "+ContractColeccio.NOM_TAULA;
-            i=0;
-            for(String camp:dades.keySet()){
-                if(i ==0){
-                    query += " WHERE ";
-                }
-                else{
-                    query += " AND ";
-                }
-                if(dades.get(camp).getClass().equals(String.class)){
-                    query += camp+" LIKE ?";
-                    valors.add("%"+dades.get(camp)+"%");
-                }
-                else{
-                    query += camp+ " = ?";
-                    valors.add(dades.get(camp));
-                }
+        if(dadesCorrectes){
+            try {
+                conn=ConnectionFactory.getInstance().getConnection();
+                valors=new ArrayList<>();
+                query = "SELECT * FROM "+ContractColeccio.NOM_TAULA;
+                i=0;
+                for(String camp:dades.keySet()){
+                    if(i ==0){
+                        query += " WHERE ";
+                    }
+                    else{
+                        query += " AND ";
+                    }
+                    if(dades.get(camp).getClass().equals(String.class)){
+                        query += camp+" LIKE ?";
+                        valors.add("%"+dades.get(camp)+"%");
+                    }
+                    else{
+                        query += camp+ " = ?";
+                        valors.add(dades.get(camp));
+                    }
+                    i++;
 
-            }
-            if(campOrdre!=null){
-                query+=" ORDER BY ? ";
-                valors.add(campOrdre);
-                if(ascendent){
-                    query+=" ASC ";
                 }
-                else{
-                    query+= " DESC ";
+                if(campOrdre!=null){
+                    query+=" ORDER BY "+campOrdre;
+                    
+                    if(ascendent){
+                        query+=" ASC ";
+                    }
+                    else{
+                        query+= " DESC ";
+                    }
                 }
-            }
-            if(registreInicial!=null || totalRegistres!=null){
-                query += " LIMIT ";
-                if(registreInicial!=null){
-                    query += " ?, ";
-                    valors.add(registreInicial);
-                }
-                if(totalRegistres==null){
-                    query +=" 18446744073709551615";
-                }
-                else{
-                    query +=" ?";
-                    valors.add(totalRegistres);
-                }
+                if(registreInicial!=null || totalRegistres!=null){
+                    query += " LIMIT ";
+                    if(registreInicial!=null){
+                        query += " ?, ";
+                        valors.add(registreInicial);
+                    }
+                    if(totalRegistres==null){
+                        query +=" 18446744073709551615";
+                    }
+                    else{
+                        query +=" ?";
+                        valors.add(totalRegistres);
+                    }
 
+                }
+                ps=conn.prepareStatement(query);
+                for(i=0;i<valors.size();i++){
+                    ps.setObject(i+1, valors.get(i));
+                }
+                rs=ps.executeQuery();
+                while(rs.next()){
+                    coleccions.add(read());
+                }
+            } catch (SQLException ex) {
+                throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+            } catch(ClassNotFoundException ex){
+                throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+            }finally{
+                close();
             }
-            ps=conn.prepareStatement(query);
-            for(i=0;i<valors.size();i++){
-                ps.setObject(i+1, valors.get(i));
-            }
-            rs=ps.executeQuery();
-            while(rs.next()){
-                coleccions.add(this.read());
-            }
-        } catch (SQLException ex) {
-            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
-        } catch(ClassNotFoundException ex){
-            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
-        }finally{
-            this.close();
         }
-
+        else{
+            throw new IllegalArgumentException("Els tipus de dades de la consulta no són correctes.");
+        }
         return coleccions;
     }
-
+    @Override
     public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
         int count=0;
         ArrayList<Object> valors;
         int i;
         String query;
-        try {
-            conn=ConnectionFactory.getInstance().getConnection();
-            valors=new ArrayList<>();
-            query = "SELECT COUNT(*) FROM "+ ContractColeccio.NOM_TAULA;
-            i=0;
-            for(String camp:dades.keySet()){
-                if(i ==0){
-                    query += " WHERE ";
+        boolean dadesCorrectes=super.comprovarDadesConsulta(dades, ContractColeccio.DEFINICIO);
+        if(dadesCorrectes){
+            try {
+                conn=ConnectionFactory.getInstance().getConnection();
+                valors=new ArrayList<>();
+                query = "SELECT COUNT(*) FROM "+ ContractColeccio.NOM_TAULA;
+                i=0;
+                for(String camp:dades.keySet()){
+                    if(i ==0){
+                        query += " WHERE ";
+                    }
+                    else{
+                        query += " AND ";
+                    }
+                    if(dades.get(camp).getClass().equals(String.class)){
+                        query += camp+" LIKE ?";
+                        valors.add("%"+dades.get(camp)+"%");
+                    }
+                    else{
+                        query += camp+ " = ?";
+                        valors.add(dades.get(camp));
+                    }
+                    i++;
                 }
-                else{
-                    query += " AND ";
+                ps=conn.prepareStatement(query);
+                for(i=0;i<valors.size();i++){
+                    ps.setObject(i+1, valors.get(i));
                 }
-                if(dades.get(camp).getClass().equals(String.class)){
-                    query += camp+" LIKE ?";
-                    valors.add("%"+dades.get(camp)+"%");
+                rs=ps.executeQuery();
+                if(rs.next()){
+                    count=rs.getInt(1);
                 }
-                else{
-                    query += camp+ " = ?";
-                    valors.add(dades.get(camp));
-                }
-
+            } catch (SQLException ex) {
+                throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+            } catch(ClassNotFoundException ex){
+                throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+            }finally{
+                close();
             }
-            ps=conn.prepareStatement(query);
-            for(i=0;i<valors.size();i++){
-                ps.setObject(i+1, valors.get(i));
-            }
-            rs=ps.executeQuery();
-            if(rs.next()){
-                count=rs.getInt(1);
-            }
-        } catch (SQLException ex) {
-            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
-        } catch(ClassNotFoundException ex){
-            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
-        }finally{
-            this.close();
+        }
+        else{
+            throw new IllegalArgumentException("Els tipus de dades de la consulta no són correctes.");
         }
         return count;
     }
-
     public List<Coleccio> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
         List<Coleccio> list = new ArrayList<>();
         String sql;
         Object [] valors;
         int i;
         boolean dadaCorrecte=false;
-
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            sql = "SELECT * FROM "+ContractColeccio.NOM_TAULA;
-            i=0;
-            valors=new Object[dades.size()];
-            for(String camp:dades.keySet()){
-                switch(ContractColeccio.DEFINICIO.get(camp)){
-                    case Types.INTEGER:
-                        dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
-                        break;
-                    case Types.CHAR:
-                    case Types.VARCHAR:
-                        dadaCorrecte=dades.get(camp).getClass().equals(String.class);
-                        break;
-                    case Types.BOOLEAN:
-                        dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
-                        break;
-                }
-                if(i ==0){
-                    sql += " WHERE " ;
-                }
-                else{
-                    sql += " AND ";
-                }
-                sql+=camp;
-                if(dades.get(camp).getClass().equals(String.class)){
-                    sql +=" LIKE ? ";
-                    valors[i]="%"+dades.get(camp)+"%";
-                }
-                else{
-                    sql+=" = ?";
-                    valors[i]=dades.get(camp);
-                }
-                if(dadaCorrecte){
+        boolean dadesCorrectes=super.comprovarDadesConsulta(dades, ContractColeccio.DEFINICIO);
+        if(dadesCorrectes){
+            try {
+                conn = ConnectionFactory.getInstance().getConnection();
+                sql = "SELECT * FROM "+ContractColeccio.NOM_TAULA;
+                i=0;
+                valors=new Object[dades.size()];
+                for(String camp:dades.keySet()){
+                    if(i ==0){
+                        sql += " WHERE " ;
+                    }
+                    else{
+                        sql += " AND ";
+                    }
+                    sql+=camp;
+                    if(dades.get(camp).getClass().equals(String.class)){
+                        sql +=" LIKE ? ";
+                        valors[i]="%"+dades.get(camp)+"%";
+                    }
+                    else{
+                        sql+=" = ?";
+                        valors[i]=dades.get(camp);
+                    }
                     i++;
                 }
-                else{
-                    throw new SQLException("Error tipus de dades incorrectes!!");
+                ps = conn.prepareStatement(sql);
+                for(i=0;i<valors.length;i++){
+                    ps.setObject(i+1, valors[i]);
                 }
-            }
-            ps = conn.prepareStatement(sql);
-            for(i=0;i<valors.length;i++){
-                ps.setObject(i+1, valors[i]);
-            }
-            rs = ps.executeQuery();
-            while(rs.next()){
-                list.add(this.read());
-            }
+                rs = ps.executeQuery();
+                while(rs.next()){
+                    list.add(this.read());
+                }
 
-        } catch (SQLException ex){
-            throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
-        }catch( ClassNotFoundException ex) {
-            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
-        } finally {
-            this.close();
+            } catch (SQLException ex){
+                throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+            }catch( ClassNotFoundException ex) {
+                throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
+            } finally {
+                close();
+            }
         }
+        else{
+            throw new IllegalArgumentException("El tipus de dades de la consulta no són correctes.");
+        }
+        
         return list;
     }
     @Override
@@ -257,7 +257,7 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "
+            sql = "SELECT "
                     +ContractColeccio.ID+","
                     +ContractColeccio.NOM+" from "
                     +ContractColeccio.NOM_TAULA + " where " +
@@ -266,7 +266,7 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
             ps.setInt(1,id);
             rs = ps.executeQuery();
             if(rs.next()){
-                coleccio=this.read();
+                coleccio=read();
             }
         } catch (SQLException ex) {
             throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
@@ -274,7 +274,7 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
         } catch(ClassNotFoundException ex){
             throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
         } finally {
-            this.close();
+            close();
         }
         return coleccio;
     }
@@ -294,7 +294,7 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
         } catch( ClassNotFoundException ex){
             throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
         }finally {
-            this.close();
+            close();
         }
         return inserit;
     }
@@ -317,7 +317,7 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
         }catch( ClassNotFoundException ex) {
             throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
-            this.close();
+            close();
         }
         return actualitzat;
     }
@@ -339,45 +339,15 @@ public class ColeccioDAO implements IObjectDAO<Coleccio> {
         }catch( ClassNotFoundException ex) {
             throw new ClassNotFoundException (ex.getMessage(),ex.getCause());
         } finally {
-            this.close();
+            close();
         }
         return id;
     }
     @Override
-    public void close(){
-        if(this.conn!=null){
-            try {
-                this.conn.close();
-                this.conn=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if(this.ps!=null){
-            try {
-                this.ps.close();
-                this.ps=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if(this.rs!=null){
-            try{
-                this.rs.close();
-                this.rs=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-    private Coleccio read() throws SQLException,ClassNotFoundException{
+    protected Coleccio read() throws SQLException{
         Coleccio objColeccio = new Coleccio();
         objColeccio.setId(rs.getInt(ContractColeccio.ID));
         objColeccio.setNom(rs.getString(ContractColeccio.NOM));
         return objColeccio;
-    }
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-
     }
 }

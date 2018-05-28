@@ -13,7 +13,7 @@
       <VBox alignment="CENTER" prefHeight="550.0" prefWidth="434.0">
          <children>
             <ImageView id="opcioMenuMant" fitHeight="417.0" fitWidth="361.0" onMouseClicked="#SubmenuManteniment" pickOnBounds="true" preserveRatio="true" />
-            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#ClicMantBiblioteca" prefHeight="37.0" prefWidth="434.0" text="MANTENIMENT " textAlignment="CENTER" />
+            <Label alignment="CENTER" contentDisplay="CENTER" onMouseClicked="#ClicMantBiblioteca" prefHeight="37.0" prefWidth="434.0" styleClass="labelsMenu" text="MANTENIMENT " textAlignment="CENTER" />
          </children>
       </VBox>
       <Separator id="separador" opacity="0.8" orientation="VERTICAL" prefHeight="545.0" prefWidth="66.0">
@@ -30,7 +30,7 @@
       <VBox alignment="CENTER" prefHeight="550.0" prefWidth="417.0">
          <children>
             <ImageView id="opcioMenuProducte" fitHeight="441.0" fitWidth="312.0" onMouseClicked="#SubmenuProductes" pickOnBounds="true" preserveRatio="true" />
-            <Label alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="37.0" prefWidth="458.0" text="PRODUCTES" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" />
+            <Label alignment="CENTER" contentDisplay="CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="37.0" prefWidth="458.0" styleClass="labelsMenu" text="PRODUCTES" textAlignment="CENTER" textOverrun="CLIP" wrapText="true" />
          </children>
       </VBox>
       <Separator id="separador" opacity="0.8" orientation="VERTICAL" prefHeight="346.0" prefWidth="0.0">
@@ -41,7 +41,7 @@
       <VBox alignment="CENTER" prefHeight="550.0" prefWidth="402.0">
          <children>
             <ImageView id="opcioMenuPrestecs" fitHeight="416.0" fitWidth="308.0" onMouseClicked="#SubmenuPrestecs" pickOnBounds="true" preserveRatio="true" />
-            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="37.0" prefWidth="434.0" text="PRESTÉCS" textAlignment="CENTER" />
+            <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="37.0" prefWidth="434.0" styleClass="labelsMenu" text="PRESTÉCS" textAlignment="CENTER" />
          </children>
       </VBox>
    </children>

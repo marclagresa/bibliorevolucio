@@ -2,23 +2,24 @@ package bbdd;
 
 import base.ConnectionFactory;
 import contract.ContractBiblioteca;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import objecte.Biblioteca;
-import java.sql.*;
-import java.util.*;
+
 
 /**
- * @author AlbertCorominas
+ * Classe encarregade de la lectura i escritura de la taula
+ * bibliorevolucio.biblioteca
+ * 
+ * @author albertCorominas,sergiclotas
  */
 
-public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
-    private Connection conn;
-    private ResultSet rs;
-    private PreparedStatement ps;
-
+public class BibliotecaDAO extends BDObject implements IObjectDAO<Biblioteca> {
+    
     public BibliotecaDAO(){
-        conn=null;
-        rs=null;
-        ps=null;
+        super();
     }
 
     @Override
@@ -27,13 +28,10 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "
-                    +ContractBiblioteca.ID+","
-                    +ContractBiblioteca.NOM+" from "
-                    +ContractBiblioteca.NOM_TAULA;
+            sql = "SELECT * FROM "
+                + ContractBiblioteca.NOM_TAULA;
             ps = conn.prepareStatement(sql);
             rs = ps.executeQuery();
-            list.clear();
             while(rs.next()){
                 list.add(this.read());
             }
@@ -42,175 +40,135 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         }catch( ClassNotFoundException ex) {
             throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
-            this.close();
+            super.close();
         }
         return list;
     }
     @Override
     public List<Biblioteca> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
-        List<Biblioteca> editorials=new ArrayList<>();
-        Biblioteca objBiblioteca;
+        List<Biblioteca> bilioteques=new ArrayList<>();
         ArrayList<Object>valors;
         String query;
         int i;
-        try {
-            conn=ConnectionFactory.getInstance().getConnection();
-            valors=new ArrayList<>();
-            query = "SELECT * FROM "+ContractBiblioteca.NOM_TAULA;
-            i=0;
-            for(String camp:dades.keySet()){
-                if(i ==0){
-                    query += " WHERE ";
+        boolean dadesCorrectes=super.comprovarDadesConsulta(dades, ContractBiblioteca.DEFINICIO);
+        if(dadesCorrectes){
+            try {
+                conn=ConnectionFactory.getInstance().getConnection();
+                valors=new ArrayList<>();
+                query = "SELECT * FROM "+ContractBiblioteca.NOM_TAULA;
+                i=0;
+                for(String camp:dades.keySet()){
+                    if(i ==0){
+                        query += " WHERE ";
+                    }
+                    else{
+                        query += " AND ";
+                    }
+                    if(dades.get(camp).getClass().equals(String.class)){
+                        query += camp+" LIKE ?";
+                        valors.add("%"+dades.get(camp)+"%");
+                    }
+                    else{
+                        query += camp+ " = ?";
+                        valors.add(dades.get(camp));
+                    }
+                    i++;
                 }
-                else{
-                    query += " AND ";
+                if(campOrdre!=null){
+                    query+=" ORDER BY "+campOrdre;
+                    
+                    if(ascendent){
+                        query+=" ASC ";
+                    }
+                    else{
+                        query+= " DESC ";
+                    }
                 }
-                if(dades.get(camp).getClass().equals(String.class)){
-                    query += camp+" LIKE ?";
-                    valors.add("%"+dades.get(camp)+"%");
-                }
-                else{
-                    query += camp+ " = ?";
-                    valors.add(dades.get(camp));
-                }
+                if(registreInicial!=null || totalRegistres!=null){
+                    query += " LIMIT ";
+                    if(registreInicial!=null){
+                        query += " ?, ";
+                        valors.add(registreInicial);
+                    }
+                    if(totalRegistres==null){
+                        query +=" 18446744073709551615";
+                    }
+                    else{
+                        query +=" ?";
+                        valors.add(totalRegistres);
+                    }
 
-            }
-            if(campOrdre!=null){
-                query+=" ORDER BY ? ";
-                valors.add(campOrdre);
-                if(ascendent){
-                    query+=" ASC ";
                 }
-                else{
-                    query+= " DESC ";
+                ps=conn.prepareStatement(query);
+                for(i=0;i<valors.size();i++){
+                    ps.setObject(i+1, valors.get(i));
                 }
-            }
-            if(registreInicial!=null || totalRegistres!=null){
-                query += " LIMIT ";
-                if(registreInicial!=null){
-                    query += " ?, ";
-                    valors.add(registreInicial);
+                rs=ps.executeQuery();
+                while(rs.next()){
+                    bilioteques.add(this.read());
                 }
-                if(totalRegistres==null){
-                    query +=" 18446744073709551615";
-                }
-                else{
-                    query +=" ?";
-                    valors.add(totalRegistres);
-                }
-
+            } catch (SQLException ex) {
+                throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+            } catch(ClassNotFoundException ex){
+                throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+            }finally{
+                super.close();
             }
-            ps=conn.prepareStatement(query);
-            for(i=0;i<valors.size();i++){
-                ps.setObject(i+1, valors.get(i));
-            }
-            rs=ps.executeQuery();
-            while(rs.next()){
-                objBiblioteca= new Biblioteca(
-                        rs.getInt(ContractBiblioteca.ID),
-                        rs.getString(ContractBiblioteca.NOM)
-                );
-                editorials.add(objBiblioteca);
-            }
-        } catch (SQLException ex) {
-            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
-        } catch(ClassNotFoundException ex){
-            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
-        }finally{
-            this.close();
+        }
+        else{
+            throw new IllegalArgumentException("el tipus de dades de la consulta no són correctes.");
         }
 
-        return editorials;
+        return bilioteques;
     }
-
-    public List<Biblioteca> select(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
-        List<Biblioteca> editorials=new ArrayList<>();
-        Biblioteca objBiblioteca;
-        ArrayList<Object>valors;
-        String query;
-        int i;
-        try {
-            conn=ConnectionFactory.getInstance().getConnection();
-            valors=new ArrayList<>();
-            query = "SELECT * FROM "+ContractBiblioteca.NOM_TAULA;
-            i=0;
-            for(String camp:dades.keySet()){
-                if(i ==0){
-                    query += " WHERE ";
-                }
-                else{
-                    query += " AND ";
-                }
-                if(dades.get(camp).getClass().equals(String.class)){
-                    query += camp+" LIKE ?";
-                    valors.add("%"+dades.get(camp)+"%");
-                }
-                else{
-                    query += camp+ " = ?";
-                    valors.add(dades.get(camp));
-                }
-
-            }
-            ps=conn.prepareStatement(query);
-            for(i=0;i<valors.size();i++){
-                ps.setObject(i+1, valors.get(i));
-            }
-            rs=ps.executeQuery();
-            while(rs.next()){
-                this.read();
-            }
-        } catch (SQLException ex) {
-            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
-        } catch(ClassNotFoundException ex){
-            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
-        }finally{
-            this.close();
-        }
-
-        return editorials;
-    }
-
+    @Override
     public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
         int count=0;
         ArrayList<Object> valors;
         int i;
         String query;
-        try {
-            conn=ConnectionFactory.getInstance().getConnection();
-            valors=new ArrayList<>();
-            query = "SELECT COUNT(*) FROM "+ContractBiblioteca.NOM_TAULA;
-            i=0;
-            for(String camp:dades.keySet()){
-                if(i ==0){
-                    query += " WHERE ";
+        boolean dadesCorrectes=super.comprovarDadesConsulta(dades, ContractBiblioteca.DEFINICIO);
+        if(dadesCorrectes){
+            try {
+                conn=ConnectionFactory.getInstance().getConnection();
+                valors=new ArrayList<>();
+                query = "SELECT COUNT(*) FROM "+ContractBiblioteca.NOM_TAULA;
+                i=0;
+                for(String camp:dades.keySet()){
+                    if(i ==0){
+                        query += " WHERE ";
+                    }
+                    else{
+                        query += " AND ";
+                    }
+                    if(dades.get(camp).getClass().equals(String.class)){
+                        query += camp+" LIKE ?";
+                        valors.add("%"+dades.get(camp)+"%");
+                    }
+                    else{
+                        query += camp+ " = ?";
+                        valors.add(dades.get(camp));
+                    }
+                    i++;
                 }
-                else{
-                    query += " AND ";
+                ps=conn.prepareStatement(query);
+                for(i=0;i<valors.size();i++){
+                    ps.setObject(i+1, valors.get(i));
                 }
-                if(dades.get(camp).getClass().equals(String.class)){
-                    query += camp+" LIKE ?";
-                    valors.add("%"+dades.get(camp)+"%");
+                rs=ps.executeQuery();
+                if(rs.next()){
+                    count=rs.getInt(1);
                 }
-                else{
-                    query += camp+ " = ?";
-                    valors.add(dades.get(camp));
-                }
-
+            } catch (SQLException ex) {
+                throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+            } catch(ClassNotFoundException ex){
+                throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+            }finally{
+                super.close();
             }
-            ps=conn.prepareStatement(query);
-            for(i=0;i<valors.size();i++){
-                ps.setObject(i+1, valors.get(i));
-            }
-            rs=ps.executeQuery();
-            if(rs.next()){
-                count=rs.getInt(1);
-            }
-        } catch (SQLException ex) {
-            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
-        } catch(ClassNotFoundException ex){
-            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
-        }finally{
-            this.close();
+        }
+        else{
+            throw new IllegalArgumentException("El tipus de dades de la consulta no són correctes.");
         }
         return count;
     }
@@ -220,11 +178,9 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         String sql;
         try {
             conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select "
-                    +ContractBiblioteca.ID+","
-                    +ContractBiblioteca.NOM+" from "
-                    +ContractBiblioteca.NOM_TAULA + " where " +
-                    ContractBiblioteca.ID + " = ? ";
+            sql = "SELECT * FROM "
+                + ContractBiblioteca.NOM_TAULA + " "
+                + "WHERE " + ContractBiblioteca.ID + " = ? ";
             ps = conn.prepareStatement(sql);
             ps.setInt(1,id);
             rs = ps.executeQuery();
@@ -237,7 +193,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         } catch(ClassNotFoundException ex){
             throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
         } finally {
-            this.close();
+            super.close();
         }
         return biblioteca;
     }
@@ -257,7 +213,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         } catch( ClassNotFoundException ex){
             throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
         }finally {
-            this.close();
+            super.close();
         }
         return inserit;
     }
@@ -279,7 +235,7 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         }catch( ClassNotFoundException ex) {
             throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
-            this.close();
+            super.close();
         }
         return actualitzat;
     }
@@ -300,46 +256,15 @@ public class BibliotecaDAO implements IObjectDAO<Biblioteca> {
         }catch( ClassNotFoundException ex) {
             throw new ClassNotFoundException (ex.getMessage(),ex.getCause());
         } finally {
-            this.close();
+            super.close();
         }
         return id;
-    }
+    } 
     @Override
-    public void close(){
-        if(this.conn!=null){
-            try {
-                this.conn.close();
-                this.conn=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if(this.ps!=null){
-            try {
-                this.ps.close();
-                this.ps=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if(this.rs!=null){
-            try{
-                this.rs.close();
-                this.rs=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    private Biblioteca read() throws SQLException,ClassNotFoundException{
+    protected Biblioteca read() throws SQLException{
         Biblioteca objBiblioteca = new Biblioteca();
         objBiblioteca.setId(rs.getInt(ContractBiblioteca.ID));
         objBiblioteca.setNom(rs.getString(ContractBiblioteca.NOM));
         return objBiblioteca;
-    }
-
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
-
     }
 }

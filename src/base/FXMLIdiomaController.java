@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -55,7 +54,6 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
                     id = idiomaDAO.nextId();
                     idioma = new Idioma(id, nomIdioma);
                     idiomaDAO.insert(idioma);
-                    idiomaDAO.close();
 
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
@@ -81,7 +79,6 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
                    if(onAcceptCallBack!= null){
                         onAcceptCallBack.accept(idioma);
                     }
-                    idiomaDAO.close();
                 }      
                 break;
             case Deshabilitar:
@@ -89,14 +86,11 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
                 idioma = new Idioma();
                 idioma.setId(id);
                 
-                //idiomaDAO.delete(idioma);
-                idiomaDAO.close();     
+                //idiomaDAO.delete(idioma);    
                 break;
         }
         
-        btnCrearIdioma.setOnAction((ActionEvent event1) -> {
-            ((Stage) (btnCrearIdioma.getScene().getWindow())).close();
-        });
+        ((Stage) (btnCrearIdioma.getScene().getWindow())).close();
     }
     
     /**

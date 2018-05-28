@@ -4,7 +4,9 @@ package base;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.FileSystems;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.ResourceBundle;
 
 import base.EmplanarComboBox.*;
@@ -21,9 +23,10 @@ import objecte.*;
 
 public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp implements Initializable {
     public int contador;
-    public static ObservableList<String> itemsAutors = FXCollections.observableArrayList();
-    public static ObservableList<String> itemsIdioma = FXCollections.observableArrayList();
-    public static ObservableList<String> itemsNivell = FXCollections.observableArrayList();
+    public  ObservableList<Persona> itemsAutors = FXCollections.observableArrayList();
+    public  ObservableList<Idioma> itemsIdioma = FXCollections.observableArrayList();
+    public  ObservableList<Nivell> itemsNivell = FXCollections.observableArrayList();
+
     @FXML
     private TextField titolTF;
     @FXML
@@ -55,7 +58,6 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
         ClNivell clNivell = new ClNivell(nivellComB);
         nivellComB.getEditor().textProperty().addListener(clNivell);
 
@@ -77,26 +79,56 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
     }
     @FXML
     public void consultar(ActionEvent actionEvent) {
+        ArrayList<Integer> arrayAutor = new ArrayList<>();
+        ArrayList<Integer> arrayIdioma = new ArrayList<>();
+        ArrayList<Integer> arrayNivell = new ArrayList<>();
         Producte prod = new Producte();
         HashMap<String, Object> consulta = new HashMap<>();
         consulta.put(ContractProducte.NOM, titolTF.getText());
         consulta.put(ContractProducte.ISBN, isbnTF.getText());
         consulta.put(ContractProducte.ANY_PUBLICACIO, dataDP.getValue());
-        if(autorComB.getSelectionModel().getSelectedIndex()!= -1) {
-            consulta.put(ContractPersona.NOM, autorComB.getItems().get( autorComB.getSelectionModel().getSelectedIndex() ));
-        }
+
         if(editorialComB.getSelectionModel().getSelectedIndex()!= -1) {
-            consulta.put(ContractProducte.EDITORIAL_ID, editorialComB.getItems().get(editorialComB.getSelectionModel().getSelectedIndex()));
+            consulta.put(ContractProducte.EDITORIAL_ID, editorialComB.getItems().get(editorialComB.getSelectionModel().getSelectedIndex()).getId());
         }
+
         if(cduComB.getSelectionModel().getSelectedIndex()!= -1) {
-            consulta.put(ContractCdu.ID, cduComB.getItems().get( cduComB.getSelectionModel().getSelectedIndex() ));
+            consulta.put(ContractCdu.ID, cduComB.getItems().get( cduComB.getSelectionModel().getSelectedIndex() ).getId());
         }
 
         if(formatComB.getSelectionModel().getSelectedIndex()!= -1) {
-            consulta.put(ContractProducte.FORMAT_ID, formatComB.getItems().get(formatComB.getSelectionModel().getSelectedIndex()));
+            consulta.put(ContractProducte.FORMAT_ID, formatComB.getItems().get(formatComB.getSelectionModel().getSelectedIndex()).getId());
+        }
+
+
+        if(autorComB.getSelectionModel().getSelectedIndex()!= -1) {
+
+            Iterator<Persona> it = itemsAutors.iterator();
+            while (it.hasNext()) {
+                Object p = it.next();
+                System.out.println("P; " + p.getClass());
+            }
+
+
+
+            for(int j = 0;itemsAutors.size()>j;j++) {
+                arrayAutor.add(itemsAutors.get(j).getId());
+            }
+
+            System.out.println(arrayAutor);
+            consulta.put(ContractPersona.ID, arrayAutor);
         }
         if( nivellComB.getSelectionModel().getSelectedIndex()!= -1) {
-            consulta.put(ContractNivell.ID, nivellComB.getItems().get( nivellComB.getSelectionModel().getSelectedIndex() ));
+            for(int j = 0;itemsNivell.size()>j;j++) {
+                arrayNivell.add(itemsNivell.get(j).getId());
+            }
+            consulta.put(ContractNivell.ID, arrayNivell);
+        }
+        if( idiomaComB.getSelectionModel().getSelectedIndex()!= -1) {
+            for(int j = 0;itemsIdioma.size()>j;j++) {
+                arrayIdioma.add(itemsIdioma.get(j).getId());
+            }
+            consulta.put(ContractIdioma.ID, arrayIdioma);
         }
         System.out.println(consulta);
         ((Stage) consultaB.getScene().getWindow()).close();
@@ -114,45 +146,26 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
 
     @FXML
     public void afegirAutor(){
-        afeguirDadeListView(autorComB, autorList, itemsAutors);
+        OpcionsListView.afeguirDadeListView(autorComB, autorList, itemsAutors);
     }
     @FXML
     public void afegirIdioma(){
-        afeguirDadeListView(idiomaComB, idiomaList,itemsIdioma);
+        OpcionsListView.afeguirDadeListView(idiomaComB, idiomaList,itemsIdioma);
     }
     @FXML
     public void afegirNivell(){
-        afeguirDadeListView(nivellComB, nivellList,itemsNivell);
+        OpcionsListView.afeguirDadeListView(nivellComB, nivellList,itemsNivell);
     }
     @FXML
-    public void elimAutor(){
-        System.out.println("hola");elimDadeListView(autorList,itemsAutors);}
+    public void elimAutor(){OpcionsListView.elimDadeListView(autorList,itemsAutors);}
     @FXML
-    public void elimIdioma(){elimDadeListView(idiomaList,itemsIdioma);}
+    public void elimIdioma(){OpcionsListView.elimDadeListView(idiomaList,itemsIdioma);}
     @FXML
-    public void elimNivell(){elimDadeListView(nivellList,itemsNivell);}
+    public void elimNivell(){OpcionsListView.elimDadeListView(nivellList,itemsNivell);}
 
 
 
-    public static void afeguirDadeListView(ComboBox comboBox, ListView lw, ObservableList items){
-        items.add(comboBox.getSelectionModel().getSelectedItem().toString());
-        System.out.println(items);
-        lw.getItems().clear();
-        lw.getItems().addAll(items);
-    }
-    public static void elimDadeListView(ListView lw, ObservableList items){
-        System.out.println(lw.getSelectionModel().getSelectedItems().toString());
-        for(int j = 0;items.size()>j;j++){
-            System.out.println(items.get(j).toString());
-            if(lw.getSelectionModel().getSelectedItems().contains(items.get(j).toString())){
-                System.out.println("que pasa");
-                items.remove(j);
-                lw.getItems().clear();
-                lw.getItems().addAll(items);
-            }
-        }
 
-    }
     @Override
     public void emplenarDades(Object obj) {
 

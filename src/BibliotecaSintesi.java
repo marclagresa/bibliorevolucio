@@ -9,6 +9,8 @@
  */
 
 
+import base.FXMLProducteController;
+import static base.GenericPopUp.TipusAccio.Crear;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -37,6 +39,9 @@ public class BibliotecaSintesi extends Application {
         stage.setTitle("Bibliorevolució");
         stage.setScene(scene);
         stage.show();        
+        
+        FXMLProducteController c = FXMLProducteController.crear(stage, true, Crear);
+        c.show();
     }
 
     /**
