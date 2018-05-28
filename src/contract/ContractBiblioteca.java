@@ -15,7 +15,7 @@ public abstract class ContractBiblioteca {
 
     //CAMPS DE LA TAULA: es el noms dels camps* que conté la taula.
     //*S'afagueix el nom de la taula i un punt al principi per que els camps no siguin ambigu.
-
+    public static final String ACTIVA=NOM_TAULA+".activa";
     public static final String ID = NOM_TAULA+".id";
     public static final String NOM = NOM_TAULA+".nom";
 
@@ -25,5 +25,6 @@ public abstract class ContractBiblioteca {
     public static HashMap<String,Integer> DEFINICIO = new HashMap<String,Integer>(){{
         put(ID, Types.INTEGER);
         put(NOM, Types.VARCHAR);
+        put(ACTIVA, Types.BOOLEAN);
     }};
 }

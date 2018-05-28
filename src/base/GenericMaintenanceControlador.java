@@ -134,7 +134,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             
         } );
         this._WIDGETSEARCH = new WidgetSearch( this, _searchField, _searchCheckB, _searchComboB, _cbAttributes, ( name, combo ) -> {
-            
+        this._hbPages.setId("_hbPages");
             try {
                 parseCombo( name, combo );
             } catch (MaintenanceException ex) {
