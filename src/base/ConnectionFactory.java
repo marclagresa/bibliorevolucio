@@ -73,7 +73,7 @@ public class ConnectionFactory {
     /**
      * Funció static que ens retorna una Conexió oberta a la base de dades
      * 
-     * @return Connection
+     * @return Connectiont  
      * @throws ClassNotFoundException Si no teniu la llibreria de jdbc mysql afegida al projecte
      * @throws SQLException Si les dades d' usuari password o url són incorrectes.
      */

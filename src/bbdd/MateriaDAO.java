@@ -2,11 +2,7 @@ package bbdd;
 
 import base.ConnectionFactory;
 import contract.ContractMateria;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Types;
 import objecte.Materia;
 
 
@@ -14,15 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class MateriaDAO implements IObjectDAO<Materia> {
-    private Connection conn;
-    private ResultSet rs;
-    private PreparedStatement ps;
-
+public class MateriaDAO extends BDObject implements IObjectDAO<Materia> {
     public MateriaDAO(){
-        conn=null;
-        rs=null;
-        ps=null;
+      
     }
 
     @Override
@@ -51,103 +41,95 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         return list;
     }
     @Override
-    public List<Materia> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
+    public List<Materia> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException,IllegalArgumentException{
         List<Materia> materies =new ArrayList<>();
         ArrayList<Object>valors;
         String query;
         int i;
-        try {
-            conn=ConnectionFactory.getInstance().getConnection();
-            valors=new ArrayList<>();
-            query = "SELECT * FROM "+ContractMateria.NOM_TAULA;
-            i=0;
-            for(String camp:dades.keySet()){
-                if(i ==0){
-                    query += " WHERE ";
+        boolean dadesCorrectes=comprovarDadesConsulta(dades, ContractMateria.DEFINICIO);
+        if(dadesCorrectes){
+            try {
+                conn=ConnectionFactory.getInstance().getConnection();
+                valors=new ArrayList<>();
+                query = "SELECT * FROM "+ContractMateria.NOM_TAULA;
+                i=0;
+                for(String camp:dades.keySet()){
+                    if(i ==0){
+                        query += " WHERE ";
+                    }
+                    else{
+                        query += " AND ";
+                    }
+                    if(dades.get(camp).getClass().equals(String.class)){
+                        query += camp+" LIKE ?";
+                        valors.add("%"+dades.get(camp)+"%");
+                    }
+                    else{
+                        query += camp+ " = ?";
+                        valors.add(dades.get(camp));
+                    }
+                    i++;
                 }
-                else{
-                    query += " AND ";
+                if(campOrdre!=null){
+                    query+=" ORDER BY "+campOrdre;
+                    if(ascendent){
+                        query+=" ASC ";
+                    }
+                    else{
+                        query+= " DESC ";
+                    }
                 }
-                if(dades.get(camp).getClass().equals(String.class)){
-                    query += camp+" LIKE ?";
-                    valors.add("%"+dades.get(camp)+"%");
+                if(registreInicial!=null || totalRegistres!=null){
+                    query += " LIMIT ";
+                    if(registreInicial!=null){
+                        query += " ?, ";
+                        valors.add(registreInicial);
+                    }
+                    if(totalRegistres==null){
+                        query +=" 18446744073709551615";
+                    }
+                    else{
+                        query +=" ?";
+                        valors.add(totalRegistres);
+                    }
                 }
-                else{
-                    query += camp+ " = ?";
-                    valors.add(dades.get(camp));
+                ps=conn.prepareStatement(query);
+                for(i=0;i<valors.size();i++){
+                    ps.setObject(i+1, valors.get(i));
                 }
-
+                rs=ps.executeQuery();
+                while(rs.next()){
+                    materies.add(this.read());
+                }
+            } catch (SQLException ex) {
+                throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+            } catch(ClassNotFoundException ex){
+                throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+            }finally{
+                this.close();
             }
-            if(campOrdre!=null){
-                query+=" ORDER BY ? ";
-                valors.add(campOrdre);
-                if(ascendent){
-                    query+=" ASC ";
-                }
-                else{
-                    query+= " DESC ";
-                }
-            }
-            if(registreInicial!=null || totalRegistres!=null){
-                query += " LIMIT ";
-                if(registreInicial!=null){
-                    query += " ?, ";
-                    valors.add(registreInicial);
-                }
-                if(totalRegistres==null){
-                    query +=" 18446744073709551615";
-                }
-                else{
-                    query +=" ?";
-                    valors.add(totalRegistres);
-                }
-
-            }
-            ps=conn.prepareStatement(query);
-            for(i=0;i<valors.size();i++){
-                ps.setObject(i+1, valors.get(i));
-            }
-            rs=ps.executeQuery();
-            while(rs.next()){
-                materies.add(this.read());
-            }
-        } catch (SQLException ex) {
-            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
-        } catch(ClassNotFoundException ex){
-            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
-        }finally{
-            this.close();
+    
+        }else{
+            throw new IllegalArgumentException("Els tipus de dades de la consulta no són correctes");
         }
-
+        
         return materies;
     }
 
-    public List<Materia> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException{
+    public List<Materia> select(HashMap<String,Object> dades) throws ClassNotFoundException, SQLException,IllegalArgumentException{
         List<Materia> list = new ArrayList<>();
         String sql;
         Object [] valors;
         int i;
-        boolean dadaCorrecte=false;
-
-        try {
+        boolean dadesCorrecte=comprovarDadesConsulta(dades, ContractMateria.DEFINICIO);
+        if(dadesCorrecte){
+            try {
             conn = ConnectionFactory.getInstance().getConnection();
             sql = "SELECT * FROM "+ContractMateria.NOM_TAULA;
             i=0;
             valors=new Object[dades.size()];
             for(String camp:dades.keySet()){
                 valors=new Object[dades.size()];
-                switch(ContractMateria.DEFINICIO.get(camp)){
-                    case Types.INTEGER:
-                        dadaCorrecte=dades.get(camp).getClass().equals(Integer.class);
-                        break;
-                    case Types.CHAR:
-                    case Types.VARCHAR:
-                        dadaCorrecte=dades.get(camp).getClass().equals(String.class);
-                        break;
-                    case Types.BOOLEAN:
-                        dadaCorrecte=dades.get(camp).getClass().equals(Boolean.class);
-                        break;
-                }
                 if(i ==0){
                     sql += " WHERE " ;
                 }
@@ -163,12 +145,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
                     sql+=" = ?";
                     valors[i]=dades.get(camp);
                 }
-                if(dadaCorrecte){
-                    i++;
-                }
-                else{
-                    throw new SQLException("Error tipus de dades incorrectes!!");
-                }
+                i++;
             }
             ps = conn.prepareStatement(sql);
             for(i=0;i<valors.length;i++){
@@ -186,6 +163,10 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         } finally {
             this.close();
         }
+        }else{
+            throw new IllegalArgumentException("Els tipus de dades de la consulta no són correctes");
+        }
+        
         return list;
     }
     public Materia select(String nom) throws SQLException,ClassNotFoundException{
@@ -210,47 +191,55 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         }
         return materiaObj;
     }
-    public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
+    @Override
+    public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException,IllegalArgumentException{
         int count=0;
         ArrayList<Object> valors;
         int i;
         String query;
-        try {
-            conn=ConnectionFactory.getInstance().getConnection();
-            valors=new ArrayList<>();
-            query = "SELECT COUNT(*) FROM "+ContractMateria.NOM_TAULA;
-            i=0;
-            for(String camp:dades.keySet()){
-                if(i ==0){
-                    query += " WHERE ";
-                }
-                else{
-                    query += " AND ";
-                }
-                if(dades.get(camp).getClass().equals(String.class)){
-                    query += camp+" LIKE ?";
-                    valors.add("%"+dades.get(camp)+"%");
-                }
-                else{
-                    query += camp+ " = ?";
-                    valors.add(dades.get(camp));
-                }
+        boolean dadesCorrectes=comprovarDadesConsulta(dades, ContractMateria.DEFINICIO);
+        if(dadesCorrectes){
+            try {
+                conn=ConnectionFactory.getInstance().getConnection();
+                valors=new ArrayList<>();
+                query = "SELECT COUNT(*) FROM "+ContractMateria.NOM_TAULA;
+                i=0;
+                for(String camp:dades.keySet()){
+                    if(i ==0){
+                        query += " WHERE ";
+                    }
+                    else{
+                        query += " AND ";
+                    }
+                    if(dades.get(camp).getClass().equals(String.class)){
+                        query += camp+" LIKE ?";
+                        valors.add("%"+dades.get(camp)+"%");
+                    }
+                    else{
+                        query += camp+ " = ?";
+                        valors.add(dades.get(camp));
+                    }
+                    i++;
 
+                }
+                ps=conn.prepareStatement(query);
+                for(i=0;i<valors.size();i++){
+                    ps.setObject(i+1, valors.get(i));
+                }
+                rs=ps.executeQuery();
+                if(rs.next()){
+                    count=rs.getInt(1);
+                }
+            } catch (SQLException ex) {
+                throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
+            } catch(ClassNotFoundException ex){
+                throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+            }finally{
+                this.close();
             }
-            ps=conn.prepareStatement(query);
-            for(i=0;i<valors.size();i++){
-                ps.setObject(i+1, valors.get(i));
-            }
-            rs=ps.executeQuery();
-            if(rs.next()){
-                count=rs.getInt(1);
-            }
-        } catch (SQLException ex) {
-            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
-        } catch(ClassNotFoundException ex){
-            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
-        }finally{
-            this.close();
+        }
+        else{
+            throw new IllegalArgumentException("Els tipus de dades de la consulta no són correctes");
         }
         return count;
     }
@@ -342,34 +331,7 @@ public class MateriaDAO implements IObjectDAO<Materia> {
         return id;
     }
     @Override
-    public void close(){
-        if(this.conn!=null){
-            try {
-                this.conn.close();
-                this.conn=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if(this.ps!=null){
-            try {
-                this.ps.close();
-                this.ps=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if(this.rs!=null){
-            try{
-                this.rs.close();
-                this.rs=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-    private Materia read() throws SQLException,ClassNotFoundException{
+    protected Materia read() throws SQLException,ClassNotFoundException{
         Materia objMateria = new Materia();
         objMateria.setId(rs.getInt(ContractMateria.ID));
         objMateria.setNom(rs.getString(ContractMateria.NOM));

@@ -4,9 +4,6 @@ import base.ConnectionFactory;
 import contract.ContractCdu;
 import objecte.Cdu;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
@@ -15,66 +12,53 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author albertCorominas
+ * Classe encarregade de la lectura i escritura de la taula
+ * bibliorevolucio.cdu
+ * @author albertCorominas,sergiclotas
  */
 
-public class CduDAO{
-    private Connection conn;
-    private ResultSet rs;
-    private PreparedStatement ps;
+public class CduDAO extends BDObject{
 
     public CduDAO(){
-        conn = null;
-        rs = null;
-        ps = null;
+        super();
     }
     public List<Cdu> selectAll() throws ClassNotFoundException, SQLException{
         List<Cdu> list = new ArrayList<>();
         Cdu selectCdu;
         String sql;
         try {
-            conn = ConnectionFactory.getInstance().getConnection();
+            super.conn = ConnectionFactory.getInstance().getConnection();
             sql = "Select "+ContractCdu.ID+","+ContractCdu.NOM+","+ContractCdu.IDPARE+" from "+ ContractCdu.NOM_TAULA;
-            ps = conn.prepareStatement(sql);
-            rs = ps.executeQuery();
-            while(rs.next()){
-                selectCdu = new Cdu();
-                selectCdu.setId(rs.getString(ContractCdu.ID));
-                selectCdu.setNom(rs.getString(2));
-                selectCdu.setIdPare(rs.getString(ContractCdu.IDPARE));
-                list.add(selectCdu);
+            super.ps = conn.prepareStatement(sql);
+            super.rs = ps.executeQuery();
+            while(super.rs.next()){
+                list.add(read());
             }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
-            this.close();
+        } catch (SQLException ex) {
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        } catch(ClassNotFoundException ex){
+            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+        }
+        finally {
+            close();
         }
         return list;
     }
-    
-    public List<Cdu> select(HashMap <String,Object> cdu) throws ClassNotFoundException, SQLException{
+    public List<Cdu> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent) throws ClassNotFoundException, SQLException,IllegalArgumentException{
         List<Cdu> list = new ArrayList<>();
         String sql;
-        Object []valors;
+        List<Object> valors;
         int i;
-        boolean dadaCorrecte = true;
-        try {
-            conn = ConnectionFactory.getInstance().getConnection();
-            sql = "Select * from "+ContractCdu.NOM_TAULA;
-            i=0;
-            valors= new Object[cdu.size()];
-            for (Map.Entry<String, Object> entry : cdu.entrySet()) {
-                String key = entry.getKey();
-                Object value = entry.getValue();
-                switch (ContractCdu.DEFINICIO.get(key)){
-                    case Types.VARCHAR:
-                        dadaCorrecte=value.getClass().equals(String.class);
-                        break;
-                }
-                if(!dadaCorrecte){
-                    throw new IllegalArgumentException("Tipus de dades erroni");
-                }
-                else{
+        boolean dadesCorrecte = super.comprovarDadesConsulta(dades, ContractCdu.DEFINICIO);
+        if(dadesCorrecte){
+            try {
+                conn = ConnectionFactory.getInstance().getConnection();
+                sql = "SELECT * FROM "+ContractCdu.NOM_TAULA;
+                i=0;
+                valors=new ArrayList<>();
+                for (Map.Entry<String, Object> entry : dades.entrySet()) {
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
                     if(i ==0){
                         sql += " WHERE ";
                     }
@@ -84,31 +68,59 @@ public class CduDAO{
                     sql += key;
                     if(value.getClass().equals(String.class)){
                         sql+= " LIKE ?";
-                        valors[i]="%"+value+"%";
+                        valors.add("%"+value+"%");
                     }
                     else{
                         sql += " = ?";
-                        valors[i]=value;
+                        valors.add(value);
                     }
                     i++;
+                    if(campOrdre!=null){
+                    sql+=" ORDER BY " + campOrdre;
+                    
+                    if(ascendent){
+                        sql+=" ASC ";
+                    }
+                    else{
+                        sql+= " DESC ";
+                    }
                 }
+                if(registreInicial!=null || totalRegistres!=null){
+                        sql += " LIMIT ";
+                        if(registreInicial!=null){
+                            sql += " ?, ";
+                            valors.add(registreInicial);
+                        }
+                        if(totalRegistres==null){
+                            sql +=" 18446744073709551615";
+                        }
+                        else{
+                            sql +=" ?";
+                            valors.add(totalRegistres);
+                        }
+
+                    }
+
+                }
+                ps = conn.prepareStatement(sql);
+                for(i=0;i<valors.size();i++){
+                    ps.setObject(i+1, valors.get(i));
+                }
+                rs = ps.executeQuery();
+                while(rs.next()){
+                    list.add(read());
+                }
+            } catch (SQLException ex){
+                throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+            }catch(  ClassNotFoundException ex) {
+                throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
+            } finally {
+                close();
             }
-            ps = conn.prepareStatement(sql);
-            for(i=0;i<valors.length;i++){
-                ps.setObject(i+1, valors[i]);
-            }
-            rs = ps.executeQuery();
-            while(rs.next()){
-                list.add(new Cdu(
-                    rs.getString(ContractCdu.ID),
-                    rs.getString(ContractCdu.IDPARE),
-                    rs.getString(ContractCdu.NOM))
-                );
-            }
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
-        } finally {
-            this.close();
+            
+        }
+        else{
+            throw new IllegalArgumentException("Els tipus de dades de la consutla no són correctes.");
         }
         return list;
     }
@@ -123,11 +135,7 @@ public class CduDAO{
             ps.setString(1, idCduPare);
             rs=ps.executeQuery();
             while(rs.next()){
-                cdus.add(new Cdu(
-                    rs.getString(ContractCdu.ID), 
-                    rs.getString(ContractCdu.IDPARE), 
-                    rs.getString(ContractCdu.NOM))
-                );
+                cdus.add(read());
             }
         } catch (SQLException e) {
             throw new SQLException(e.getMessage(),e.getSQLState(),e.getErrorCode(),e.getCause());
@@ -152,8 +160,10 @@ public class CduDAO{
             cdu.setId(rs.getString(ContractCdu.ID));
             cdu.setNom(rs.getString(ContractCdu.NOM));
             cdu.setIdPare(rs.getString(ContractCdu.IDPARE));
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
             this.close();
         }
@@ -178,13 +188,14 @@ public class CduDAO{
             else{
                 ps.setString(3,cdu.getIdPare());
             }
-            ps.executeUpdate();
-            inserit = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            System.out.println(cdu.getId()+" \t "+cdu.getIdPare()+" \t "+cdu.getNom());
-            ex.printStackTrace();
+            inserit =ps.executeUpdate()==1;
+             
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        }catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
-            this.close();
+            close();
         } 
         return inserit;
     }
@@ -200,12 +211,14 @@ public class CduDAO{
             ps.setString(1,cdu.getNom());
             ps.setString(2,cdu.getIdPare());
             ps.setString(3,cdu.getId());
-            ps.executeUpdate();
-            actualitzat = true;
-        } catch (SQLException | ClassNotFoundException ex) {
-            ex.printStackTrace();
+            
+            actualitzat = ps.executeUpdate()==1;
+        } catch (SQLException ex){
+            throw new SQLException(ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+        } catch( ClassNotFoundException ex) {
+            throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
         } finally {
-            this.close();
+            close();
         }
         return actualitzat;
     }
@@ -249,107 +262,15 @@ public class CduDAO{
         } catch(ClassNotFoundException ex){
             throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
         }finally{
-            this.close();
+            close();
         }
         return count;
     }
-    public void close(){
-        if(this.conn!=null){
-            try {
-                this.conn.close();
-                this.conn=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if(this.ps!=null){
-            try {
-                this.ps.close();
-                this.ps=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-        if(this.rs!=null){
-            try{
-                this.rs.close();
-                this.rs=null;
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
-
-   public List<Cdu> select(HashMap <String,Object> dades,String campOrdre,Integer totalRegistres,Integer registreInicial,Boolean ascendent)throws SQLException,ClassNotFoundException{
-        List<Cdu> coleccions =new ArrayList<>();
-        ArrayList<Object>valors;
-        String query;
-        int i;
-        try {
-            conn=ConnectionFactory.getInstance().getConnection();
-            valors=new ArrayList<>();
-            query = "SELECT * FROM "+ContractCdu.NOM_TAULA;
-            i=0;
-            for(String camp:dades.keySet()){
-                if(i ==0){
-                    query += " WHERE ";
-                }
-                else{
-                    query += " AND ";
-                }
-                if(dades.get(camp).getClass().equals(String.class)){
-                    query += camp+" LIKE ?";
-                    valors.add("%"+dades.get(camp)+"%");
-                }
-                else{
-                    query += camp+ " = ?";
-                    valors.add(dades.get(camp));
-                }
-
-            }
-            if(campOrdre!=null){
-                query+=" ORDER BY ? ";
-                valors.add(campOrdre);
-                if(ascendent){
-                    query+=" ASC ";
-                }
-                else{
-                    query+= " DESC ";
-                }
-            }
-            if(registreInicial!=null || totalRegistres!=null){
-                query += " LIMIT ";
-                if(registreInicial!=null){
-                    query += " ?, ";
-                    valors.add(registreInicial);
-                }
-                if(totalRegistres==null){
-                    query +=" 18446744073709551615";
-                }
-                else{
-                    query +=" ?";
-                    valors.add(totalRegistres);
-                }
-
-            }
-            ps=conn.prepareStatement(query);
-            for(i=0;i<valors.size();i++){
-                ps.setObject(i+1, valors.get(i));
-            }
-            rs=ps.executeQuery();
-            while(rs.next()){
-                coleccions.add(new Cdu(rs.getString(ContractCdu.ID),
-                    rs.getString(ContractCdu.IDPARE),
-                    rs.getString(ContractCdu.NOM)));
-            }
-        } catch (SQLException ex) {
-            throw new SQLException(ex.getMessage(), ex.getSQLState() , ex.getErrorCode(), ex.getCause());
-        } catch(ClassNotFoundException ex){
-            throw new ClassNotFoundException(ex.getMessage(), ex.getCause());
-        }finally{
-            this.close();
-        }
-
-        return coleccions;
+    @Override
+    protected Cdu read() throws SQLException {
+        return new Cdu (
+            rs.getString(ContractCdu.ID),
+            rs.getString(ContractCdu.IDPARE),
+            rs.getString(ContractCdu.NOM));
     }
 }

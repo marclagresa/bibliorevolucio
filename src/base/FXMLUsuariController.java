@@ -6,7 +6,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
@@ -159,7 +158,7 @@ public class FXMLUsuariController extends GenericPopUp implements Initializable 
     public void initialize(URL url, ResourceBundle rb) {
         try {
             ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
-        } catch (IOException e) {
+        } catch (IOException | SQLException e) {
             e.printStackTrace();
         }
         //Ara omplim els combobox a partir del text que s'ha escrit en ells(busqueda)

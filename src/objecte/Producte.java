@@ -48,7 +48,7 @@ public class Producte {
         this.urlPortada = new SimpleStringProperty("");
         this.adreçaWeb = new SimpleStringProperty("");
         this.cdu = new SimpleStringProperty("");
-        this.estat = new SimpleBooleanProperty(false);
+        this.estat = new SimpleBooleanProperty(true);
         this.idiomes = new SimpleObjectProperty<>(new HashSet<>());
         this.editorial = new SimpleObjectProperty<>(new Editorial());
         this.format = new SimpleObjectProperty<>(new Format());

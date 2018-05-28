@@ -100,7 +100,7 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
                     id = ((Materia) object).getId();
                     break;
                 case autors:
-                    id = ((Autoria) object).getId();
+                    id = ((Persona) object).getId();
                     break;
                 case "editorial":
                     id = ((Editorial) object).getId();
