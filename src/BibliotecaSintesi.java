@@ -40,8 +40,6 @@ public class BibliotecaSintesi extends Application {
         stage.setScene(scene);
         stage.show();        
         
-        FXMLProducteController c = FXMLProducteController.crear(stage, true, Crear);
-        c.show();
     }
 
     /**

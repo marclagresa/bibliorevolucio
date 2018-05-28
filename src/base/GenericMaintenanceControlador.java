@@ -55,6 +55,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     
     private HashMap< String, Object > _lastSearch;
     
+    private Label _currentLabel;
     private int _currentPage;
     private int _maxPage;
     
@@ -178,7 +179,17 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             
             try {
                 
-                openPage( Integer.valueOf( ( (Label) event.getSource()).getText()) );
+                // Check is there last label remove style
+                if( _currentLabel != null ){
+                    _currentLabel.getStyleClass().remove( "numerosSeleccionats" );
+                }
+                
+                Label newLabel = ((Label) event.getSource());
+                // set style at new label
+                newLabel.getStyleClass().add( "numerosSeleccionats");
+                // change _currentLabel
+                _currentLabel = newLabel;
+                openPage( Integer.valueOf( newLabel.getText() ) );
 
             } catch (SQLException | ClassNotFoundException ex) {
                 // Set in logger
@@ -189,11 +200,23 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         
         int pages =  (int) Math.ceil( totalItems/(_LIMITXPAGE*1.0 ));
         
-        for( int i = 1; i <= pages; i++ ) {
+        // alwayas add first page 
+        Label label = new Label( String.valueOf( 1 ) );
+        label.setOnMouseClicked( labelClickEvent );
+        label.getStyleClass().add( "numerosSeleccionats");
+        _currentLabel = label;
+        _currentPage = 1;
+        _hbPages.getChildren().add( label );
+        
+        for( int i = 2; i <= pages; i++ ) {
 
-            Label label = new Label( String.valueOf( i ) );
+            label = new Label( String.valueOf( i ) );
             label.setOnMouseClicked( labelClickEvent );
             _hbPages.getChildren().add( label );
+            
+            if( i%2 == 0) {
+                label.getStyleClass().add( "numerosParells" );
+            }
 
         }
         
@@ -261,12 +284,13 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
            ascending = st.equals(SortType.ASCENDING);
         }
         
+        generatePagination( getTotalItems( data ) );
+        
         List list = searchOcurrences( data, 0, _LIMITXPAGE, _WIDGETLIST.getColumnsAttribName().get( sc ), ascending );
         _WIDGETLIST.fillTable( FXCollections.observableList( list ) );
 
-        generatePagination( getTotalItems( data ) );
         _lastSearch = data;
-        _currentPage = 1;
+        
         
     }
     

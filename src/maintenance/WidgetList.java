@@ -1,14 +1,12 @@
 package maintenance;
 
 import com.sun.javafx.property.PropertyReference;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -18,10 +16,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import maintenance.AttributeBrick.allowedFormats;
 
 /**
  * This class represents a widget that contains a custom table view for specific object and chooseable columns to display
