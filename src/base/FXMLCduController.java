@@ -63,10 +63,9 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
         switch(tipusA){
             case Crear:
                 try {
-                  //   id = cduDAO.nextId();
-                  //  cdu = new Cdu(id, idPare, nomCDU);
+                  //id = cduDAO.nextId();
+                  //cdu = new Cdu(id, idPare, nomCDU);
                     cduDAO.insert(cdu);
-                    cduDAO.close();
 
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
@@ -79,8 +78,8 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
                 }
                 break;
             case Modificar:
-            //    id = cduRebut.getId();
-            //    cdu = new Cdu(id, idPare, nomCDU);
+                //id = cduRebut.getId();
+                //cdu = new Cdu(id, idPare, nomCDU);
         
                 try {
                     cduDAO.update(cdu);
@@ -92,18 +91,18 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
                    if(onAcceptCallBack!= null){
                         onAcceptCallBack.accept(cdu);
                     }
-                    cduDAO.close();
                 }      
                 break;
             case Deshabilitar:
-           //     id = cduRebut.getId();
-                cdu = new Cdu();
-    //            cdu.setId(id);
+                //id = cduRebut.getId();
+                //cdu = new Cdu();
+                //cdu.setId(id);
                 
-                //cduDAO.delete(cdu);
-                cduDAO.close();     
+                //cduDAO.delete(cdu);    
                 break;
         }
+        
+        ((Stage) (btnCrearCDU.getScene().getWindow())).close();
     }
 
     @Override
@@ -127,7 +126,7 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
                     btnCrearCDU.setText("Buscar");
                     btnCrearCDU.setDisable(true);
                     break;
-            }          
+            }         
         }
     }
     

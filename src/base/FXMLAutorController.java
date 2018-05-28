@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -65,7 +67,6 @@ public class FXMLAutorController extends GenericPopUp implements Initializable {
                     id = personaDAO.nextId();
                     persona = new Persona(id, nomAutor);
                     personaDAO.insert(persona);
-                    personaDAO.close();
 
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
@@ -91,18 +92,24 @@ public class FXMLAutorController extends GenericPopUp implements Initializable {
                    if(onAcceptCallBack!= null){
                         onAcceptCallBack.accept(persona);
                     }
-                    personaDAO.close();
                 }      
                 break;
             case Deshabilitar:
                 id = personaRebuda.getId();
                 persona = new Persona();
-                persona.setId(id);
-                
-                //personaDAO.delete(persona);
-                personaDAO.close();     
+                persona.setId(id);                
+        
+            try {
+                personaDAO.update(persona);
+            } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }           
                 break;
         }
+        
+        ((Stage) (btnCrearAutor.getScene().getWindow())).close();
     }
 
     @Override

@@ -156,11 +156,6 @@ public class FXMLUsuariController extends GenericPopUp implements Initializable 
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        try {
-            ConnectionFactory.getInstance().configure(FileSystems.getDefault().getPath("src/base", "configBibliotecari"));
-        } catch (IOException | SQLException e) {
-            e.printStackTrace();
-        }
         //Ara omplim els combobox a partir del text que s'ha escrit en ells(busqueda)
         
         //Listener Nivell        
@@ -198,8 +193,6 @@ public class FXMLUsuariController extends GenericPopUp implements Initializable 
             System.out.println("ClassNotFoundException: "+ex.getMessage());
         } catch (SQLException ex) {
             System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            objNivellDAO.close();
         }
     }
 

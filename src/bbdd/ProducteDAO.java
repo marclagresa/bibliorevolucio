@@ -181,71 +181,66 @@ public class ProducteDAO extends BDObject implements IObjectDAO<Producte> {
     }
 
     public List<Producte> select(HashMap <String,Object> dades) throws ClassNotFoundException, SQLException{
-        if(dades!=null){
-            List<Producte> list = new ArrayList<>();
-            String sql;
-            Object [] valors;
-  
-            int i;
-            boolean dadesCorrecte=comprovarDadesConsulta(dades, ContractProducte.DEFINICIO);
-            if(dadesCorrecte){
-                try {
-                    conn = ConnectionFactory.getInstance().getConnection();
-                    sql = "SELECT * FROM "+ContractProducte.NOM_TAULA;
-                    i=0;
+        
+        List<Producte> list = new ArrayList<>();
+        String sql;
+        Object [] valors;
+
+        int i;
+        boolean dadesCorrecte=comprovarDadesConsulta(dades, ContractProducte.DEFINICIO);
+        if(dadesCorrecte){
+            try {
+                conn = ConnectionFactory.getInstance().getConnection();
+                sql = "SELECT * FROM "+ContractProducte.NOM_TAULA;
+                i=0;
+                valors=new Object[dades.size()];
+                for(String camp:dades.keySet()){
                     valors=new Object[dades.size()];
-                    for(String camp:dades.keySet()){
-                        valors=new Object[dades.size()];
-                        if(i ==0){
-                            sql += " WHERE " ;
-                        }
-                        else{
-                            sql += " AND ";
-                        }
-                        sql+=camp;
-                        if(dades.get(camp).getClass().equals(String.class)){
-                            sql +=" LIKE ? ";
-                        }
-                        else{
-                            sql+=" = ?";
-                        }
-            
-                        valors[i]=dades.get(camp);
-                        i++;
-                    
+                    if(i ==0){
+                        sql += " WHERE " ;
                     }
-                    ps = conn.prepareStatement(sql);
-                    for(i=0;i<valors.length;i++){
-                        ps.setObject(i+1, valors[i]);
+                    else{
+                        sql += " AND ";
+                    }
+                    sql+=camp;
+                    if(dades.get(camp).getClass().equals(String.class)){
+                        sql +=" LIKE ? ";
+                    }
+                    else{
+                        sql+=" = ?";
                     }
 
-                    rs = ps.executeQuery();
+                    valors[i]=dades.get(camp);
+                    i++;
 
-
-                    while(rs.next()){
-                        list.add(this.read());
-                    }
-
-
-                } catch (SQLException ex){
-                    throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
-                }catch( ClassNotFoundException ex) {
-                    throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
-                }catch(IllegalArgumentException ex){
-                    throw new IllegalArgumentException(ex.getMessage());
-                } finally {
-                    this.close();
                 }
-            }else{
-                throw new IllegalArgumentException("Els tipus de dades de la consulta no són correctes.");
+                ps = conn.prepareStatement(sql);
+                for(i=0;i<valors.length;i++){
+                    ps.setObject(i+1, valors[i]);
+                }
+
+                rs = ps.executeQuery();
+
+
+                while(rs.next()){
+                    list.add(this.read());
+                }
+
+
+            } catch (SQLException ex){
+                throw new SQLException (ex.getMessage(),ex.getSQLState(),ex.getErrorCode(),ex.getCause());
+            }catch( ClassNotFoundException ex) {
+                throw new ClassNotFoundException(ex.getMessage(),ex.getCause());
+            } finally {
+                this.close();
             }
-                
-            
-            return list;
+        }else{
+            throw new IllegalArgumentException("Els tipus de dades de la consulta no són correctes.");
         }
-        else{
-            throw new NullPointerException();
-        }
+
+
+        return list;
+    
     }
     @Override
     public int selectCount(HashMap <String,Object> dades)throws SQLException,ClassNotFoundException{
@@ -582,4 +577,6 @@ public class ProducteDAO extends BDObject implements IObjectDAO<Producte> {
         return objProducte;
     }
     
+
 }
+

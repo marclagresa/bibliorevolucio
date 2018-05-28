@@ -61,7 +61,6 @@ public class FXMLFormatController extends GenericPopUp implements Initializable 
                     id = formatDAO.nextId();
                     format = new Format(id, nomFormat);
                     formatDAO.insert(format);
-                    formatDAO.close();
 
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
@@ -87,7 +86,6 @@ public class FXMLFormatController extends GenericPopUp implements Initializable 
                    if(onAcceptCallBack!= null){
                         onAcceptCallBack.accept(format);
                     }
-                    formatDAO.close();
                 }      
                 break;
             case Deshabilitar:
@@ -95,14 +93,11 @@ public class FXMLFormatController extends GenericPopUp implements Initializable 
                 format = new Format();
                 format.setId(id);
                 
-                //formatDAO.delete(format);
-                formatDAO.close();     
+                //formatDAO.delete(format);  
                 break;
         }
         
-        btnCrearFormat.setOnAction((ActionEvent event1) -> {
-            ((Stage) (btnCrearFormat.getScene().getWindow())).close();
-        });
+        ((Stage) (btnCrearFormat.getScene().getWindow())).close();
     }   
     
     @Override

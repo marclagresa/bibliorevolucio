@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.image.*?>
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<AnchorPane id="AnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" >
+<AnchorPane id="AnchorPane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <SplitPane dividerPositions="0.6872909698996655" layoutX="90.0" layoutY="49.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <items>
@@ -25,7 +35,7 @@
                                     <ComboBox fx:id="_searchComboB" editable="true" maxWidth="1.7976931348623157E308" />
                                  </children>
                               </StackPane>
-                              <ChoiceBox fx:id="_cbAttributes" maxWidth="200.0" nodeOrientation="LEFT_TO_RIGHT" HBox.hgrow="ALWAYS" />
+                              <ChoiceBox id="botoSelect" fx:id="_cbAttributes" maxWidth="200.0" nodeOrientation="LEFT_TO_RIGHT" HBox.hgrow="ALWAYS" />
                            </children>
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
@@ -73,9 +83,9 @@
                            <center>
                               <ScrollPane maxHeight="-Infinity" prefHeight="0.0" vbarPolicy="NEVER" BorderPane.alignment="CENTER">
                                 <content>
-                                  <AnchorPane>
+                                  <AnchorPane id="numerosPaginacio">
                                        <children>
-                                          <HBox fx:id="_hbPages" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                          <HBox fx:id="_hbPages" alignment="CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
                                 </content>
@@ -92,14 +102,14 @@
                      <children>
                         <VBox alignment="TOP_RIGHT" spacing="5.0">
                            <children>
-                              <Button fx:id="_btnSearch" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#searchAction" text="Cerca" />
-                              <Label fx:id="_lblAdvancedSearch" onMousePressed="#advSearchAction" text="Cerca avançada" textFill="#0a66ff" />
+                              <Button fx:id="_btnSearch" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#searchAction" styleClass="botosGenerics" text="Cerca" />
+                              <Label id="LabelCercaAbansada" fx:id="_lblAdvancedSearch" onMousePressed="#advSearchAction" text="Cerca avançada" textFill="#0a66ff" />
                            </children>
                         </VBox>
-                        <Button fx:id="_btnAdd" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addAction" text="Afegir" />
-                        <Button fx:id="_btnModify" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#modifyAction" text="Modificar" />
-                        <Button fx:id="_btnDel" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteAction" text="Eliminar" />
-                        <Button fx:id="_btnDuplicate" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#duplicateAction" text="Duplicar" />
+                        <Button fx:id="_btnAdd" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#addAction" styleClass="botosGenerics" text="Afegir" />
+                        <Button fx:id="_btnModify" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#modifyAction" styleClass="botosGenerics" text="Modificar" />
+                        <Button fx:id="_btnDel" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#deleteAction" styleClass="botosGenerics" text="Eliminar" />
+                        <Button fx:id="_btnDuplicate" maxWidth="1.7976931348623157E308" mnemonicParsing="false" onAction="#duplicateAction" styleClass="botosGenerics" text="Duplicar" />
                      </children>
                      <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />

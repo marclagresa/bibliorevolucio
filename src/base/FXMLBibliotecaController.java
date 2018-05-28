@@ -13,6 +13,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import objecte.Biblioteca;
 
@@ -63,7 +64,6 @@ public class FXMLBibliotecaController extends GenericPopUp implements Initializa
                     id = bibliotecaDAO.nextId();
                     biblioteca = new Biblioteca(id, nomBiblioteca);
                     bibliotecaDAO.insert(biblioteca);
-                    bibliotecaDAO.close();
 
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
@@ -89,7 +89,6 @@ public class FXMLBibliotecaController extends GenericPopUp implements Initializa
                    if(onAcceptCallBack!= null){
                         onAcceptCallBack.accept(biblioteca);
                     }
-                    bibliotecaDAO.close();
                 }      
                 break;
             case Deshabilitar:
@@ -97,10 +96,11 @@ public class FXMLBibliotecaController extends GenericPopUp implements Initializa
                 biblioteca = new Biblioteca();
                 biblioteca.setId(id);
                 
-                //bibliotecaDAO.delete(biblioteca);
-                bibliotecaDAO.close();     
+                //bibliotecaDAO.delete(biblioteca);   
                 break;
         }
+        
+        ((Stage) (btnCrearBiblioteca.getScene().getWindow())).close();
     }
 
     @Override
@@ -127,4 +127,9 @@ public class FXMLBibliotecaController extends GenericPopUp implements Initializa
             }          
         }
     }    
+
+    @FXML
+    private void cancelar(ActionEvent event) {
+        ((Stage) (btnCancelar.getScene().getWindow())).close();
+    }
 }

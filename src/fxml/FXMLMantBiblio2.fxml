@@ -31,7 +31,7 @@
                         <Image url="@../media/img/submenuIdioma.png" />
                      </image>
                   </ImageView>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="52.0" prefWidth="217.0" text="IDIOMA" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="52.0" prefWidth="217.0" styleClass="labelsMenu" text="IDIOMA" />
                </children>
             </VBox>
             <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0">
@@ -41,7 +41,7 @@
                         <Image url="@../media/img/submenuNivells.png" />
                      </image>
                   </ImageView>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="44.0" prefWidth="184.0" text="NIVELLS" textAlignment="CENTER" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="44.0" prefWidth="184.0" styleClass="labelsMenu" text="NIVELLS" textAlignment="CENTER" />
                </children>
             </VBox>
             <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
@@ -51,7 +51,7 @@
                         <Image url="@../media/img/submenuProcedencia.png" />
                      </image>
                   </ImageView>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="235.0" text="PROCEDÉNCIA" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="46.0" prefWidth="235.0" styleClass="labelsMenu" text="PROCEDÉNCIA" />
                </children>
             </VBox>
             <VBox alignment="BOTTOM_CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
@@ -61,7 +61,7 @@
                         <Image url="@../media/img/submenuMaterias.png" />
                      </image>
                   </ImageView>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="56.0" prefWidth="223.0" text="MATERIAS" />
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="56.0" prefWidth="223.0" styleClass="labelsMenu" text="MATERIAS" />
                </children>
             </VBox>
             <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="3" GridPane.rowIndex="2" />

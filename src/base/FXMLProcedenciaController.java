@@ -31,6 +31,8 @@ public class FXMLProcedenciaController extends GenericPopUp implements Initializ
     private TextField tfProcedencia;
     @FXML
     private Button btnCrearProcedencia;
+    @FXML
+    private Button btnCancelar;
 
     /**
      * Initializes the controller class.
@@ -47,8 +49,6 @@ public class FXMLProcedenciaController extends GenericPopUp implements Initializ
         
         return crearPopUp("/fxml/FXMLProcedencia.fxml", FXMLProcedenciaController.class, owner, isModal, tipus);
     } 
-    @FXML
-    private Button btnCancelar;
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -70,7 +70,6 @@ public class FXMLProcedenciaController extends GenericPopUp implements Initializ
                 id = procedenciaDAO.nextId();
                 procedencia = new Procedencia(id, nomProcedencia);                    
                 procedenciaDAO.insert(procedencia);
-                procedenciaDAO.close();
             
         } catch (ClassNotFoundException ex) {
             System.out.println("ClassNotFoundException: "+ex.getMessage());
@@ -81,10 +80,8 @@ public class FXMLProcedenciaController extends GenericPopUp implements Initializ
                 onAcceptCallBack.accept(procedencia);
             }
         }
-        
-        btnCrearProcedencia.setOnAction((ActionEvent event1) -> {
-            ((Stage) (btnCrearProcedencia.getScene().getWindow())).close();
-        });
+
+        ((Stage) (btnCrearProcedencia.getScene().getWindow())).close();
     }
 
     @Override

@@ -69,7 +69,6 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
                     id = materiaDAO.nextId();
                     materia = new Materia(id, nomMateria);
                     materiaDAO.insert(materia);
-                    materiaDAO.close();
 
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
@@ -95,7 +94,6 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
                    if(onAcceptCallBack!= null){
                         onAcceptCallBack.accept(materia);
                     }
-                    materiaDAO.close();
                 }      
                 break;
             case Deshabilitar:
@@ -103,14 +101,11 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
                 materia = new Materia();
                 materia.setId(id);
                 
-                //materiaDAO.delete(materia);
-                materiaDAO.close();     
+                //materiaDAO.delete(materia);   
                 break;
         }
         
-        btnCrearMateria.setOnAction((ActionEvent event1) -> {
-            ((Stage) (btnCrearMateria.getScene().getWindow())).close();
-        });
+        ((Stage) (btnCrearMateria.getScene().getWindow())).close();  
     }
     
     @Override
