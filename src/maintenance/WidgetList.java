@@ -1,11 +1,11 @@
 package maintenance;
 
 import com.sun.javafx.property.PropertyReference;
-import excepcions.MaintenanceException;
 import java.util.HashMap;
 import java.util.List;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -18,7 +18,6 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
-import maintenance.AttributeBrick.allowedFormats;
 
 /**
  * This class represents a widget that contains a custom table view for specific object and chooseable columns to display
@@ -38,15 +37,16 @@ public class WidgetList {
      * @param _wallClass The class to be implemented
      * @param title Title of upper column 
      * @param _TABLE 
-     * @param _CHECKERS
+     * @param _checkers
+     * @param _scrollCheckers
      */
-    public WidgetList( AttributeWall _wallClass, String title, TableView<?> _TABLE, VBox _CHECKERS, ScrollPane _scrollCheckers ) {
+    public WidgetList( AttributeWall _wallClass, String title, TableView<?> _TABLE, VBox _checkers, ScrollPane _scrollCheckers, Runnable onColumnAction ) {
         
         this._TABLE = _TABLE;
         this._SCROLLCHECKERS = _scrollCheckers;
-        this._CHECKERS = _CHECKERS;
+        this._CHECKERS = _checkers;
         
-        generate( generateUpperColumn( title ), _wallClass.getAttributeWall() );
+        generate( generateUpperColumn( title ), _wallClass.getAttributeWall(), onColumnAction );
         loadDesign();
         
     }
@@ -87,7 +87,7 @@ public class WidgetList {
      * Build the table creating a column and  checkbox for each attribute
      * Put all checkbox into vbox
      */
-    private void generate( TableColumn upperColumn, List<AttributeBrick> attributes ){
+    private void generate( TableColumn upperColumn, List<AttributeBrick> attributes, Runnable onColumnAction ){
         
         // Iterate list of attributes
         attributes.forEach( attrBrick -> {
@@ -98,32 +98,39 @@ public class WidgetList {
 
             column = new TableColumn( attrBrick.getNAMECOLUMN() );
             // Custom view for booleans
-            if( attrBrick.getFORMAT().equals( allowedFormats.Boolean ) ) {
-                
-                column.setCellValueFactory( (param) -> {
+            switch ( attrBrick.getFORMAT() ) {
+                case Boolean:
+                    
+                    column.setCellValueFactory( (param) -> {
           
-                    PropertyReference propertyRef = new PropertyReference<>( param.getValue().getClass(), attrBrick.getNAME() );
+                        PropertyReference propertyRef = new PropertyReference<>( param.getValue().getClass(), attrBrick.getNAME() );
 
-                    ObservableValue property;
-                    if (propertyRef.hasProperty()) {
-                        property = propertyRef.getProperty( param.getValue() );
-                    } else {
-                        Object value = propertyRef.get( param.getValue() );
-                        property = new ReadOnlyObjectWrapper<>( value );
-                    }
+                        ObservableValue property;
+                        if (propertyRef.hasProperty()) {
+                            property = propertyRef.getProperty( param.getValue() );
+                        } else {
+                            Object value = propertyRef.get( param.getValue() );
+                            property = new ReadOnlyObjectWrapper<>( value );
+                        }
+
+                        return property;
+
+                    });
+                
+                    column.setCellFactory( tc -> new CheckBoxTableCell<>() );
                     
-                    return property;
+                    break;
+                default:
                     
-                });
-                
-                column.setCellFactory( tc -> new CheckBoxTableCell<>() );
-                
-            } else {
-                
-                column.setCellValueFactory( new PropertyValueFactory<>( attrBrick.getNAME() ) );
-                
+                    column.setCellValueFactory( new PropertyValueFactory<>( attrBrick.getNAME() ) );
+                    
             }
-                        
+            
+            // Listener when property change
+            column.sortTypeProperty().addListener((observable) -> {
+                onColumnAction.run();
+            });
+            
             // His checkbox
             ckBox = new CheckBox( attrBrick.getNAMECOLUMN() );
             column.setVisible( attrBrick.isDEFAULT() );
@@ -144,9 +151,9 @@ public class WidgetList {
             _columnsAttribName.put( column, attrBrick.getCONTRACTNAME() );
             
         });
-        
+   
         _TABLE.getColumns().add( upperColumn );
-        
+
     }
     
     /**
@@ -160,13 +167,25 @@ public class WidgetList {
     }
     
     /**
-     * Fill table view with obtained list
-     * 
+     * Fill table view with obtained list 
+     * We save each column order of the list, for later of filled the return it
      * @param list 
      */
     public void fillTable( ObservableList list ){
+
+        // save
+        ObservableList<TableColumn> columnList = FXCollections.observableArrayList();
+        _TABLE.getSortOrder().forEach( ( column ) -> {
+            columnList.add( column );
+        });
         
+        // fill
         _TABLE.setItems( list );
+        
+        // return it
+        columnList.forEach( ( column ) -> {
+            _TABLE.getSortOrder().add( column );
+        });        
         
     }
     
@@ -181,14 +200,13 @@ public class WidgetList {
     
     /**
      * @return Object The selected item of table view, if are multiple selection return last object
-     * @throws excepcions.MaintenanceException When any item are selected
      */
-    public Object getSelected() throws MaintenanceException {
+    public Object getSelected() throws IllegalArgumentException {
         
         Object object = _TABLE.getSelectionModel().getSelectedItem();
         
         if( object == null) {
-            throw new MaintenanceException( "Any item selected" );
+            throw new IllegalArgumentException( "Any item selected" );
         }
         
         return object;

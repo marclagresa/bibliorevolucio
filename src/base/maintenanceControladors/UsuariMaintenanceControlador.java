@@ -120,9 +120,9 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     }
 
     @Override
-    public GenericPopUp createPopUpAdvSearch(GenericPopUp.TipusAccio tipusAccio) throws IOException {
-        
-        return FXMLUsuariController.crear( this.getScene().getWindow(), true, tipusAccio );
+    public GenericPopUp createPopUpAdvSearch() throws IOException {
+        // ------- AREGLAR ------
+        return null;// FXMLUsuariController.crear( this.getScene().getWindow(), true );
         
     }
 

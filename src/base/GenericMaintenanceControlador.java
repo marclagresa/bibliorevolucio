@@ -55,6 +55,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     
     private HashMap< String, Object > _lastSearch;
     
+    private Label _currentLabel;
     private int _currentPage;
     private int _maxPage;
     
@@ -123,13 +124,22 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        this._WIDGETLIST = new WidgetList( this, _TITLELIST, _tvTable, _vbCheckers, _spCheckers );
+        this._WIDGETLIST = new WidgetList( this, _TITLELIST, _tvTable, _vbCheckers, _spCheckers, () -> {
+            
+            try {
+                openPage( 1 );
+            } catch (SQLException | ClassNotFoundException ex) {
+                // Set in logger
+                // Open a generic alert
+            }
+            
+        } );
         this._WIDGETSEARCH = new WidgetSearch( this, _searchField, _searchCheckB, _searchComboB, _cbAttributes, ( name, combo ) -> {
         this._hbPages.setId("_hbPages");
             try {
                 parseCombo( name, combo );
             } catch (MaintenanceException ex) {
-                // Set in logger: getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Add"
+                // Set in logger
                 // Open a generic alert
             }
             
@@ -145,15 +155,16 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
      * @param tipusAccio
      * @return GenericPopUp Object
      * @throws IOException 
+     * @throws excepcions.MaintenanceException 
      */
-    public abstract GenericPopUp createPopUpObject( TipusAccio tipusAccio ) throws IOException;
+    public abstract GenericPopUp createPopUpObject( TipusAccio tipusAccio ) throws IOException, MaintenanceException;
     
     /**
-     * @param tipusAccio
      * @return GenericPopUp Object
      * @throws IOException 
+     * @throws excepcions.MaintenanceException 
      */
-    public abstract GenericPopUp createPopUpAdvSearch( TipusAccio tipusAccio) throws IOException; 
+    public abstract GenericPopUp createPopUpAdvSearch() throws IOException, MaintenanceException; 
     
     /**
      * Create pagination for search
@@ -168,7 +179,17 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             
             try {
                 
-                openPage( Integer.valueOf( ( (Label) event.getSource()).getText()) );
+                // Check is there last label remove style
+                if( _currentLabel != null ){
+                    _currentLabel.getStyleClass().remove( "numerosSeleccionats" );
+                }
+                
+                Label newLabel = ((Label) event.getSource());
+                // set style at new label
+                newLabel.getStyleClass().add( "numerosSeleccionats");
+                // change _currentLabel
+                _currentLabel = newLabel;
+                openPage( Integer.valueOf( newLabel.getText() ) );
 
             } catch (SQLException | ClassNotFoundException ex) {
                 // Set in logger
@@ -179,11 +200,23 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         
         int pages =  (int) Math.ceil( totalItems/(_LIMITXPAGE*1.0 ));
         
-        for( int i = 1; i <= pages; i++ ) {
+        // alwayas add first page 
+        Label label = new Label( String.valueOf( 1 ) );
+        label.setOnMouseClicked( labelClickEvent );
+        label.getStyleClass().add( "numerosSeleccionats");
+        _currentLabel = label;
+        _currentPage = 1;
+        _hbPages.getChildren().add( label );
+        
+        for( int i = 2; i <= pages; i++ ) {
 
-            Label label = new Label( String.valueOf( i ) );
+            label = new Label( String.valueOf( i ) );
             label.setOnMouseClicked( labelClickEvent );
             _hbPages.getChildren().add( label );
+            
+            if( i%2 == 0) {
+                label.getStyleClass().add( "numerosParells" );
+            }
 
         }
         
@@ -200,30 +233,30 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
      */
     private void openPage( int page ) throws SQLException, ClassNotFoundException {
         
-        TableColumn sc = null;
-        SortType st = null;
-        Boolean ascending = true;
+        // Check if there is a previous search
+        if( _lastSearch != null ) {
+        
+            TableColumn sc = null;
+            SortType st = null;
+            Boolean ascending = true;
 
-        if ( !_tvTable.getSortOrder().isEmpty() ) {
-            sc = (TableColumn) _tvTable.getSortOrder().get( 0 );
-            st = sc.getSortType();
-        }
-       
-        if( sc!=null ){
-           ascending = st.equals(SortType.ASCENDING);
-        }
-            
-        List list = searchOcurrences( _lastSearch, 
-                _LIMITXPAGE*(page-1),
-                _LIMITXPAGE,
-                _WIDGETLIST.getColumnsAttribName().get( sc ),
-                ascending );
-        _WIDGETLIST.clearTable();
-        _WIDGETLIST.fillTable( FXCollections.observableList( list ) );
-        _currentPage = page;
+            if ( !_tvTable.getSortOrder().isEmpty() ) {
+                sc = (TableColumn) _tvTable.getSortOrder().get( 0 );
+                st = sc.getSortType();
+            }
 
-        if ( sc != null ) {
-            sc.setSortType( st );
+            if( sc!=null ){
+               ascending = st.equals(SortType.ASCENDING);
+            }
+
+            List list = searchOcurrences( _lastSearch, 
+                    _LIMITXPAGE*(page-1),
+                    _LIMITXPAGE,
+                    _WIDGETLIST.getColumnsAttribName().get( sc ),
+                    ascending );
+            _WIDGETLIST.fillTable( FXCollections.observableList( list ) );
+            _currentPage = page;
+        
         }
         
     }
@@ -238,13 +271,26 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
      */
     private void doSearch( HashMap< String, Object > data ) throws SQLException, ClassNotFoundException, IllegalArgumentException {
         
-        _WIDGETLIST.clearTable();
-        List list = searchOcurrences( data, 0, _LIMITXPAGE, null, null);
+        TableColumn sc = null;
+        SortType st = null;
+        Boolean ascending = true;
+
+        if ( !_tvTable.getSortOrder().isEmpty() ) {
+            sc = (TableColumn) _tvTable.getSortOrder().get( 0 );
+            st = sc.getSortType();
+        }
+       
+        if( sc!=null ){
+           ascending = st.equals(SortType.ASCENDING);
+        }
+        
+        generatePagination( getTotalItems( data ) );
+        
+        List list = searchOcurrences( data, 0, _LIMITXPAGE, _WIDGETLIST.getColumnsAttribName().get( sc ), ascending );
         _WIDGETLIST.fillTable( FXCollections.observableList( list ) );
 
-        generatePagination( getTotalItems( data ) );
         _lastSearch = data;
-        _currentPage = 1;
+        
         
     }
     
@@ -308,7 +354,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
         
         try {
                
-            GenericPopUp w = createPopUpAdvSearch( TipusAccio.Buscar );
+            GenericPopUp w = createPopUpAdvSearch( );
             
             w.onAccept( ( map ) -> {
                 
@@ -334,8 +380,8 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             
             w.show();
 
-        } catch ( IOException ex ) {
-            // Set in logger : getClass().getName() + ": Error when try to create AdvancedSearchPopUp window in loadFunctionalies()"
+        } catch ( IOException | MaintenanceException ex ) {
+            // Set in logger
             // Open a generic alert
         }
         
@@ -349,8 +395,8 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             GenericPopUp window = createPopUpObject( TipusAccio.Crear );
             window.show();
 
-        } catch ( IOException ex ) {
-            // Set in logger: getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Add"
+        } catch ( IOException | MaintenanceException ex ) {
+            // Set in logger
             // Open a generic alert
         }
         
@@ -387,10 +433,10 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             
             window.show();
             
-        } catch ( IOException ex ) {
-            // Set in logger : getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Modify"
+        } catch ( IOException | MaintenanceException ex ) {
+            // Set in logger
             // Open a generic alert
-        } catch ( MaintenanceException ex ) {
+        } catch ( IllegalArgumentException ex ) {
             // When any item selected
                 // Open an alert
         } 
@@ -428,10 +474,10 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             
             window.show();
             
-        } catch ( IOException ex ) {
-            // Set in logger : getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - delete"
+        } catch ( IOException | MaintenanceException ex ) {
+            // Set in logger
             // Open a generic alert
-        } catch ( MaintenanceException ex ) {
+        } catch ( IllegalArgumentException ex ) {
             // When any item selected
                 // Open an alert
         } 
@@ -469,10 +515,10 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             
             window.show();
             
-        } catch ( IOException ex ) {
-            // Set in logger : getClass().getName() + ": Error when try to create ObjectPopUp window in loadFunctionalies() - Duplicate"
+        } catch ( IOException | MaintenanceException ex ) {
+            // Set in logger
             // Open a generic alert
-        } catch ( MaintenanceException ex ) {
+        } catch ( IllegalArgumentException ex ) {
             // When any item selected
                 // Open an alert
         } 

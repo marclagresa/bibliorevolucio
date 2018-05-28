@@ -25,7 +25,12 @@ public class Cdu {
         this.nom = new SimpleStringProperty(nom);
         this.activa=new SimpleBooleanProperty(activa);
     }
-
+     public Cdu(String id, String idPare, String nom){
+        this.id = new SimpleStringProperty(id);
+        this.idPare = new SimpleStringProperty(idPare);
+        this.nom = new SimpleStringProperty(nom);
+        this.activa=new SimpleBooleanProperty(true);
+    }
     //Getters
     public Boolean isActiva (){return activa.get();}
     public String getId() { return id.get(); }
