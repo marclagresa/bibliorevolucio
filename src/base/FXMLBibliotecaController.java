@@ -92,14 +92,10 @@ public class FXMLBibliotecaController extends GenericPopUp implements Initializa
                 }      
                 break;
             case Deshabilitar:
-                id = bibliotecaRebuda.getId();
-                biblioteca = new Biblioteca();
-                biblioteca.setId(id);
-                biblioteca.setActiva(false);
-                
+                bibliotecaRebuda.setActiva(false);                
            
                 try {
-                    bibliotecaDAO.update(biblioteca);
+                    bibliotecaDAO.update(bibliotecaRebuda);
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
                 } catch (ClassNotFoundException ex){

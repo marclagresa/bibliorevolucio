@@ -33,6 +33,7 @@ public class ClProcedencia implements ChangeListener<String> {
 
                 HashMap<String, Object> cercaProcedencia = new HashMap<>();
                 cercaProcedencia.put(ContractProcedencia.NOM, newValue);
+                cercaProcedencia.put(ContractProcedencia.ACTIVA, true);
 
                 ProcedenciaDAO objProcedenciaDAO = new ProcedenciaDAO();
                 ObservableList<Procedencia> opcionsProcedencia = null;

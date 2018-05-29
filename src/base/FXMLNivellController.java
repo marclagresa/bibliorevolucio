@@ -82,13 +82,10 @@ public class FXMLNivellController extends GenericPopUp implements Initializable 
                 }      
                 break;
             case Deshabilitar:
-                id = nivellRebut.getId();
-                nivell = new Nivell();
-                nivell.setId(id);
-                nivell.setActiva(false);               
+                nivellRebut.setActiva(false);               
         
                 try {
-                    nivellDAO.update(nivell);
+                    nivellDAO.update(nivellRebut);
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
                 } catch (ClassNotFoundException ex){

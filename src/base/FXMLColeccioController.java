@@ -93,13 +93,10 @@ public class FXMLColeccioController extends GenericPopUp implements Initializabl
                 }      
                 break;
             case Deshabilitar:
-                id = coleccioRebuda.getId();
-                coleccio = new Coleccio();
-                coleccio.setId(id);
-                coleccio.setActiva(false);                
+                coleccioRebuda.setActiva(false);                
           
                 try {
-                    coleccioDAO.update(coleccio);
+                    coleccioDAO.update(coleccioRebuda);
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
                 } catch (ClassNotFoundException ex){

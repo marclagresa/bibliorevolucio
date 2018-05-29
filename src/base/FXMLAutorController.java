@@ -92,14 +92,11 @@ public class FXMLAutorController extends GenericPopUp implements Initializable {
                     }
                 }      
                 break;
-            case Deshabilitar:
-                id = personaRebuda.getId();
-                persona = new Persona();
-                persona.setId(id);   
-                persona.setActiva(false);
+            case Deshabilitar: 
+                personaRebuda.setActiva(false);
         
             try {
-                personaDAO.update(persona);
+                personaDAO.update(personaRebuda);
             } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
                 } catch (ClassNotFoundException ex){

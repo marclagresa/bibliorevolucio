@@ -32,6 +32,7 @@ public class ClPersona implements ChangeListener<String> {
 
                 HashMap<String, Object> cercaPersona = new HashMap<>();
                 cercaPersona.put(ContractPersona.NOM, newValue);
+                cercaPersona.put(ContractPersona.ACTIVA, true);
 
                 PersonaDAO objPersonaDAO = new PersonaDAO();
                 ObservableList<Persona> opcionsPersona = null;

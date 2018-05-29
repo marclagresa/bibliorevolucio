@@ -116,13 +116,10 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
                 }      
                 break;
             case Deshabilitar:
-                id = cduRebut.getId();
-                cdu = new Cdu();
-                cdu.setId(id);
-                cdu.setActiva(false);
+                cduRebut.setActiva(false);
             
                 try {
-                    cduDAO.update(cdu);
+                    cduDAO.update(cduRebut);
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
                 } catch (ClassNotFoundException ex){

@@ -33,6 +33,7 @@ public class ClColeccio implements ChangeListener<String> {
 
                 HashMap<String, Object> cercaColeccio = new HashMap<>();
                 cercaColeccio.put(ContractColeccio.NOM, newValue);
+                cercaColeccio.put(ContractColeccio.ACTIVA,true);
 
                 ColeccioDAO objColeccioDAO = new ColeccioDAO();
                 ObservableList<Coleccio> opcionsColeccio = null;

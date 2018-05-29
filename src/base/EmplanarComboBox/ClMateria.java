@@ -33,6 +33,7 @@ public class ClMateria implements ChangeListener<String> {
 
                 HashMap<String, Object> cercaMateria = new HashMap<>();
                 cercaMateria.put(ContractMateria.NOM, newValue);
+                cercaMateria.put(ContractMateria.ACTIVA, true);
 
                 MateriaDAO objMateriaDAO = new MateriaDAO();
                 ObservableList<Materia> opcionsMateria = null;

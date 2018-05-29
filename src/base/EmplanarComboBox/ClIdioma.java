@@ -33,6 +33,7 @@ public class ClIdioma implements ChangeListener<String> {
 
                 HashMap<String, Object> cercaIdioma = new HashMap<>();
                 cercaIdioma.put(ContractIdioma.NOM, newValue);
+                cercaIdioma.put(ContractIdioma.ACTIVA,true);
 
                 IdiomaDAO objIdiomaDAO = new IdiomaDAO();
                 ObservableList<Idioma> opcionsIdioma = null;

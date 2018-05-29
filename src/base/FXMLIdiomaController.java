@@ -82,13 +82,10 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
                 }      
                 break;
             case Deshabilitar:
-                id = idiomaRebut.getId();
-                idioma = new Idioma();
-                idioma.setId(id);
-                idioma.setActiva(false);                
+                idiomaRebut.setActiva(false);                
           
                 try {
-                    idiomaDAO.update(idioma);
+                    idiomaDAO.update(idiomaRebut);
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
                 } catch (ClassNotFoundException ex){

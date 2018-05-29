@@ -3,6 +3,7 @@ package base.maintenanceControladors;
 import base.GenericPopUp;
 import base.EmplanarComboBox.ClNivell;
 import base.FXMLControllerConsultaAvanzadaProducta;
+import base.FXMLControllerConsultaAvanzadaUsuari;
 import base.FXMLUsuariController;
 import bbdd.UsuariDAO;
 import contract.ContractUsuari;
@@ -121,7 +122,7 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     @Override
     public GenericPopUp createPopUpAdvSearch() throws IOException {
 
-        return FXMLControllerConsultaAvanzadaProducta.crear( this.getScene().getWindow(), true );
+        return FXMLControllerConsultaAvanzadaUsuari.crear( this.getScene().getWindow(), true );
         
     }
 
