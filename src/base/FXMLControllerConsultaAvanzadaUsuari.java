@@ -42,7 +42,7 @@ public class FXMLControllerConsultaAvanzadaUsuari extends GenericPopUp implement
         ArrayList<Integer> arrayNivell = new ArrayList<>();
         Usuari user = new Usuari();
         HashMap<String, Object> consulta = new HashMap<>();
-        if (comEmail()) {
+        if (comEmail() || emailTF.getText().isEmpty()) {
             if(!nomTF.getText().isEmpty()) {
                 consulta.put(ContractUsuari.NOM, nomTF.getText());
             }
@@ -55,10 +55,9 @@ public class FXMLControllerConsultaAvanzadaUsuari extends GenericPopUp implement
             if(!emailTF.getText().isEmpty()) {
                 consulta.put(ContractUsuari.EMAIL, emailTF.getText());
             }
-            if(adminCheckB.isSelected()) {
                 consulta.put(ContractUsuari.ADMIN, adminCheckB.isSelected());
-            }
-            if(adminCheckB.isSelected()) {
+
+            if(actiuCheckB.isSelected()) {
                 consulta.put(ContractUsuari.ACTIVA, actiuCheckB.isSelected());
             }
             if( nivellComB.getSelectionModel().getSelectedIndex()!= -1) {
@@ -67,7 +66,10 @@ public class FXMLControllerConsultaAvanzadaUsuari extends GenericPopUp implement
                 }
                 consulta.put(ContractNivell.ID, arrayNivell.toArray(new Integer[arrayNivell.size()]));
             }
-            System.out.println(user.getNivell());
+            if(onAcceptCallBack != null) {
+                onAcceptCallBack.accept(consulta);
+            }
+            ((Stage) consultar.getScene().getWindow()).close();
         }else{
             emailTF.setStyle("-fx-border-color: red;"+
                     " -fx-background-color:#FFCDD2");
@@ -78,10 +80,7 @@ public class FXMLControllerConsultaAvanzadaUsuari extends GenericPopUp implement
                 if (rs == ButtonType.OK) {
                 }
             });}
-        if(onAcceptCallBack != null) {
-            onAcceptCallBack.accept(consulta);
-        }
-        ((Stage) consultar.getScene().getWindow()).close();
+
 
 
 
