@@ -69,7 +69,7 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
             new AttributeBrick( "adrecaWeb", "Adreca Web", false, ContractProducte.ADRECA_WEB, AttributeBrick.allowedFormats.String),
             new AttributeBrick( "lloc", "Lloc", false, ContractProducte.LLOC, AttributeBrick.allowedFormats.String),
             new AttributeBrick( "pais", "Païs", false, ContractProducte.PAIS, AttributeBrick.allowedFormats.String),
-            new AttributeBrick( "estat", "Estat", false, ContractProducte.ESTAT, AttributeBrick.allowedFormats.Boolean),
+            new AttributeBrick( "estat", "Estat", false, ContractProducte.ACTIVA, AttributeBrick.allowedFormats.Boolean),
             new AttributeBrick( "coleccio", "Coleccio", false, ContractProducte.COLECCIO_ID, AttributeBrick.allowedFormats.Object),
             new AttributeBrick( idiomes, "Idioma", false, ContractProducte.IDIOMA_ID, AttributeBrick.allowedFormats.List),
             new AttributeBrick( editorial, "Editorial", false, ContractProducte.EDITORIAL_ID, AttributeBrick.allowedFormats.Object),
