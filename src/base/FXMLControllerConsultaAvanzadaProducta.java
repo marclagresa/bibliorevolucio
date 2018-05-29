@@ -55,6 +55,10 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
     private ListView idiomaList;
     @FXML
     private ListView nivellList;
+    @FXML
+    private CheckBox actiu;
+    @FXML
+    private Button tornarEnreraB;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -84,11 +88,17 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
         ArrayList<Integer> arrayNivell = new ArrayList<>();
         Producte prod = new Producte();
         HashMap<String, Object> consulta = new HashMap<>();
+        if(actiu.isSelected()) {
+            consulta.put(ContractProducte.ESTAT, actiu.isSelected());
+        }
         if (!titolTF.getText().isEmpty()) {
             consulta.put(ContractProducte.NOM, titolTF.getText());
         }
         if (!isbnTF.getText().isEmpty()) {
             consulta.put(ContractProducte.ISBN, isbnTF.getText());
+        }
+        if (!cLliureTF.getText().isEmpty()){
+            consulta.put(ContractProducte.RESUM, cLliureTF.getText());
         }
         if (dataDP.getValue() != null){
             consulta.put(ContractProducte.ANY_PUBLICACIO, dataDP.getValue());
@@ -138,7 +148,7 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
         if(onCancelCallBack != null) {
             onCancelCallBack.run();
         }
-        ((Stage) consultaB.getScene().getWindow()).close();
+        ((Stage) tornarEnreraB.getScene().getWindow()).close();
 
     }
 
