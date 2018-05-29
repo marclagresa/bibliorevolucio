@@ -73,7 +73,7 @@ public class UsuariDAO extends BDObject implements IObjectDAO<Usuari> {
         try {
             conn = ConnectionFactory.getInstance().getConnection();
             query = "SELECT * FROM " + ContractUsuari.NOM_TAULA
-                    + " WHERE " + ContractUsuari.ACTIU + " = 1";
+                    + " WHERE " + ContractUsuari.ACTIVA + " = 1";
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
@@ -287,7 +287,7 @@ public class UsuariDAO extends BDObject implements IObjectDAO<Usuari> {
                     + ContractUsuari.EMAIL + ", "
                     + ContractUsuari.ID_NIVELL + ", "
                     + ContractUsuari.ADMIN + ", "
-                    + ContractUsuari.ACTIU + ", "
+                    + ContractUsuari.ACTIVA + ", "
                     + ContractUsuari.CONTRASENYA + ", "
                     + ContractUsuari.SALT + " ) "
                     + "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
@@ -334,7 +334,7 @@ public class UsuariDAO extends BDObject implements IObjectDAO<Usuari> {
                     + ContractUsuari.TELEFON_FIX + " = ?, "
                     + ContractUsuari.EMAIL + " = ?, "
                     + ContractUsuari.ID_NIVELL + " = ?, "
-                    + ContractUsuari.ACTIU + " = ?, "
+                    + ContractUsuari.ACTIVA + " = ?, "
                     + ContractUsuari.ADMIN + " = ?, "
                     + ContractUsuari.SALT + " = ?, "
                     + ContractUsuari.CONTRASENYA + " = ? "
@@ -431,7 +431,7 @@ public class UsuariDAO extends BDObject implements IObjectDAO<Usuari> {
                 rs.getString(ContractUsuari.TELEFON_FIX),
                 rs.getString(ContractUsuari.EMAIL),
                 rs.getString(ContractUsuari.CONTRASENYA),
-                rs.getBoolean(ContractUsuari.ACTIU),
+                rs.getBoolean(ContractUsuari.ACTIVA),
                 rs.getString(ContractUsuari.SALT),
                 rs.getBoolean(ContractUsuari.ADMIN),
                 nivellDao.select(rs.getInt(ContractUsuari.ID_NIVELL))

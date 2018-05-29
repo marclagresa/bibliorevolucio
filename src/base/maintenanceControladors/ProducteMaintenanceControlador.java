@@ -22,8 +22,6 @@ import contract.ContractProducte;
 import excepcions.MaintenanceException;
 import maintenance.AttributeBrick;
 import maintenance.AttributeWall;
-import objecte.*;
-
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -32,6 +30,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.ResourceBundle;
 import javafx.scene.control.ComboBox;
+import objecte.Cdu;
+import objecte.Coleccio;
+import objecte.Editorial;
+import objecte.Format;
+import objecte.Idioma;
+import objecte.Materia;
+import objecte.Nivell;
+import objecte.Persona;
+import objecte.Procedencia;
+import objecte.Producte;
 
 /**
  * @author Albert Corominas

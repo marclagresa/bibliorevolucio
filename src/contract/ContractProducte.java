@@ -25,7 +25,7 @@ public abstract class ContractProducte {
     public static final String CARACTERISTIQUES = NOM_TAULA+".caracteristiques";
     public static final String URL_PORTADA = NOM_TAULA+".url_portada";
     public static final String ADRECA_WEB = NOM_TAULA+".adreca_web";
-    public static final String ESTAT = NOM_TAULA+".estat";
+    public static final String ACTIVA = NOM_TAULA+".estat";
 
     public static final String EDITORIAL_ID = NOM_TAULA+".editorial_id";
     public static final String FORMAT_ID = NOM_TAULA+".format_id";
@@ -54,7 +54,7 @@ public abstract class ContractProducte {
         put(CARACTERISTIQUES, Types.VARCHAR);
         put(URL_PORTADA, Types.VARCHAR);
         put(ADRECA_WEB, Types.VARCHAR);
-        put(ESTAT, Types.BOOLEAN);
+        put(ACTIVA, Types.BOOLEAN);
         put(EDITORIAL_ID,Types.INTEGER);
         put(FORMAT_ID, Types.INTEGER);
         put(PROCEDENCIA_ID, Types.INTEGER);
