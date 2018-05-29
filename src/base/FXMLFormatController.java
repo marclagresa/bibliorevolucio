@@ -92,8 +92,15 @@ public class FXMLFormatController extends GenericPopUp implements Initializable 
                 id = formatRebut.getId();
                 format = new Format();
                 format.setId(id);
-                
-                //formatDAO.delete(format);  
+                format.setActiva(false);
+                          
+                try {
+                    formatDAO.update(format);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }        
                 break;
         }
         

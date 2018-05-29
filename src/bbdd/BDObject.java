@@ -64,7 +64,7 @@ public abstract class BDObject{
                     comprovat = valor instanceof Boolean;
                     break;
                 case Types.ARRAY: 
-                    comprovat = valor instanceof String[] || valor instanceof Integer[];
+                    comprovat = valor instanceof Object[] ;
                     break;
             }
         }

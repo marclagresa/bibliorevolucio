@@ -115,7 +115,7 @@ public class ProducteDAO extends BDObject implements IObjectDAO<Producte> {
                                     valors.add(ids[j]);
                                     break;
                                 case ContractProducte.AUTORS:
-                                    query+=ContractProducteIdioma.ID_IDIOMA + " = ?";
+                                    query+=ContractProductePersona.ID_PERSONA + " = ?";
                                     valors.add(ids[j]);
                                     break;
                                 case ContractProducte.MATERIA:

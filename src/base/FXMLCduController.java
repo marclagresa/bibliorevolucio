@@ -1,4 +1,3 @@
-
 package base;
 
 import bbdd.CduDAO;
@@ -6,10 +5,13 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -29,11 +31,15 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
     @FXML
     private Label lblCDU;
     @FXML
-    private TextField tfCDU;
-    @FXML
     private Button btnCrearCDU;
     @FXML
     private Button btnCancelar;
+    @FXML
+    private TextField tfIdCdu;
+    @FXML
+    private TextField tfNomCdu;
+    @FXML
+    private ComboBox<Cdu> cbCduPare;
 
     /**
      * Initializes the controller class.
@@ -42,7 +48,19 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
+        
+        CduDAO objCduDAO = new CduDAO();
+        
+        ObservableList<Cdu> opcionsCDU = null;
+        try{
+            objCduDAO= new CduDAO();       
+            opcionsCDU = FXCollections.observableArrayList(objCduDAO.selectAll());
+            cbCduPare.setItems(opcionsCDU);
+        }catch(ClassNotFoundException ex){
+            System.out.println("ClassNotFoundException: "+ex.getMessage());
+        } catch (SQLException ex) {
+            System.out.println("SQLException: "+ex.getMessage());
+        }
     }    
     
     public static FXMLCduController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{        
@@ -55,16 +73,18 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
     private void crearCDU(ActionEvent event) {
         
         Cdu cdu = null;
-        int id = -1;
-        int idPare = -1;
-        String nomCDU = tfCDU.getText();
+        Cdu cduPare = null;
+        String id = null;
+        String idPare = null;
+        String nomCDU = tfNomCdu.getText();
         CduDAO cduDAO = new CduDAO();
         
         switch(tipusA){
             case Crear:
-                try {
-                  //id = cduDAO.nextId();
-                  //cdu = new Cdu(id, idPare, nomCDU);
+                try {                  
+                    cduPare = cbCduPare.getValue();
+                    idPare = cduPare.getId();
+                    cdu = new Cdu(id, idPare, nomCDU);
                     cduDAO.insert(cdu);
 
                 } catch (SQLException  ex) {
@@ -78,8 +98,10 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
                 }
                 break;
             case Modificar:
-                //id = cduRebut.getId();
-                //cdu = new Cdu(id, idPare, nomCDU);
+                id = cduRebut.getId();
+                cduPare = cbCduPare.getValue();
+                idPare = cduPare.getId();
+                cdu = new Cdu(id, idPare, nomCDU);
         
                 try {
                     cduDAO.update(cdu);
@@ -94,11 +116,18 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
                 }      
                 break;
             case Deshabilitar:
-                //id = cduRebut.getId();
-                //cdu = new Cdu();
-                //cdu.setId(id);
-                
-                //cduDAO.delete(cdu);    
+                id = cduRebut.getId();
+                cdu = new Cdu();
+                cdu.setId(id);
+                cdu.setActiva(false);
+            
+                try {
+                    cduDAO.update(cdu);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }      
                 break;
         }
         
@@ -113,7 +142,10 @@ public class FXMLCduController extends GenericPopUp implements Initializable {
         
         if (cdu!=null){
             cduRebut = cdu;
-            tfCDU.setText(cdu.getNom());
+            tfIdCdu.setText(cdu.getId());
+            tfNomCdu.setText(cdu.getNom());
+            Cdu cduPare = new Cdu(cdu.getId(), null, null);
+            cbCduPare.setValue(cduPare);
             
             switch(tipusA){
                 case Modificar:
