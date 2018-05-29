@@ -29,7 +29,7 @@ public abstract class ContractUsuari {
     public static final String TELEFON_FIX = NOM_TAULA+".telefon_fixe";
     public static final String EMAIL = NOM_TAULA+".email";
     public static final String CONTRASENYA = NOM_TAULA+".contrasenya";
-    public static final String ACTIU = NOM_TAULA+".estat";
+    public static final String ACTIVA = NOM_TAULA+".estat";
     public static final String SALT = NOM_TAULA+".saltContr";
     public static final String ADMIN = NOM_TAULA+".esAdmin";
     public static final String ID_NIVELL = NOM_TAULA+".nivell";
@@ -46,7 +46,7 @@ public abstract class ContractUsuari {
         put(TELEFON_FIX, Types.VARCHAR);
         put(EMAIL, Types.VARCHAR);
         put(CONTRASENYA, Types.CHAR);
-        put(ACTIU, Types.BOOLEAN);
+        put(ACTIVA, Types.BOOLEAN);
         put(ADMIN,Types.BOOLEAN);
         put(SALT, Types.CHAR);
         put(ID_NIVELL, Types.INTEGER);

@@ -280,7 +280,7 @@ public class ExemplarDAO extends BDObject implements IObjectDAO<Exemplar> {
             update = "UPDATE "+ContractExemplar.NOM_TAULA+" SET "
                     +ContractExemplar.ID_PRODUCTE+" = ?,"
                     +ContractExemplar.ID_BIBLIOTECA+" = ?,"
-                    +ContractExemplar.ESTAT+" = ?"
+                    +ContractExemplar.ACTIVA+" = ?"
                     +" WHERE "
                     +ContractExemplar.ID+" = ? ";
             ps = conn.prepareStatement(update);
@@ -328,7 +328,7 @@ public class ExemplarDAO extends BDObject implements IObjectDAO<Exemplar> {
         objExemplar.setId(rs.getInt(ContractExemplar.ID));
         objExemplar.setIdProducte(new ProducteDAO().select(rs.getInt(ContractExemplar.ID_PRODUCTE)));
         objExemplar.setIdBiblioteca(new BibliotecaDAO().select(rs.getInt(ContractExemplar.ID_BIBLIOTECA)));
-        objExemplar.setEstat(rs.getBoolean(ContractExemplar.ESTAT));
+        objExemplar.setEstat(rs.getBoolean(ContractExemplar.ACTIVA));
         return objExemplar;
     }
 }

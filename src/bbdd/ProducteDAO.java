@@ -375,7 +375,7 @@ public class ProducteDAO extends BDObject implements IObjectDAO<Producte> {
                     + ContractProducte.CARACTERISTIQUES + ", "
                     + ContractProducte.URL_PORTADA + ", "
                     + ContractProducte.ADRECA_WEB + ", "
-                    + ContractProducte.ESTAT + ", "
+                    + ContractProducte.ACTIVA + ", "
                     + ContractProducte.EDITORIAL_ID + ", "
                     + ContractProducte.FORMAT_ID + ", "
                     + ContractProducte.PROCEDENCIA_ID + ", "
@@ -504,7 +504,7 @@ public class ProducteDAO extends BDObject implements IObjectDAO<Producte> {
                     +ContractProducte.URL_PORTADA+" = ?,"+ContractProducte.ADRECA_WEB+" = ?,"
                     +ContractProducte.EDITORIAL_ID+" = ?,"+ContractProducte.FORMAT_ID+" = ?,"+ContractProducte.PROCEDENCIA_ID+" = ?,"
                     +ContractProducte.COLECCIO_ID+" = ?,"+ContractProducte.CDU+" = ?,"
-                    +ContractProducte.ESTAT + "= ?  where "+ContractProducte.ID+" = ?";
+                    +ContractProducte.ACTIVA + "= ?  where "+ContractProducte.ID+" = ?";
             ps = conn.prepareStatement(update);
             ps.setString(1,producte.getISBN());
             ps.setString(2,producte.getNom());
@@ -565,7 +565,7 @@ public class ProducteDAO extends BDObject implements IObjectDAO<Producte> {
         objProducte.setCaracteristiques(rs.getString(ContractProducte.CARACTERISTIQUES));
         objProducte.setUrlPortada(rs.getString(ContractProducte.URL_PORTADA));
         objProducte.setAdreçaWeb(rs.getString(ContractProducte.ADRECA_WEB));
-        objProducte.setEstat(rs.getBoolean(ContractProducte.ESTAT));
+        objProducte.setEstat(rs.getBoolean(ContractProducte.ACTIVA));
         objProducte.setPais(rs.getString(ContractProducte.PAIS));
         objProducte.setLloc(rs.getString(ContractProducte.LLOC));
         objProducte.setCdu(rs.getString(ContractProducte.CDU));

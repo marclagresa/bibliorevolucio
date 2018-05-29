@@ -19,7 +19,7 @@ public abstract class ContractExemplar {
     public static final String ID = NOM_TAULA+".id";
     public static final String ID_PRODUCTE = NOM_TAULA+".id_producte";
     public static final String ID_BIBLIOTECA = NOM_TAULA+".select d_biblioteca";
-    public static final String ESTAT = NOM_TAULA+".estat";
+    public static final String ACTIVA = NOM_TAULA+".estat";
 
     //DEFINICIO DE LA TAULA: amb aquest HashMap el que aconseguim es relacionar tots els camps de la taula amb un tipus de variable*.
     //*Aixó ens serveix més endevant per poder fer comprovacions d'entrades d'usuari.
@@ -28,6 +28,6 @@ public abstract class ContractExemplar {
         put(ID, Types.INTEGER);
         put(ID_PRODUCTE, Types.INTEGER);
         put(ID_BIBLIOTECA, Types.INTEGER);
-        put(ESTAT, Types.BOOLEAN);
+        put(ACTIVA, Types.BOOLEAN);
     }};
 }
