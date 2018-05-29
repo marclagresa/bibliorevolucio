@@ -23,7 +23,7 @@ import javafx.scene.control.ComboBox;
 public class ColeccioMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
     public ColeccioMaintenanceControlador() {
-        super( "Coleccio", 15);
+        super( "Coleccio", 15, ContractColeccio.ACTIVA );
     }
     
     // AttributeWall

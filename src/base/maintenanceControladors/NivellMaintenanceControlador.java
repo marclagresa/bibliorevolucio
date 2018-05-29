@@ -23,7 +23,7 @@ import javafx.scene.control.ComboBox;
 public class NivellMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
     public NivellMaintenanceControlador() {
-        super( "Nivell", 15);
+        super( "Nivell", 15, ContractNivell.ACTIVA);
     }
     
     // AttributeWall

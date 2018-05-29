@@ -57,7 +57,7 @@ public class ProducteMaintenanceControlador extends GenericMaintenanceControlado
     private final String cdu = "cdu";
     
     public ProducteMaintenanceControlador() {
-        super( "Productes", 15, ContractProducte.ID);
+        super( "Productes", 15, ContractProducte.ACTIVA);
     }
     
     // AttributeWall

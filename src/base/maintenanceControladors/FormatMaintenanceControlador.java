@@ -23,7 +23,7 @@ import javafx.scene.control.ComboBox;
 public class FormatMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
     public FormatMaintenanceControlador() {
-        super( "Format", 15);
+        super( "Format", 15, ContractFormat.ACTIVA);
     }
     
     // AttributeWall

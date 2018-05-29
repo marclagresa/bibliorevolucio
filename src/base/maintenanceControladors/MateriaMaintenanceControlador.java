@@ -23,7 +23,7 @@ import javafx.scene.control.ComboBox;
 public class MateriaMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
     public MateriaMaintenanceControlador() {
-        super( "Materia", 15);
+        super( "Materia", 15, ContractMateria.ACTIVA);
     }
     
     // AttributeWall

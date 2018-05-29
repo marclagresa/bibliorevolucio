@@ -23,7 +23,7 @@ import javafx.scene.control.ComboBox;
 public class IdiomaMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
     public IdiomaMaintenanceControlador() {
-        super( "Idioma", 15);
+        super( "Idioma", 15, ContractIdioma.ACTIVA);
     }
     
     // AttributeWall

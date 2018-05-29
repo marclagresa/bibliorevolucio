@@ -1,6 +1,5 @@
 package base.maintenanceControladors;
 
-import base.FXMLCduController;
 import base.GenericPopUp;
 import base.EmplanarComboBox.ClNivell;
 import base.FXMLUsuariController;
@@ -29,7 +28,7 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
     private final String nivell = "nivell";
     
     public UsuariMaintenanceControlador() {
-        super( "Usuaris", 15);
+        super( "Usuaris", 15, ContractUsuari.ACTIVA);
     }
     
     // AttributeWall
@@ -44,7 +43,6 @@ public class UsuariMaintenanceControlador extends GenericMaintenanceControlador 
             new AttributeBrick( "telefonMobil", "T.Mòbil", false, ContractUsuari.TELEFON_MOBIL, AttributeBrick.allowedFormats.String ),
             new AttributeBrick( "telefonFixe", "T.Fixe", false, ContractUsuari.TELEFON_FIX, AttributeBrick.allowedFormats.String ),
             new AttributeBrick( "email", "Correu", false, ContractUsuari.EMAIL, AttributeBrick.allowedFormats.String ),
-            new AttributeBrick( "actiu", "Actiu", false, ContractUsuari.ACTIVA, AttributeBrick.allowedFormats.Boolean ),
             new AttributeBrick( "admin", "Administrador", false, ContractUsuari.ADMIN, AttributeBrick.allowedFormats.Boolean ),
             new AttributeBrick( nivell, "Nivell", false, ContractUsuari.ID_NIVELL, AttributeBrick.allowedFormats.Object )
         );

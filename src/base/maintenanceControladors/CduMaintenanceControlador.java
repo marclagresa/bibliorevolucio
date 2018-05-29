@@ -23,7 +23,7 @@ import javafx.scene.control.ComboBox;
 public class CduMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
     public CduMaintenanceControlador() {
-        super( "Cdu", 15);
+        super( "Cdu", 15, ContractCdu.ACTIVA);
     }
     
     // AttributeWall

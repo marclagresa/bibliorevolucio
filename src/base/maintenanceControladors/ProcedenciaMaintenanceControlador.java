@@ -23,7 +23,7 @@ import javafx.scene.control.ComboBox;
 public class ProcedenciaMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
     public ProcedenciaMaintenanceControlador() {
-        super( "Procedencia", 15);
+        super( "Procedencia", 15, ContractProcedencia.ACTIVA);
     }
     
     // AttributeWall

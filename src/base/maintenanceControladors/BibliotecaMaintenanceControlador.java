@@ -23,7 +23,7 @@ import maintenance.AttributeWall;
 public class BibliotecaMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
     public BibliotecaMaintenanceControlador() {
-        super( "Biblioteca", 15);
+        super( "Biblioteca", 15, ContractBiblioteca.ACTIVA);
     }
     
     // AttributeWall

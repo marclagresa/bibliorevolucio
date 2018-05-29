@@ -23,7 +23,7 @@ import javafx.scene.control.ComboBox;
 public class EditorialMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
     public EditorialMaintenanceControlador() {
-        super( "Editorial", 15);
+        super( "Editorial", 15, ContractEditorial.ACTIVA);
     }
     
     // AttributeWall

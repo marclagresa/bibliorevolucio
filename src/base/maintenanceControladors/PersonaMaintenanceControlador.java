@@ -23,7 +23,7 @@ import javafx.scene.control.ComboBox;
 public class PersonaMaintenanceControlador extends GenericMaintenanceControlador implements AttributeWall {
 
     public PersonaMaintenanceControlador() {
-        super( "Persona", 15);
+        super( "Persona", 15, ContractPersona.ACTIVA);
     }
     
     // AttributeWall
