@@ -55,6 +55,10 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
     private ListView idiomaList;
     @FXML
     private ListView nivellList;
+    @FXML
+    private CheckBox actiu;
+    @FXML
+    private Button tornarEnreraB;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -84,11 +88,17 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
         ArrayList<Integer> arrayNivell = new ArrayList<>();
         Producte prod = new Producte();
         HashMap<String, Object> consulta = new HashMap<>();
-        if (titolTF.getText() != null) {
+        if(actiu.isSelected()) {
+            consulta.put(ContractProducte.ESTAT, actiu.isSelected());
+        }
+        if (!titolTF.getText().isEmpty()) {
             consulta.put(ContractProducte.NOM, titolTF.getText());
         }
-        if (isbnTF.getText() != null) {
+        if (!isbnTF.getText().isEmpty()) {
             consulta.put(ContractProducte.ISBN, isbnTF.getText());
+        }
+        if (!cLliureTF.getText().isEmpty()){
+            consulta.put(ContractProducte.RESUM, cLliureTF.getText());
         }
         if (dataDP.getValue() != null){
             consulta.put(ContractProducte.ANY_PUBLICACIO, dataDP.getValue());
@@ -113,21 +123,20 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
             }
 
             System.out.println(arrayAutor);
-            consulta.put(ContractPersona.ID, arrayAutor);
+            consulta.put(ContractPersona.ID, arrayAutor.toArray(new Integer[arrayAutor.size()]));
         }
         if( nivellComB.getSelectionModel().getSelectedIndex()!= -1) {
             for(int j = 0;itemsNivell.size()>j;j++) {
                 arrayNivell.add(itemsNivell.get(j).getId());
             }
-            consulta.put(ContractNivell.ID, arrayNivell);
+            consulta.put(ContractNivell.ID, arrayNivell.toArray(new Integer[arrayNivell.size()]));
         }
         if( idiomaComB.getSelectionModel().getSelectedIndex()!= -1) {
             for(int j = 0;itemsIdioma.size()>j;j++) {
                 arrayIdioma.add(itemsIdioma.get(j).getId());
             }
-            consulta.put(ContractIdioma.ID, arrayIdioma);
+            consulta.put(ContractIdioma.ID, arrayIdioma.toArray(new Integer[arrayIdioma.size()]));
         }
-        System.out.println(consulta);
         if(onAcceptCallBack != null) {
             onAcceptCallBack.accept(consulta);
         }
@@ -139,7 +148,7 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
         if(onCancelCallBack != null) {
             onCancelCallBack.run();
         }
-        ((Stage) consultaB.getScene().getWindow()).close();
+        ((Stage) tornarEnreraB.getScene().getWindow()).close();
 
     }
 
