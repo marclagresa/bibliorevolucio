@@ -59,7 +59,7 @@ public class FXMLControllerConsultaAvanzadaUsuari extends GenericPopUp implement
                 consulta.put(ContractUsuari.ADMIN, adminCheckB.isSelected());
             }
             if(adminCheckB.isSelected()) {
-                consulta.put(ContractUsuari.ACTIU, actiuCheckB.isSelected());
+                consulta.put(ContractUsuari.ACTIVA, actiuCheckB.isSelected());
             }
             if( nivellComB.getSelectionModel().getSelectedIndex()!= -1) {
                 for(int j = 0;itemsNivell.size()>j;j++) {

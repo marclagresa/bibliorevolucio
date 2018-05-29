@@ -89,7 +89,7 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
         Producte prod = new Producte();
         HashMap<String, Object> consulta = new HashMap<>();
         if(actiu.isSelected()) {
-            consulta.put(ContractProducte.ESTAT, actiu.isSelected());
+            consulta.put(ContractProducte.ACTIVA, actiu.isSelected());
         }
         if (!titolTF.getText().isEmpty()) {
             consulta.put(ContractProducte.NOM, titolTF.getText());
