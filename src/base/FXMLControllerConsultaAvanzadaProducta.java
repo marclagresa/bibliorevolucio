@@ -109,7 +109,7 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
         }
 
         if(cduComB.getSelectionModel().getSelectedIndex()!= -1) {
-            consulta.put(ContractCdu.ID, cduComB.getItems().get( cduComB.getSelectionModel().getSelectedIndex() ).getId());
+            consulta.put(ContractProducte.CDU, cduComB.getItems().get( cduComB.getSelectionModel().getSelectedIndex() ).getId());
         }
 
         if(formatComB.getSelectionModel().getSelectedIndex()!= -1) {
@@ -123,19 +123,19 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
             }
 
             System.out.println(arrayAutor);
-            consulta.put(ContractPersona.ID, arrayAutor.toArray(new Integer[arrayAutor.size()]));
+            consulta.put(ContractProducte.AUTORS, arrayAutor.toArray(new Integer[arrayAutor.size()]));
         }
         if( nivellComB.getSelectionModel().getSelectedIndex()!= -1) {
             for(int j = 0;itemsNivell.size()>j;j++) {
                 arrayNivell.add(itemsNivell.get(j).getId());
             }
-            consulta.put(ContractNivell.ID, arrayNivell.toArray(new Integer[arrayNivell.size()]));
+            consulta.put(ContractProducte.NIVELL, arrayNivell.toArray(new Integer[arrayNivell.size()]));
         }
         if( idiomaComB.getSelectionModel().getSelectedIndex()!= -1) {
             for(int j = 0;itemsIdioma.size()>j;j++) {
                 arrayIdioma.add(itemsIdioma.get(j).getId());
             }
-            consulta.put(ContractIdioma.ID, arrayIdioma.toArray(new Integer[arrayIdioma.size()]));
+            consulta.put(ContractProducte.IDIOMA_ID, arrayIdioma.toArray(new Integer[arrayIdioma.size()]));
         }
         if(onAcceptCallBack != null) {
             onAcceptCallBack.accept(consulta);

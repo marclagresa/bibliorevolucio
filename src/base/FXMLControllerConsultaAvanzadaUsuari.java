@@ -64,7 +64,7 @@ public class FXMLControllerConsultaAvanzadaUsuari extends GenericPopUp implement
                 for(int j = 0;itemsNivell.size()>j;j++) {
                     arrayNivell.add(itemsNivell.get(j).getId());
                 }
-                consulta.put(ContractNivell.ID, arrayNivell.toArray(new Integer[arrayNivell.size()]));
+                consulta.put(ContractUsuari.ID_NIVELL, arrayNivell.toArray(new Integer[arrayNivell.size()]));
             }
             if(onAcceptCallBack != null) {
                 onAcceptCallBack.accept(consulta);

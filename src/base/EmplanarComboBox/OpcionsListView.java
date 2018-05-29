@@ -22,7 +22,6 @@ public class OpcionsListView {
         }
         if (!repatit){
             items.add(comboBox.getItems().get(comboBox.getSelectionModel().getSelectedIndex()));
-            System.out.println("que passa");
             lw.getItems().clear();
             lw.getItems().addAll(items);
         }else {
@@ -35,7 +34,6 @@ public class OpcionsListView {
             System.out.println(items.get(j).toString());
 
             if(lw.getSelectionModel().getSelectedItems().contains(items.get(j))){
-                System.out.println("a eliminar");
                 items.remove(j);
                 lw.getItems().clear();
                 lw.getItems().addAll(items);
