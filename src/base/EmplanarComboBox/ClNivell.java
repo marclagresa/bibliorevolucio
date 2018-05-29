@@ -34,6 +34,7 @@ public class ClNivell implements ChangeListener<String> {
 
                 HashMap<String, Object> cercaNivell = new HashMap<>();
                 cercaNivell.put(ContractNivell.NOM, newValue);
+                cercaNivell.put(ContractNivell.ACTIVA, true);
 
                 NivellDAO objNivellDAO = new NivellDAO();
                 ObservableList<Nivell> opcionsNivell = null;

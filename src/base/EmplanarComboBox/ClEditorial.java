@@ -37,6 +37,7 @@ public class  ClEditorial implements ChangeListener<String> {
 
                 HashMap<String, Object> cercaEditorial = new HashMap<>();
                 cercaEditorial.put(ContractEditorial.NOM, newValue);
+                cercaEditorial.put(ContractEditorial.ACTIVA, true);
 
                 EditorialDAO objEditorialDAO = new EditorialDAO();
                 ObservableList<Editorial> opcionsEditorial = null;

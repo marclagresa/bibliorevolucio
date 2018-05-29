@@ -37,6 +37,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
@@ -74,9 +75,11 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     ColeccioDAO objColeccioDAO;
     MateriaDAO objMateriaDAO;
     ProcedenciaDAO objProcedenciaDAO;
+    ProducteDAO objProducteDAO;
     
     static TipusAccio tipusA;
     static String pathImatge = "";
+    static Producte producteRebut;
     
     public  ObservableList<Persona> itemsAutors = FXCollections.observableArrayList();
     public  ObservableList<Materia> itemsMateries = FXCollections.observableArrayList();
@@ -140,16 +143,262 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     private ListView LvIdiomes;
     @FXML
     private ListView LvCdus;
+    @FXML
+    private Button btnCrear;
+    @FXML
+    private CheckBox chbActiu;
     
     public static FXMLProducteController crear(Window owner, boolean isModal, TipusAccio tipus) throws IOException{
 
         tipusA = tipus;
         
         return crearPopUp("/fxml/FXMLProducte.fxml", FXMLProducteController.class, owner, isModal, tipus);
-    }   
+    } 
     
+    @FXML
     public void guardar() {
     
+        switch(tipusA){
+            case Crear:
+                
+                //Falta afegir comprovadors de els contenidors de text no estan buits
+                int num_pag = 0,volum = 0,num_exemplars = 0, idProducteRebut = -1;
+                String cdu = "",editorial = "", persona = "",nivellLectura = "",format = "",idioma = "", coleccio = "", data = "",llistaCdu = "";
+                Editorial objEditorial = null;
+                Persona objAutor = null;
+                Cdu objCDU = null;
+                Format objFormat = null;
+                Nivell ojbNivell = null;
+                Idioma objIdioma = null;
+                Coleccio objColeccio = null;
+                Materia objMateria = null;
+                Procedencia objProcedencia = null;
+
+                //CDU->comprovació de que no estigui buit el cbCDU
+                //boolean cbCDUBuit = (cbCDU.getValue() == null);       
+                boolean cbCDUBuit = cbCDU.getSelectionModel().isEmpty();
+
+                if(!cbCDUBuit){
+                    objCDU = cbCDU.getValue();
+                    cdu = objCDU.getNom();
+                    System.out.println("CDU: "+cdu);    
+                }
+
+                //Autor->comprovació de que no estigui buit el cbEditorial
+                boolean cbAutorBuit = (cbAutor.getValue() == null);
+                if(!cbAutorBuit){ 
+                    objAutor = cbAutor.getValue();
+                    persona = objAutor.getNom();
+                    System.out.println("Autor: "+persona);
+                }     
+
+                //Editorial->comprovació de que no estigui buit el cbEditorial
+                boolean cbEditorialBuit = (cbEditorial.getValue() == null);       
+
+                if(!cbEditorialBuit){
+                    objEditorial = cbEditorial.getValue();
+                    editorial = objEditorial.getNom();
+                    System.out.println("Editorial: "+editorial);    
+                }
+
+                //Nivell lectura->comprovació de que no estigui buit el cbNivell
+                boolean cbNivellBuit = (cbNivell.getValue() == null);       
+
+                if(!cbNivellBuit){
+                    ojbNivell = cbNivell.getValue();
+                    nivellLectura = ojbNivell.getNom();
+                    System.out.println("Nivell lectura: "+nivellLectura);    
+                }
+
+                //Idioma->comprovació de que no estigui buit el cbIdioma
+                boolean cbIdiomaBuit = (cbIdioma.getValue() == null);       
+
+                if(!cbIdiomaBuit){
+                    objIdioma = cbIdioma.getValue();
+                    idioma = objIdioma.getNom();
+                    System.out.println("Nivell lectura: "+idioma);    
+                }
+
+                //Format->comprovació de que no estigui buit el cbFormat
+                boolean cbFormatBuit = (cbFormat.getValue() == null);       
+
+                if(!cbFormatBuit){
+                    objFormat = cbFormat.getValue();
+                    format = objFormat.getNom();
+                    System.out.println("Format: "+format);    
+                }        
+
+                //Any
+                String validacioData = tfAny.getText();    
+                if (!"".equals(validacioData)) {
+                    if(isNumeric(validacioData)){
+                        data = validacioData;
+                    }else{
+                        tfAny.setStyle("-fx-border-color: red; -fx-background-color:#FFCDD2");
+                        tfAny.setText("");
+                    }            
+                }
+
+                //Num pag
+                String validacioNumPag = tfNumPag.getText();
+                if(!"".equals(validacioNumPag)) {
+                    if(isNumeric(validacioData)){
+                         num_pag = Integer.valueOf(validacioNumPag);
+                    }else{
+                        tfNumPag.setStyle("-fx-border-color: red; -fx-background-color:#FFCDD2");
+                        tfNumPag.setText("");
+                    }
+                }
+
+                //Col·lecció
+                boolean cbColeccioBuit = (cbColeccio.getValue() == null);       
+
+                if(!cbColeccioBuit){
+                    objColeccio = cbColeccio.getValue();
+                    coleccio = objColeccio.getNom();
+                    System.out.println("Col·lecció: "+coleccio);    
+                }
+
+                String nom = tfTitol.getText();
+                String ISBN = tfISBN.getText();        
+                String dimensions = tfDimensions.getText();
+                String resum = taResum.getText();
+                String caracteristiques = taCaracteristiques.getText();
+                String adresaWeb = tfAdresaWeb.getText();
+                String pais = tfPais.getText();
+                String lloc = tfLloc.getText();
+
+                //Comprovem que tots aquests camps que no poden estar buits no ho estan
+               if(ISBN.equals("") || nom.equals("") || format.equals("") || idioma.equals("") || editorial.equals("") || nivellLectura.equals("") || cdu.equals("") || coleccio.equals("")){
+
+                   //Tots aquests camps si estan buit els marquem en vermell, sino els posem amb el seu color original
+                   if(ISBN.equals("")){
+                       tfISBN.setStyle("-fx-border-color: red;");
+                   }else{
+                       tfISBN.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }
+                   if(nom.equals("")){
+                       tfTitol.setStyle("-fx-border-color: red;");
+                   }else{
+                       tfTitol.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }
+                   if(editorial.equals("")){
+                       cbEditorial.setStyle("-fx-border-color: red;");
+                   }else{
+                       cbEditorial.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }
+                   if(format.equals("")){
+                       cbFormat.setStyle("-fx-border-color: red;");
+                   }else{
+                       cbFormat.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }
+                   if(idioma.equals("")){
+                       cbIdioma.setStyle("-fx-border-color: red;");
+                   }else{
+                       cbIdioma.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }           
+                   if(nivellLectura.equals("")){
+                       cbNivell.setStyle("-fx-border-color: red;");
+                   }else{
+                       cbNivell.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }
+                   if(cdu.equals("")){
+                       cbCDU.setStyle("-fx-border-color: red;");
+                   }else{
+                       cbCDU.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }
+                   if(persona.equals("")){
+                       cbAutor.setStyle("-fx-border-color: red;");
+                   }else{
+                       cbAutor.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }
+                   if(coleccio.equals("")){
+                       cbColeccio.setStyle("-fx-border-color: red;");
+                   }else{
+                       cbColeccio.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }           
+
+                    Alert alerta = new Alert(AlertType.WARNING);
+                    alerta.setTitle("Alerta");
+                    alerta.setHeaderText("Has d'emplenar tots els camps necessaris");
+                    alerta.showAndWait().ifPresent(rs -> {            
+                        //Quan pulses ok acceptar de l'alert box s'entra dins l'if
+                        if (rs == ButtonType.OK) {                
+                        }
+                });
+                }else{
+                   ProducteDAO producteDAO = new ProducteDAO();
+                   int id = -1;
+                    try {
+                        id = producteDAO.nextId();
+                    } catch (ClassNotFoundException ex) {
+                    System.out.println("ClassNotFoundException: "+ex.getMessage());
+                    } catch (SQLException ex) {
+                        System.out.println("SQLException: "+ex.getMessage());
+                    }
+
+                    HashSet<Nivell> setNivells = new HashSet<>();
+                    setNivells.addAll(itemsNivells);
+
+                    HashSet<Persona> setAutors = new HashSet<>();
+                    setAutors.addAll(itemsAutors);
+
+                    HashSet<Materia> setMateries = new HashSet<>();
+                    setMateries.addAll(itemsMateries);
+
+                    HashSet<Idioma> setIdiomes = new HashSet<>();
+                    setIdiomes.addAll(itemsIdiomes);
+
+                    HashSet<Exemplar> setExemplars = new HashSet<>();
+
+                    for (int i = 0; i < itemsCdus.size(); i++) {
+
+                        llistaCdu = llistaCdu+"+"+itemsCdus.get(i);
+                   }
+
+                   Producte producte = new Producte(id, ISBN, nom, num_pag, dimensions, data, resum, caracteristiques,pathImatge, adresaWeb, true, setIdiomes, objEditorial, objFormat, objProcedencia, setNivells, objColeccio, cdu, setExemplars, lloc, pais, setMateries, setAutors);
+
+                    try {
+                        producteDAO.insert(producte);
+                    } catch (ClassNotFoundException ex) {
+                        System.out.println("ClassNotFoundException-ProducteController: "+ex.getMessage());
+                    } catch (SQLException ex) {
+                        System.out.println("SQLException-ProducteController: "+ex.getMessage());
+                    }
+
+                    //Retornem el border dels textFields i combobox al color original
+                    cbFormat.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                    taResum.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                    tfISBN.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                    tfAny.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                    tfNumPag.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                    cbColeccio.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                    tfTitol.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                    cbNivell.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                    tfDimensions.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                    cbIdioma.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                    cbAutor.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                    cbCDU.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                    cbEditorial.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                }
+                
+                break;
+            case Modificar:
+                
+                break;
+            case Deshabilitar:                    
+                    producteRebut.setEstat(false);                
+
+                    try {
+                        objProducteDAO.update(producteRebut);
+                    } catch (SQLException  ex) {
+                        System.out.println("Exception: "+ex.getMessage());
+                    } catch (ClassNotFoundException ex){
+                        System.out.println(ex.getMessage());
+                    }
+                break;
+        }
+        
         //Falta afegir comprovadors de els contenidors de text no estan buits
         int num_pag = 0,volum = 0,num_exemplars = 0;
         String cdu = "",editorial = "", persona = "",nivellLectura = "",format = "",idioma = "", coleccio = "", data = "",llistaCdu = "";
@@ -484,7 +733,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             System.out.println("SQLException: "+ex.getMessage());
         }
         
-        //Ara omplim els combobox a partir del text que s'ha escrit en ells(busqueda)
+        //Ara omplim els combobox a partir del text que s'ha escrit en ells(búsqueda)
         
         //Listener Editorial        
         ClEditorial clEditorial = new ClEditorial(cbEditorial);  
@@ -814,29 +1063,35 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     }
 
     @Override
-    public void emplenarDades(Object obj) {        
+    public void emplenarDades(Object obj) {  
+        
+        switch(tipusA){
+                case Modificar:
+                    btnCrear.setText("Modificar");     
+                    break;
+                case Deshabilitar:
+                    btnCrear.setText("Deshabilitar");     
+                    break;
+                case Buscar:
+                    btnCrear.setText("Visualitzar");
+                    btnCrear.setDisable(true);
+                    break;
+            }     
                
         Producte producte = (Producte) obj;
         boolean nouCdu = true;
         
         if(producte!=null){
             cbFormat.setValue(producte.getFormat());
-            tfISBN.setText(producte.getISBN());
+            tfISBN.setText(producte.getISBN());            
             
-            while(nouCdu){
-                String llistatCdus = producte.getCdu();
-                int posicio1 = 0, posicio2 = llistatCdus.indexOf("+");
-                String cdu = llistatCdus.substring(posicio1,posicio2);
-                itemsCdus.add(cdu);
-                while(llistatCdus.length()>posicio2){
-                    posicio1 = posicio2;
-                    posicio2 = llistatCdus.indexOf("+");
-                    cdu = llistatCdus.substring(posicio1,posicio2);
-                    itemsCdus.add(cdu);
-                }
-                nouCdu = false;
-                LvCdus.setItems(itemsCdus);
+            String llistatCdus = producte.getCdu();
+            String[] cdus = llistatCdus.split("+");
+            
+            for (int i = 0; i < cdus.length; i++) {
+                itemsCdus.add(cdus[i]);
             }
+            LvCdus.setItems(itemsCdus);           
             
             tfAny.setText(producte.getAnyPublicacio());
             tfNumPag.setText(String.valueOf(producte.getNumPag()));
@@ -845,9 +1100,10 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             
             Set llistaAutors = producte.getAutors();
             llistaAutors.stream().forEach((objs) -> {
-                Persona persona = (Persona) objs;
-                itemsAutors.add(persona);
+                Persona persona = (Persona) objs;                
+                itemsAutors.add(persona);                
             });            
+            LvAutors.setItems(itemsAutors);
                       
             //itemsAutors.addAll(producte.getAutors());
             
@@ -858,6 +1114,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
                 Nivell nivell = (Nivell) objs;
                 itemsNivells.add(nivell);
             });
+            LvNivells.setItems(itemsNivells);
                       
             //itemsNivells.addAll(producte.getNivells());
             
@@ -867,18 +1124,26 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             llistaMateries.stream().forEach((objs) -> {
                 Materia materia = (Materia) objs;
                 itemsMateries.add(materia);
-            }); 
+            });
+            LvMateries.setItems(itemsMateries);
             
             //itemsMateries.addAll(producte.getMateries());
             
             cbProcedencia.setValue(producte.getProcedencia());
             
-            //cbIdioma.setItems(producte.getIdiomes());
+            Set llistaIdiomes = producte.getIdiomes();
+            llistaIdiomes.stream().forEach((objs) -> {
+                Idioma idioma = (Idioma) objs;
+                itemsIdiomes.add(idioma);
+            }); 
+            LvIdiomes.setItems(itemsIdiomes);            
+            
             tfAdresaWeb.setText(producte.getAdreçaWeb());
             tfPais.setText(producte.getPais());
             tfLloc.setText(producte.getLloc());
             taResum.setText(producte.getResum());
             taCaracteristiques.setText(producte.getCaracteristiques());
+            chbActiu.setSelected(producte.getEstat());
         }        
     }
 

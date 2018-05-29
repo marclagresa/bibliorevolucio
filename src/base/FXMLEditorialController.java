@@ -92,13 +92,10 @@ public class FXMLEditorialController extends GenericPopUp implements Initializab
                 }      
                 break;
             case Deshabilitar:
-                id = editorialRebutda.getId();
-                editorial = new Editorial();
-                editorial.setId(id);
-                editorial.setActiva(false);                
+                editorialRebutda.setActiva(false);                
             
                 try {
-                    editorialDAO.update(editorial);
+                    editorialDAO.update(editorialRebutda);
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
                 } catch (ClassNotFoundException ex){

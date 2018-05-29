@@ -33,6 +33,7 @@ public class ClFormat implements ChangeListener<String> {
 
                 HashMap<String, Object> cercaFormat = new HashMap<>();
                 cercaFormat.put(ContractFormat.NOM, newValue);
+                cercaFormat.put(ContractFormat.ACTIVA, true);
 
                 FormatDAO objFormatDAO = new FormatDAO();
                 ObservableList<Format> opcionsFormat = null;

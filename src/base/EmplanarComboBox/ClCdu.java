@@ -31,8 +31,9 @@ public class ClCdu implements ChangeListener<String> {
 
                 String campOrdre = ContractCdu.ID;
 
-                HashMap<String, Object> cercaCdu = new HashMap<>();
+                HashMap<String, Object> cercaCdu = new HashMap<>();                
                 cercaCdu.put(ContractCdu.NOM, newValue);
+                cercaCdu.put(ContractCdu.ACTIVA, true);
 
                 CduDAO objCduDAO = new CduDAO();
                 ObservableList<Cdu> opcionsCdu = null;

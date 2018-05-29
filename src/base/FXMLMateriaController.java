@@ -97,13 +97,10 @@ public class FXMLMateriaController extends GenericPopUp implements Initializable
                 }      
                 break;
             case Deshabilitar:
-                id = materiaRebuda.getId();
-                materia = new Materia();
-                materia.setId(id);
-                materia.setActiva(false);           
+                materiaRebuda.setActiva(false);           
           
                 try {
-                    materiaDAO.update(materia);
+                    materiaDAO.update(materiaRebuda);
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
                 } catch (ClassNotFoundException ex){

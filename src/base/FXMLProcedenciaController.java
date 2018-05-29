@@ -98,13 +98,10 @@ public class FXMLProcedenciaController extends GenericPopUp implements Initializ
                 }   
                 break;
             case Deshabilitar:
-                id = procedenciaRebuda.getId();
-                procedencia = new Procedencia();
-                procedencia.setId(id);
-                procedencia.setActiva(false);
+                procedenciaRebuda.setActiva(false);
                           
                 try {
-                    procedenciaDAO.update(procedencia);
+                    procedenciaDAO.update(procedenciaRebuda);
                 } catch (SQLException  ex) {
                     System.out.println("Exception: "+ex.getMessage());
                 } catch (ClassNotFoundException ex){
