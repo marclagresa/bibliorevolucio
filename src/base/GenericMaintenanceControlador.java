@@ -48,6 +48,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
 
     private final String _TITLELIST;
     private final int _LIMITXPAGE;
+    private final String _CONTRACTACTIU; // Because our search option only show active elements
     
     private WidgetList _WIDGETLIST;
     private WidgetSearch _WIDGETSEARCH;
@@ -57,7 +58,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     private Label _currentLabel;
     private int _currentPage;
     private int _maxPage;
-    
+        
     @FXML
     private TextField _searchField;
     @FXML
@@ -112,11 +113,13 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
      * 
      * @param _TITLELIST
      * @param _LIMITXPAGE 
+     * @param _CONTRACTEACTIU 
      */
-    public GenericMaintenanceControlador(String _TITLELIST, int _LIMITXPAGE) {
+    public GenericMaintenanceControlador(String _TITLELIST, int _LIMITXPAGE, String _CONTRACTEACTIU) {
         
         this._TITLELIST = _TITLELIST;
         this._LIMITXPAGE = _LIMITXPAGE;
+        this._CONTRACTACTIU = _CONTRACTEACTIU;
         
     }
     
@@ -297,10 +300,11 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
     private void searchAction(ActionEvent event) {
 
         SearchData sd = _WIDGETSEARCH.getSearchData();
-        // Falta afegir el format "list" en el switch
         try {
             
             HashMap< String, Object > data = new HashMap<>();
+            data.put( _CONTRACTACTIU, true);
+            
             String contractName = sd.getBrick().getCONTRACTNAME();
         
             switch( sd.getBrick().getFORMAT() ) {
