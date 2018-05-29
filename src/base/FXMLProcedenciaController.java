@@ -24,6 +24,7 @@ import objecte.Procedencia;
 public class FXMLProcedenciaController extends GenericPopUp implements Initializable {
 
     static TipusAccio tipusA;
+    static Procedencia procedenciaRebuda;
     
     @FXML
     private Label lblProcedencia;
@@ -59,26 +60,57 @@ public class FXMLProcedenciaController extends GenericPopUp implements Initializ
     private void crearProcedencia(ActionEvent event) {
         
         Procedencia procedencia = null;
+        int id = -1;
+        String nomProcedencia = tfProcedencia.getText();
+        ProcedenciaDAO procedenciaDAO = new ProcedenciaDAO();
         
-        try {
-            String nomProcedencia = tfProcedencia.getText();
-            
-            ProcedenciaDAO procedenciaDAO = new ProcedenciaDAO();
-            
-            int id = -1
-                    ;
-                id = procedenciaDAO.nextId();
-                procedencia = new Procedencia(id, nomProcedencia);                    
-                procedenciaDAO.insert(procedencia);
-            
-        } catch (ClassNotFoundException ex) {
-            System.out.println("ClassNotFoundException: "+ex.getMessage());
-        } catch (SQLException ex) {
-            System.out.println("SQLException: "+ex.getMessage());
-        }finally{
-            if(onAcceptCallBack!= null){
-                onAcceptCallBack.accept(procedencia);
-            }
+        switch(tipusA){
+            case Crear:
+                try {                 
+                    id = procedenciaDAO.nextId();
+                    procedencia = new Procedencia(id, nomProcedencia);                    
+                    procedenciaDAO.insert(procedencia);
+
+                } catch (ClassNotFoundException ex) {
+                    System.out.println("ClassNotFoundException: "+ex.getMessage());
+                } catch (SQLException ex) {
+                    System.out.println("SQLException: "+ex.getMessage());
+                }finally{
+                    if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(procedencia);
+                    }
+                }
+                break;
+            case Modificar:
+                id = procedenciaRebuda.getId();
+                procedencia = new Procedencia(id, nomProcedencia);
+        
+                try {
+                    procedenciaDAO.update(procedencia);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }finally{
+                   if(onAcceptCallBack!= null){
+                        onAcceptCallBack.accept(procedencia);
+                    }
+                }   
+                break;
+            case Deshabilitar:
+                id = procedenciaRebuda.getId();
+                procedencia = new Procedencia();
+                procedencia.setId(id);
+                procedencia.setActiva(false);
+                          
+                try {
+                    procedenciaDAO.update(procedencia);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }      
+                break;
         }
 
         ((Stage) (btnCrearProcedencia.getScene().getWindow())).close();

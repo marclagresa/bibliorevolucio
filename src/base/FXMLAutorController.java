@@ -5,8 +5,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -97,7 +95,8 @@ public class FXMLAutorController extends GenericPopUp implements Initializable {
             case Deshabilitar:
                 id = personaRebuda.getId();
                 persona = new Persona();
-                persona.setId(id);                
+                persona.setId(id);   
+                persona.setActiva(false);
         
             try {
                 personaDAO.update(persona);

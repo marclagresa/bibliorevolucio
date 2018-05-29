@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -135,7 +134,7 @@ public abstract class GenericMaintenanceControlador extends GenericControlador i
             
         } );
         this._WIDGETSEARCH = new WidgetSearch( this, _searchField, _searchCheckB, _searchComboB, _cbAttributes, ( name, combo ) -> {
-            
+        this._hbPages.setId("_hbPages");
             try {
                 parseCombo( name, combo );
             } catch (MaintenanceException ex) {

@@ -85,8 +85,15 @@ public class FXMLIdiomaController extends GenericPopUp implements Initializable 
                 id = idiomaRebut.getId();
                 idioma = new Idioma();
                 idioma.setId(id);
-                
-                //idiomaDAO.delete(idioma);    
+                idioma.setActiva(false);                
+          
+                try {
+                    idiomaDAO.update(idioma);
+                } catch (SQLException  ex) {
+                    System.out.println("Exception: "+ex.getMessage());
+                } catch (ClassNotFoundException ex){
+                    System.out.println(ex.getMessage());
+                }        
                 break;
         }
         
