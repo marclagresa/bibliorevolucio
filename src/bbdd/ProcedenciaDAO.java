@@ -98,7 +98,7 @@ public class ProcedenciaDAO extends BDObject implements IObjectDAO<Procedencia> 
 
                 }
                 if(campOrdre!=null){
-                    query+=" ORDER BY ? " + campOrdre;
+                    query+=" ORDER BY " + campOrdre;
                     if(ascendent){
                         query+=" ASC ";
                     }

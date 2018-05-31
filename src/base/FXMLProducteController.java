@@ -94,7 +94,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     ObservableList<Object> opcionsColeccio = null;
     ObservableList<Object> opcionsProcedencia = null;
     ObservableList<Materia> opcionsMateria = null;
-    ObservableList<Cdu> opcionsCDU = null;
+    ObservableList<Object> opcionsCDU = null;
     ObservableList<Idioma> opcionsIdioma = null;
     ObservableList<Nivell> opcionsNivell = null;
     ObservableList<Persona> opcionsPersona;
@@ -107,7 +107,12 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     public  ObservableList<Materia> itemsMateries = FXCollections.observableArrayList();
     public  ObservableList<Nivell> itemsNivells = FXCollections.observableArrayList();
     public  ObservableList<Idioma> itemsIdiomes = FXCollections.observableArrayList();
-    public  ObservableList<String> itemsCdus = FXCollections.observableArrayList();
+    public  ObservableList<Object> itemsCdus = FXCollections.observableArrayList();
+    
+    public  ObservableList<Object> itemsEditorial = FXCollections.observableArrayList();
+    public  ObservableList<Object> itemsFormat = FXCollections.observableArrayList();
+    public  ObservableList<Object> itemsColeccio = FXCollections.observableArrayList();
+    public  ObservableList<Object> itemsProcedencia = FXCollections.observableArrayList();
     
     @FXML
     private TextArea taResum;
@@ -136,7 +141,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
     @FXML
     private ComboBox<Object> cbEditorial;
     @FXML
-    private ComboBox<Cdu> cbCDU;
+    private ComboBox<Object> cbCDU;
     @FXML
     private ComboBox<Object> cbFormat;
     @FXML
@@ -333,17 +338,25 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
 
                     HashSet<Exemplar> setExemplars = new HashSet<>();
 
-                    /*for (int i = 0; i < itemsCdus.size(); i++) {
-
-                        llistaCdu = llistaCdu+"+"+itemsCdus.get(i);
-                   }*/
+                    for (int i = 0; i < itemsCdus.size(); i++) {
+                        System.out.println(itemsCdus.get(i));
+                        if(llistaCdu.equals("")){
+                            System.out.println("holadesdedins1");
+                            llistaCdu = llistaCdu+((Cdu) itemsCdus.get(i)).getId();
+                        }else{
+                            System.out.println("holadesdedins2");
+                            llistaCdu = llistaCdu+"+"+((Cdu) itemsCdus.get(i)).getId();
+                        }                        
+                   }
+                    
+                    System.out.println("LlistaCdu: "+llistaCdu);
                     
                     selectEditorial = (Editorial) opcionsEditorial.get(indexEditorial);
                     selectFormat = (Format) opcionsFormat.get(indexFormat);
                     selectColeccio = (Coleccio) opcionsColeccio.get(indexColeccio);
                     selectProcedencia = (Procedencia) opcionsProcedencia.get(indexProcedencia);
 
-                   Producte producte = new Producte(id, ISBN, nom, num_pag, dimensions, data, resum, caracteristiques,pathImatge, adresaWeb, true, setIdiomes, selectEditorial, selectFormat, selectProcedencia, setNivells, selectColeccio, cdu, setExemplars, lloc, pais, setMateries, setAutors);
+                   Producte producte = new Producte(id, ISBN, nom, num_pag, dimensions, data, resum, caracteristiques,pathImatge, adresaWeb, true, setIdiomes, selectEditorial, selectFormat, selectProcedencia, setNivells, selectColeccio, llistaCdu, setExemplars, lloc, pais, setMateries, setAutors);
 
                     try {
                         producteDAO.insert(producte);
@@ -371,11 +384,196 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
                 
                 break;
             case Modificar:
+
+                //CDU->comprovació de que no estigui buit el cbCDU
+                //boolean cbCDUBuit = (cbCDU.getValue() == null);       
+                /*boolean cbCDUBuit = cbCDU.getSelectionModel().isEmpty();
+
+                if(!cbCDUBuit){
+                    objCDU = cbCDU.getValue();
+                    cdu = objCDU.getNom();
+                    System.out.println("CDU: "+cdu);    
+                }*/
+
+                //Editorial->comprovació de que no estigui buit el cbEditorial
+                /*boolean cbEditorialBuit = (cbEditorial.getValue() == null);       
+
+                if(!cbEditorialBuit){
+                    objEditorial = cbEditorial.getValue();
+                    editorial = objEditorial.getNom();
+                    System.out.println("Editorial: "+editorial);    
+                }*/
+
+                //Format->comprovació de que no estigui buit el cbFormat
+                /*boolean cbFormatBuit = (cbFormat.getValue() == null);       
+
+                if(!cbFormatBuit){
+                    objFormat = cbFormat.getValue();
+                    format = objFormat.getNom();
+                    System.out.println("Format: "+format);    
+                }     */   
+
+                //Any
+                validacioData = tfAny.getText(); 
+                data = "";
+                if (!"".equals(validacioData)) {
+                    if(isNumeric(validacioData)){
+                        data = validacioData;
+                    }else{
+                        tfAny.setStyle("-fx-border-color: red; -fx-background-color:#FFCDD2");
+                        tfAny.setText("");
+                    }            
+                }
+
+                //Num pag
+                validacioNumPag = tfNumPag.getText();
+                num_pag = 0;
+                if(!"".equals(validacioNumPag)) {
+                    if(isNumeric(validacioData)){
+                         num_pag = Integer.valueOf(validacioNumPag);
+                    }else{
+                        tfNumPag.setStyle("-fx-border-color: red; -fx-background-color:#FFCDD2");
+                        tfNumPag.setText("");
+                    }
+                }
+
+                //Col·lecció
+                /*boolean cbColeccioBuit = (cbColeccio.getValue() == null);       
+
+                if(!cbColeccioBuit){
+                    objColeccio = cbColeccio.getValue();
+                    coleccio = objColeccio.getNom();
+                    System.out.println("Col·lecció: "+coleccio);    
+                }*/
+
+                nom = tfTitol.getText();
+                ISBN = tfISBN.getText();        
+                dimensions = tfDimensions.getText();
+                resum = taResum.getText();
+                caracteristiques = taCaracteristiques.getText();
+                adresaWeb = tfAdresaWeb.getText();
+                pais = tfPais.getText();
+                lloc = tfLloc.getText();
+
+                //Comprovem que tots aquests camps que no poden estar buits no ho estan
+               /*if(ISBN.equals("") || nom.equals("") || format.equals("") || editorial.equals("") || cdu.equals("") || coleccio.equals("")){*/
+                if(1!=1){
+
+                   //Tots aquests camps si estan buit els marquem en vermell, sino els posem amb el seu color original
+                   if(ISBN.equals("")){
+                       tfISBN.setStyle("-fx-border-color: red;");
+                   }else{
+                       tfISBN.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }
+                   if(nom.equals("")){
+                       tfTitol.setStyle("-fx-border-color: red;");
+                   }else{
+                       tfTitol.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }
+                   if(editorial.equals("")){
+                       cbEditorial.setStyle("-fx-border-color: red;");
+                   }else{
+                       cbEditorial.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }
+                   if(format.equals("")){
+                       cbFormat.setStyle("-fx-border-color: red;");
+                   }else{
+                       cbFormat.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }         
+                   if(cdu.equals("")){
+                       cbCDU.setStyle("-fx-border-color: red;");
+                   }else{
+                       cbCDU.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }
+                   if(coleccio.equals("")){
+                       cbColeccio.setStyle("-fx-border-color: red;");
+                   }else{
+                       cbColeccio.setStyle("-fx-border-color: #BDBDBD; -fx-background-color:white");
+                   }           
+
+                    Alert alerta = new Alert(AlertType.WARNING);
+                    alerta.setTitle("Alerta");
+                    alerta.setHeaderText("Has d'emplenar tots els camps necessaris");
+                    alerta.showAndWait().ifPresent(rs -> {            
+                        //Quan pulses ok acceptar de l'alert box s'entra dins l'if
+                        if (rs == ButtonType.OK) {                
+                        }
+                });
+                }else{
+                   ProducteDAO producteDAO = new ProducteDAO();
+                   int id = -1;
+                    try {
+                        id = producteDAO.nextId();
+                    } catch (ClassNotFoundException ex) {
+                    System.out.println("ClassNotFoundException: "+ex.getMessage());
+                    } catch (SQLException ex) {
+                        System.out.println("SQLException: "+ex.getMessage());
+                    }
+
+                    HashSet<Nivell> setNivells = new HashSet<>();
+                    setNivells.addAll(itemsNivells);
+
+                    HashSet<Persona> setAutors = new HashSet<>();
+                    setAutors.addAll(itemsAutors);
+
+                    HashSet<Materia> setMateries = new HashSet<>();
+                    setMateries.addAll(itemsMateries);
+
+                    HashSet<Idioma> setIdiomes = new HashSet<>();
+                    setIdiomes.addAll(itemsIdiomes);
+
+                    HashSet<Exemplar> setExemplars = new HashSet<>();
+
+                    llistaCdu="";
+                    for (int i = 0; i < itemsCdus.size(); i++) {
+                        System.out.println(itemsCdus.get(i));
+                        if(llistaCdu.equals("")){
+                            System.out.println("holadesdedins1");
+                            llistaCdu = llistaCdu+itemsCdus.get(i);
+                        }else{
+                            System.out.println("holadesdedins2");
+                            llistaCdu = llistaCdu+"+"+itemsCdus.get(i);
+                        }                        
+                    }
+                    
+                    System.out.println("LlistaCdu: "+llistaCdu);
+                    
+                    if(indexEditorial==-1){
+                        selectEditorial = producteRebut.getEditorial();
+                    }else{
+                        selectEditorial = (Editorial) opcionsEditorial.get(indexEditorial);
+                    }
+                    if(indexFormat==-1){
+                        selectFormat = producteRebut.getFormat();
+                    }else{
+                        selectFormat = (Format) opcionsFormat.get(indexFormat);
+                    }
+                    if(indexColeccio==-1){
+                        selectColeccio = producteRebut.getColeccio();
+                    }else{
+                        selectColeccio = (Coleccio) opcionsColeccio.get(indexColeccio);
+                    }
+                    if(indexProcedencia==-1){
+                        selectProcedencia = producteRebut.getProcedencia();
+                    }else{
+                        selectProcedencia = (Procedencia) opcionsProcedencia.get(indexProcedencia);
+                    }
+
+                   Producte producte = new Producte(id, ISBN, nom, num_pag, dimensions, data, resum, caracteristiques,pathImatge, adresaWeb, true, setIdiomes, selectEditorial, selectFormat, selectProcedencia, setNivells, selectColeccio, llistaCdu, setExemplars, lloc, pais, setMateries, setAutors);
+
+                    try {
+                        producteDAO.update(producte);
+                    } catch (ClassNotFoundException ex) {
+                        System.out.println("ClassNotFoundException-ProducteController: "+ex.getMessage());
+                    } catch (SQLException ex) {
+                        System.out.println("SQLException-ProducteController: "+ex.getMessage());
+                    }
+                }
                 
                 break;
             case Deshabilitar:                    
                     producteRebut.setEstat(false);                
-
+                    objProducteDAO = new ProducteDAO();
                     try {
                         objProducteDAO.update(producteRebut);
                     } catch (SQLException  ex) {
@@ -532,7 +730,7 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         ClProcedencia clProcedencia = new ClProcedencia(cbProcedencia);
         cbProcedencia.getEditor().textProperty().addListener(clProcedencia);
         
-                //Listeners de item seleccionats als diferents comboBox
+        //Listeners de item seleccionats als diferents comboBox
         
         //Editorial
         cbEditorial.valueProperty().addListener((ObservableValue<? extends Object> observable, Object oldValue, Object newValue) -> {
@@ -863,12 +1061,16 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
         boolean nouCdu = true;
         
         if(producte!=null){
+            
+            producteRebut = producte;
+            
+            itemsFormat.add(producte.getFormat());
+            cbFormat.setItems(itemsFormat);
             cbFormat.setValue(producte.getFormat());
             tfISBN.setText(producte.getISBN());            
             
             String llistatCdus = producte.getCdu();
             String[] cdus = llistatCdus.split("\\+");
-            
             for (int i = 0; i < cdus.length; i++) {
                 itemsCdus.add(cdus[i]);
             }
@@ -876,6 +1078,9 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             
             tfAny.setText(producte.getAnyPublicacio());
             tfNumPag.setText(String.valueOf(producte.getNumPag()));
+            
+            itemsColeccio.add(producte.getColeccio());
+            cbColeccio.setItems(itemsColeccio);
             cbColeccio.setValue(producte.getColeccio());
             tfTitol.setText(producte.getNom());
             
@@ -883,11 +1088,11 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             llistaAutors.stream().forEach((objs) -> {
                 Persona persona = (Persona) objs;                
                 itemsAutors.add(persona);                
-            });            
+            });         
             LvAutors.setItems(itemsAutors);
-                      
-            //itemsAutors.addAll(producte.getAutors());
             
+            itemsEditorial.add(producte.getEditorial());
+            cbEditorial.setItems(itemsEditorial);
             cbEditorial.setValue(producte.getEditorial());
             
             Set llistaNivells = producte.getNivells();
@@ -896,8 +1101,6 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
                 itemsNivells.add(nivell);
             });
             LvNivells.setItems(itemsNivells);
-                      
-            //itemsNivells.addAll(producte.getNivells());
             
             tfDimensions.setText(producte.getDimensions());
 
@@ -908,8 +1111,8 @@ public class FXMLProducteController extends GenericPopUp implements Initializabl
             });
             LvMateries.setItems(itemsMateries);
             
-            //itemsMateries.addAll(producte.getMateries());
-            
+            itemsProcedencia.add(producte.getProcedencia());
+            cbProcedencia.setItems(itemsProcedencia);
             cbProcedencia.setValue(producte.getProcedencia());
             
             Set llistaIdiomes = producte.getIdiomes();
