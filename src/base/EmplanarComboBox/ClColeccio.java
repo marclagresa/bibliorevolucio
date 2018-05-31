@@ -22,6 +22,9 @@ public class ClColeccio implements ChangeListener<String> {
     public ClColeccio(ComboBox combo){
         this.cb = combo;
     }
+    /*Fas un listener per cade cop que es far un canvi en el combobox texecuti el codi
+    * L'hi passes un comboox on li emplenes les dades i et fa una serca a la base de dades
+    * depenen del valor del combobox, i el va actualitzan cade comp que canvia el text*/
 
     @Override
     public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
@@ -33,7 +36,6 @@ public class ClColeccio implements ChangeListener<String> {
 
                 HashMap<String, Object> cercaColeccio = new HashMap<>();
                 cercaColeccio.put(ContractColeccio.NOM, newValue);
-                cercaColeccio.put(ContractColeccio.ACTIVA,true);
 
                 ColeccioDAO objColeccioDAO = new ColeccioDAO();
                 ObservableList<Coleccio> opcionsColeccio = null;

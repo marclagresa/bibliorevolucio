@@ -10,6 +10,9 @@ import java.util.ArrayList;
  * Created by Marc on 25/05/2018.
  */
 public class OpcionsListView {
+    /*Li passes un combo un listView i una observablelist agafes el cobobox agafes el seu valor i l'afageixes
+    * dintre de una observavbleList despres passes aquesta observablelist i la poses dintre el listview
+    * i comprobes que el mateix valor no a estat repatit, tambe pots eliminar un registre */
     public static<E> void afeguirDadeListView(ComboBox<E> comboBox, ListView lw, ObservableList items){
         boolean repatit = false;
 

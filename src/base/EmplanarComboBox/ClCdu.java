@@ -16,6 +16,9 @@ import java.util.HashMap;
  * Created by Marc on 18/05/2018.
  */
 public class ClCdu implements ChangeListener<String> {
+    /*Fas un listener per cade cop que es far un canvi en el combobox texecuti el codi
+    * L'hi passes un comboox on li emplenes les dades i et fa una serca a la base de dades
+    * depenen del valor del combobox, i el va actualitzan cade comp que canvia el text*/
 
     ComboBox cb;
 
@@ -31,9 +34,8 @@ public class ClCdu implements ChangeListener<String> {
 
                 String campOrdre = ContractCdu.ID;
 
-                HashMap<String, Object> cercaCdu = new HashMap<>();                
+                HashMap<String, Object> cercaCdu = new HashMap<>();
                 cercaCdu.put(ContractCdu.NOM, newValue);
-                cercaCdu.put(ContractCdu.ACTIVA, true);
 
                 CduDAO objCduDAO = new CduDAO();
                 ObservableList<Cdu> opcionsCdu = null;

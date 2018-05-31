@@ -39,12 +39,15 @@ public class FXMLControllerConsultaAvanzadaUsuari extends GenericPopUp implement
     @FXML private Button cancelar;
     @FXML
     public void consultar(ActionEvent actionEvent) {
+        //Aquesta foncio el que fa es agafa les dades de FXML i les passes per array les dades per poder fer la consulta
         ArrayList<Integer> arrayNivell = new ArrayList<>();
         Usuari user = new Usuari();
         HashMap<String, Object> consulta = new HashMap<>();
+        //El que fa aquesta foncio es que crida el comprovar email, i apart si esta buid
         if (comEmail() || emailTF.getText().isEmpty()) {
+            //comprobes i hi ha el text si no pues no fa res
             if(!nomTF.getText().isEmpty()) {
-                consulta.put(ContractUsuari.NOM, nomTF.getText());
+                consulta.put(ContractUsuari.NOM, nomTF.getText());//crides el les dades de nom
             }
             if(!cognom_1TF.getText().isEmpty()) {
                 consulta.put(ContractUsuari.PRIMER_COGNOM, cognom_1TF.getText());
@@ -60,9 +63,10 @@ public class FXMLControllerConsultaAvanzadaUsuari extends GenericPopUp implement
             if(actiuCheckB.isSelected()) {
                 consulta.put(ContractUsuari.ACTIVA, actiuCheckB.isSelected());
             }
+            // combobox agafes tots els que hi hagin dintre la observable list
             if( nivellComB.getSelectionModel().getSelectedIndex()!= -1) {
                 for(int j = 0;itemsNivell.size()>j;j++) {
-                    arrayNivell.add(itemsNivell.get(j).getId());
+                    arrayNivell.add(itemsNivell.get(j).getId());//agafes la id de l'objecta
                 }
                 consulta.put(ContractUsuari.ID_NIVELL, arrayNivell.toArray(new Integer[arrayNivell.size()]));
             }
@@ -71,6 +75,7 @@ public class FXMLControllerConsultaAvanzadaUsuari extends GenericPopUp implement
             }
             ((Stage) consultar.getScene().getWindow()).close();
         }else{
+            //alerta
             emailTF.setStyle("-fx-border-color: red;"+
                     " -fx-background-color:#FFCDD2");
             Alert alerta = new Alert(Alert.AlertType.WARNING);
@@ -107,6 +112,7 @@ public class FXMLControllerConsultaAvanzadaUsuari extends GenericPopUp implement
         return crearPopUp("/fxml/FXMLusuariConsultaAvanzada.fxml", FXMLControllerConsultaAvanzadaUsuari.class, owner, isModal,null);
     }
     public Boolean comEmail(){
+        //comporves l'Email
         Pattern pattern = Pattern
                 .compile("^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
                         + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$");

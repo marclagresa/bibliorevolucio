@@ -16,6 +16,9 @@ import java.util.HashMap;
  * Created by Marc on 18/05/2018.
  */
 public class ClIdioma implements ChangeListener<String> {
+    /*Fas un listener per cade cop que es far un canvi en el combobox texecuti el codi
+    * L'hi passes un comboox on li emplenes les dades i et fa una serca a la base de dades
+    * depenen del valor del combobox, i el va actualitzan cade comp que canvia el text*/
 
     ComboBox cb;
 
@@ -33,7 +36,6 @@ public class ClIdioma implements ChangeListener<String> {
 
                 HashMap<String, Object> cercaIdioma = new HashMap<>();
                 cercaIdioma.put(ContractIdioma.NOM, newValue);
-                cercaIdioma.put(ContractIdioma.ACTIVA,true);
 
                 IdiomaDAO objIdiomaDAO = new IdiomaDAO();
                 ObservableList<Idioma> opcionsIdioma = null;

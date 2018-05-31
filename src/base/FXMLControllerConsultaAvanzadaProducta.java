@@ -62,6 +62,7 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //inicialitces la funcio dels combobox
         ClNivell clNivell = new ClNivell(nivellComB);
         nivellComB.getEditor().textProperty().addListener(clNivell);
 
@@ -83,11 +84,13 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
     }
     @FXML
     public void consultar(ActionEvent actionEvent) {
+        //Passes les dades per consultar
         ArrayList<Integer> arrayAutor = new ArrayList<>();
         ArrayList<Integer> arrayIdioma = new ArrayList<>();
         ArrayList<Integer> arrayNivell = new ArrayList<>();
         Producte prod = new Producte();
         HashMap<String, Object> consulta = new HashMap<>();
+        //comprobes si hi ha alguna dada
         if(actiu.isSelected()) {
             consulta.put(ContractProducte.ACTIVA, actiu.isSelected());
         }
@@ -103,8 +106,9 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
         if (dataDP.getValue() != null){
             consulta.put(ContractProducte.ANY_PUBLICACIO, dataDP.getValue());
         }
-
+        //combobox agafes la id de l'objecte
         if(editorialComB.getSelectionModel().getSelectedIndex()!= -1) {
+
             consulta.put(ContractProducte.EDITORIAL_ID, editorialComB.getItems().get(editorialComB.getSelectionModel().getSelectedIndex()).getId());
         }
 
@@ -116,7 +120,7 @@ public class FXMLControllerConsultaAvanzadaProducta extends GenericPopUp impleme
             consulta.put(ContractProducte.FORMAT_ID, formatComB.getItems().get(formatComB.getSelectionModel().getSelectedIndex()).getId());
         }
 
-
+        // combobox agafes tots els que hi hagin dintre la observable list
         if(autorComB.getSelectionModel().getSelectedIndex()!= -1) {
             for(int j = 0;itemsAutors.size()>j;j++) {
                 arrayAutor.add(itemsAutors.get(j).getId());

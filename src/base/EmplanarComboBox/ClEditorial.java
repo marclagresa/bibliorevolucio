@@ -16,6 +16,9 @@ import java.util.HashMap;
  * Created by Marc on 18/05/2018.
  */
 public class  ClEditorial implements ChangeListener<String> {
+    /*Fas un listener per cade cop que es far un canvi en el combobox texecuti el codi
+    * L'hi passes un comboox on li emplenes les dades i et fa una serca a la base de dades
+    * depenen del valor del combobox, i el va actualitzan cade comp que canvia el text*/
 
     ComboBox cb;
     int cont =0 ;
@@ -37,7 +40,6 @@ public class  ClEditorial implements ChangeListener<String> {
 
                 HashMap<String, Object> cercaEditorial = new HashMap<>();
                 cercaEditorial.put(ContractEditorial.NOM, newValue);
-                cercaEditorial.put(ContractEditorial.ACTIVA, true);
 
                 EditorialDAO objEditorialDAO = new EditorialDAO();
                 ObservableList<Editorial> opcionsEditorial = null;
